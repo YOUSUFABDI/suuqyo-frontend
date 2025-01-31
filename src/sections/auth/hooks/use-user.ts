@@ -1,0 +1,11 @@
+import { useGetUserQuery } from 'src/store/auth/authApi';
+import { UserResDT } from '../types/types';
+import { isSuccessResponse } from 'src/utils/is-success-res';
+
+export const useUser = () => {
+  const { data, error, isLoading } = useGetUserQuery();
+
+  const user = isSuccessResponse<UserResDT>(data) ? data.payload.data : null;
+
+  return { user, isLoading, error };
+};
