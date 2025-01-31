@@ -1,8 +1,8 @@
 {
-  "name": "@minimal-kit/next-ts",
-  "author": "Minimals",
+  "name": "suuqyo",
+  "author": "Yusuf",
   "version": "6.2.0",
-  "description": "Next & TypeScript",
+  "description": "suuqyo platform",
   "private": true,
   "scripts": {
     "dev": "next dev -p 8082",
