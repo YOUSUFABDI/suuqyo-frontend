@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';
 
-import { TransactionListView } from 'src/sections/admin/report/view';
+import { TransactionListView } from 'src/sections/admin/report/transaction/view';
 
 // ----------------------------------------------------------------------
 

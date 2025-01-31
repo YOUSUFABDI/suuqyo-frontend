@@ -88,7 +88,10 @@ export const navData: NavSectionProps['data'] = [
         title: 'Report',
         path: paths.dashboard.report.root,
         icon: ICONS.tour,
-        children: [{ title: 'Transactions', path: paths.dashboard.report.root }],
+        children: [
+          { title: 'Transactions', path: paths.dashboard.report.root },
+          { title: 'subscription Renewal', path: paths.dashboard.report.subscriptionRenewal },
+        ],
       },
     ],
   },

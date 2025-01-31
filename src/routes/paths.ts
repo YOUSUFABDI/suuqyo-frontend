@@ -42,6 +42,7 @@ export const paths = {
     },
     report: {
       root: `${ROOTS.DASHBOARD}/report`,
+      subscriptionRenewal: `${ROOTS.DASHBOARD}/report/subs-renewal`,
     },
   },
 

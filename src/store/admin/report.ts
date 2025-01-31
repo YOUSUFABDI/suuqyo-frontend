@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { ApiResponseDT } from 'src/types/api-response';
 import { API } from '../api';
-import { SubscriptionTransactionResDT } from 'src/sections/admin/report/types/transaction';
+import { SubscriptionTransactionResDT } from 'src/sections/admin/report/transaction/types/transaction';
+import { SubscriptionRenewalResDT } from 'src/sections/admin/report/subscription-renewal/types/subscription-renewal';
 
 export const reportApi = createApi({
   reducerPath: 'reportApi',
@@ -26,7 +27,14 @@ export const reportApi = createApi({
       }),
       providesTags: ['reportApi'],
     }),
+    getSubscriptionRenewals: builder.query<ApiResponseDT<SubscriptionRenewalResDT[]>, void>({
+      query: () => ({
+        url: `/subscription/renewal-history`,
+        method: 'GET',
+      }),
+      providesTags: ['reportApi'],
+    }),
   }),
 });
 
-export const { useGetTransactionsQuery } = reportApi;
+export const { useGetTransactionsQuery, useGetSubscriptionRenewalsQuery } = reportApi;
