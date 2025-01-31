@@ -43,8 +43,8 @@ export type SubscriptionResDT = {
 
 export const SUBS_STATUS_OPTIONS = [
   { value: 'PENDING', label: 'Pending' },
-  { value: 'FAILED', label: 'Failed' },
-  { value: 'COMPLETED', label: 'Completed' },
+  { value: 'ACTIVE', label: 'Active' },
+  { value: 'EXPIRED', label: 'Expired' },
 ];
 
 export interface ReminderSubscriptionDetailsDT {

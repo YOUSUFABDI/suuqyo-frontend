@@ -57,7 +57,6 @@ const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'endDate', label: 'End date' },
   { id: 'remainingTime', label: 'Remaining time' },
   { id: 'subscriptionStatus', label: 'Subscription status' },
-  // { id: 'isActive', label: 'Is active' },
   { id: '', width: 80 },
 ];
 
@@ -159,13 +158,13 @@ export function SubscriptionListView() {
                       'soft'
                     }
                     color={
-                      (tab.value === 'COMPLETED' && 'success') ||
                       (tab.value === 'PENDING' && 'warning') ||
+                      (tab.value === 'ACTIVE' && 'success') ||
                       (tab.value === 'EXPIRED' && 'error') ||
                       'default'
                     }
                   >
-                    {['COMPLETED', 'PENDING', 'EXPIRED'].includes(tab.value)
+                    {['PENDING', 'ACTIVE', 'EXPIRED'].includes(tab.value)
                       ? tableData.filter((user) => user.subscriptionStatus === tab.value).length
                       : tableData.length}
                   </Label>

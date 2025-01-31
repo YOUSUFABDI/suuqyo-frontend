@@ -151,7 +151,6 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
             color={
               (row.subscriptionStatus === 'PENDING' && 'warning') ||
               (row.subscriptionStatus === 'ACTIVE' && 'success') ||
-              (row.subscriptionStatus === 'RENEWED' && 'success') ||
               (row.subscriptionStatus === 'EXPIRED' && 'error') ||
               'default'
             }
@@ -159,12 +158,6 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
             {row.subscriptionStatus}
           </Label>
         </TableCell>
-
-        {/* <TableCell>
-          <Label variant="soft" color={row.isActive ? 'success' : 'error'}>
-            {row.subscriptionStatus ? 'Active' : 'Inactive'}
-          </Label>
-        </TableCell> */}
 
         <TableCell>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
