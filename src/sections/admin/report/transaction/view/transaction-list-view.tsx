@@ -59,11 +59,12 @@ const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'price', label: 'Amount' },
   { id: 'paymentMethod', label: 'Payment method' },
   { id: 'subscriptionType', label: 'Subscription type' },
+  { id: 'transactionType', label: 'Transaction type' },
   { id: 'status', label: 'Status' },
   { id: '' },
 ];
 
-export const TRANSACTION_STATUS_OPTIONS = ['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED'];
+export const TRANSACTION_STATUS_OPTIONS = ['PENDING', 'COMPLETED', 'FAILED'];
 
 // ----------------------------------------------------------------------
 
@@ -136,12 +137,6 @@ export function TransactionListView() {
       label: 'Completed',
       color: 'success',
       count: getInvoiceLength('COMPLETED'),
-    },
-    {
-      value: 'REFUNDED',
-      label: 'Refund',
-      color: 'default',
-      count: getInvoiceLength('REFUNDED'),
     },
     {
       value: 'FAILED',
@@ -241,41 +236,41 @@ export function TransactionListView() {
                 color={theme.vars.palette.info.main}
               />
 
-              <TransactionAnalytic
+              {/* <TransactionAnalytic
                 title="Pending"
                 total={getInvoiceLength('pending')}
                 percent={getPercentByStatus('pending')}
                 price={getTotalAmount('pending')}
                 icon="solar:sort-by-time-bold-duotone"
                 color={theme.vars.palette.warning.main}
-              />
+              /> */}
 
-              <TransactionAnalytic
+              {/* <TransactionAnalytic
                 title="Completed"
                 total={getInvoiceLength('paid')}
                 percent={getPercentByStatus('paid')}
                 price={getTotalAmount('paid')}
                 icon="solar:file-check-bold-duotone"
                 color={theme.vars.palette.success.main}
-              />
+              /> */}
 
-              <TransactionAnalytic
+              {/* <TransactionAnalytic
                 title="Refund"
                 total={getInvoiceLength('draft')}
                 percent={getPercentByStatus('draft')}
                 price={getTotalAmount('draft')}
                 icon="solar:file-corrupted-bold-duotone"
                 color={theme.vars.palette.text.secondary}
-              />
+              /> */}
 
-              <TransactionAnalytic
+              {/* <TransactionAnalytic
                 title="Failed"
                 total={getInvoiceLength('overdue')}
                 percent={getPercentByStatus('overdue')}
                 price={getTotalAmount('overdue')}
                 icon="solar:bell-bing-bold-duotone"
                 color={theme.vars.palette.error.main}
-              />
+              /> */}
             </Stack>
           </Scrollbar>
         </Card>

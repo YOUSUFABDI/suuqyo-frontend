@@ -64,11 +64,6 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
     try {
       const response = await renewSubscription({ shopOwnerId: Number(row.shopOwner.id) }).unwrap();
       toast.success('Renewed subscription.');
-      // if ('payload' in response) {
-      //   const { message } = response.payload.data;
-      //   // Display success message
-      //   toast.success(message);
-      // }
     } catch (error: any) {
       console.error(error);
       const errorMessage = getErrorMessage(error);
@@ -87,12 +82,6 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
     >
       <MenuList>
         <li>
-          <MenuItem component={RouterLink} href={'#'} onClick={() => menuActions.onClose()}>
-            <Iconify icon="solar:pen-bold" />
-            Edit
-          </MenuItem>
-        </li>
-        <li>
           <MenuItem onClick={handleSendReminder} disabled={isLoading}>
             <Iconify icon="solar:bell-bold" />
             Remind
@@ -100,7 +89,7 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
         </li>
         <li>
           <MenuItem onClick={handleRenew} disabled={renewIsLoading}>
-            <Iconify icon="solar:bell-bold" />
+            <Iconify icon="solar:close-bold" />
             Renew
           </MenuItem>
         </li>

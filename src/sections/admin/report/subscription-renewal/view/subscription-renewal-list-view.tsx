@@ -64,16 +64,14 @@ const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'startDate', label: 'Start date' },
   { id: 'endDate', label: 'End date' },
   { id: 'subscriptionStatus', label: 'Subscription status' },
-  { id: '' },
 ];
 
-export const TRANSACTION_STATUS_OPTIONS = ['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED'];
+export const TRANSACTION_STATUS_OPTIONS = ['PENDING', 'ACTIVE', 'EXPIRED'];
 
 // ----------------------------------------------------------------------
 
 export function SubscriptionRenewalListView() {
   const { subscriptionRenewals } = UseSubscriptionRenewals();
-  console.log('transactions', subscriptionRenewals);
   const theme = useTheme();
 
   const table = useTable({ defaultOrderBy: 'createDate' });
@@ -136,22 +134,16 @@ export function SubscriptionRenewalListView() {
       count: getInvoiceLength('PENDING'),
     },
     {
-      value: 'COMPLETED',
-      label: 'Completed',
+      value: 'ACTIVE',
+      label: 'Active',
       color: 'success',
-      count: getInvoiceLength('COMPLETED'),
+      count: getInvoiceLength('ACTIVE'),
     },
     {
-      value: 'REFUNDED',
-      label: 'Refund',
+      value: 'EXPIRED',
+      label: 'Expired',
       color: 'default',
-      count: getInvoiceLength('REFUNDED'),
-    },
-    {
-      value: 'FAILED',
-      label: 'Failed',
-      color: 'error',
-      count: getInvoiceLength('FAILED'),
+      count: getInvoiceLength('EXPIRED'),
     },
   ] as const;
 
@@ -343,29 +335,29 @@ export function SubscriptionRenewalListView() {
               }}
               action={
                 <Box sx={{ display: 'flex' }}>
-                  <Tooltip title="Sent">
+                  {/* <Tooltip title="Sent">
                     <IconButton color="primary">
                       <Iconify icon="iconamoon:send-fill" />
                     </IconButton>
-                  </Tooltip>
+                  </Tooltip> */}
 
-                  <Tooltip title="Download">
+                  {/* <Tooltip title="Download">
                     <IconButton color="primary">
                       <Iconify icon="eva:download-outline" />
                     </IconButton>
-                  </Tooltip>
+                  </Tooltip> */}
 
-                  <Tooltip title="Print">
+                  {/* <Tooltip title="Print">
                     <IconButton color="primary">
                       <Iconify icon="solar:printer-minimalistic-bold" />
                     </IconButton>
-                  </Tooltip>
+                  </Tooltip> */}
 
-                  <Tooltip title="Delete">
+                  {/* <Tooltip title="Delete">
                     <IconButton color="primary" onClick={confirmDialog.onTrue}>
                       <Iconify icon="solar:trash-bin-trash-bold" />
                     </IconButton>
-                  </Tooltip>
+                  </Tooltip> */}
                 </Box>
               }
             />
@@ -455,23 +447,23 @@ function applyFilter({ inputData, comparator, filters, dateError }: ApplyFilterP
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  // if (name) {
-  //   inputData = inputData.filter(({ id, shopOwner }) =>
-  //     [id, shopOwner?.fullName, shopOwner?.phoneNumber].some(
-  //       (field) => typeof field === 'string' && field.toLowerCase().includes(name.toLowerCase())
-  //     )
-  //   );
-  // }
+  if (name) {
+    inputData = inputData.filter(({ id, subscription }) =>
+      [id, subscription?.shopOwner.fullName, subscription?.shopOwner.phoneNumber].some(
+        (field) => typeof field === 'string' && field.toLowerCase().includes(name.toLowerCase())
+      )
+    );
+  }
 
-  // if (status !== 'all') {
-  //   inputData = inputData.filter((invoice) => invoice.transactionStatus === status);
-  // }
+  if (status !== 'all') {
+    inputData = inputData.filter((invoice) => invoice.subscription.subscriptionStatus === status);
+  }
 
-  // if (service.length) {
-  //   inputData = inputData.filter(
-  //     (invoice) => service.includes(invoice.transactionStatus) // No need for 'some' since 'transactionStatus' is a string
-  //   );
-  // }
+  if (service.length) {
+    inputData = inputData.filter(
+      (invoice) => service.includes(invoice.subscription.subscriptionStatus) // No need for 'some' since 'transactionStatus' is a string
+    );
+  }
 
   if (!dateError) {
     if (startDate && endDate) {

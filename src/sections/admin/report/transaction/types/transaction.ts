@@ -10,6 +10,7 @@ export type SubscriptionTransactionResDT = {
   createdAt: string;
   updatedAt: string;
   transactionStatus: string;
+  transactionType: string;
   subscription: {
     id: number;
     shopOwnerId: number;

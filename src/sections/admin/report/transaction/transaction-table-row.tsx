@@ -155,6 +155,7 @@ export function TransactionTableRow({
         <TableCell>{row.paymentMethod}</TableCell>
 
         <TableCell>{row.subscription.subscriptionType}</TableCell>
+        <TableCell>{row.transactionType}</TableCell>
 
         <TableCell>
           <Label

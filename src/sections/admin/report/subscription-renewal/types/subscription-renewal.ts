@@ -34,6 +34,7 @@ export type SubscriptionRenewalResDT = {
       updatedAt: string; // ISO date string
       user: {
         profileImage: string;
+        email: string;
       };
     };
   };
