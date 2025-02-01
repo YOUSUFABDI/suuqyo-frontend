@@ -58,11 +58,12 @@ import {
 
 const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'shopOwner', label: 'Shopowner' },
-  { id: 'transactionDate', label: 'Transaction Date' },
-  { id: 'price', label: 'Amount' },
-  { id: 'paymentMethod', label: 'Payment method' },
+  { id: 'phone', label: 'Phone' },
   { id: 'subscriptionType', label: 'Subscription type' },
-  { id: 'status', label: 'Status' },
+  { id: 'subscriptionFee', label: 'Subscription fee' },
+  { id: 'startDate', label: 'Start date' },
+  { id: 'endDate', label: 'End date' },
+  { id: 'subscriptionStatus', label: 'Subscription status' },
   { id: '' },
 ];
 
@@ -243,7 +244,7 @@ export function SubscriptionRenewalListView() {
                 icon="solar:bill-list-bold-duotone"
                 color={theme.vars.palette.info.main}
               />
-
+              {/* 
               <SubscriptionRenewalAnalytic
                 title="Pending"
                 total={getInvoiceLength('pending')}
@@ -251,8 +252,8 @@ export function SubscriptionRenewalListView() {
                 price={getTotalAmount('pending')}
                 icon="solar:sort-by-time-bold-duotone"
                 color={theme.vars.palette.warning.main}
-              />
-
+              />  */}
+              {/* 
               <SubscriptionRenewalAnalytic
                 title="Completed"
                 total={getInvoiceLength('paid')}
@@ -260,25 +261,25 @@ export function SubscriptionRenewalListView() {
                 price={getTotalAmount('paid')}
                 icon="solar:file-check-bold-duotone"
                 color={theme.vars.palette.success.main}
-              />
+              /> */}
 
-              <SubscriptionRenewalAnalytic
+              {/* <SubscriptionRenewalAnalytic
                 title="Refund"
                 total={getInvoiceLength('draft')}
                 percent={getPercentByStatus('draft')}
                 price={getTotalAmount('draft')}
                 icon="solar:file-corrupted-bold-duotone"
                 color={theme.vars.palette.text.secondary}
-              />
+              /> */}
 
-              <SubscriptionRenewalAnalytic
+              {/* <SubscriptionRenewalAnalytic
                 title="Failed"
                 total={getInvoiceLength('overdue')}
                 percent={getPercentByStatus('overdue')}
                 price={getTotalAmount('overdue')}
                 icon="solar:bell-bing-bold-duotone"
                 color={theme.vars.palette.error.main}
-              />
+              /> */}
             </Stack>
           </Scrollbar>
         </Card>

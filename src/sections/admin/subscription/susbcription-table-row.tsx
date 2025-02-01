@@ -22,7 +22,7 @@ import { Label } from 'src/components/label';
 import { ListItemText } from '@mui/material';
 import { fDate, fTime } from 'src/utils/format-time';
 import { SubscriptionResDT } from './types/subscription';
-import { useSendReminderMutation } from 'src/store/admin/shop-owner';
+import { useRenewSubscriptionMutation, useSendReminderMutation } from 'src/store/admin/shop-owner';
 import { getErrorMessage } from 'src/utils/error.message';
 import { toast } from 'src/components/snackbar';
 
@@ -39,6 +39,7 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
   const menuActions = usePopover();
 
   const [sendReminder, { isLoading }] = useSendReminderMutation();
+  const [renewSubscription, { isLoading: renewIsLoading }] = useRenewSubscriptionMutation();
 
   const handleSendReminder = async () => {
     try {
@@ -47,6 +48,23 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
       if ('payload' in response) {
         const { message } = response.payload.data;
 
+        // Display success message
+        toast.success('Renewed subscription.');
+      }
+    } catch (error: any) {
+      console.error(error);
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+    } finally {
+      menuActions.onClose();
+    }
+  };
+
+  const handleRenew = async () => {
+    try {
+      const response = await renewSubscription({ shopOwnerId: Number(row.shopOwner.id) }).unwrap();
+      if ('payload' in response) {
+        const { message } = response.payload.data;
         // Display success message
         toast.success(message);
       }
@@ -77,6 +95,12 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
           <MenuItem onClick={handleSendReminder} disabled={isLoading}>
             <Iconify icon="solar:bell-bold" />
             Remind
+          </MenuItem>
+        </li>
+        <li>
+          <MenuItem onClick={handleRenew} disabled={renewIsLoading}>
+            <Iconify icon="solar:bell-bold" />
+            Renew
           </MenuItem>
         </li>
       </MenuList>

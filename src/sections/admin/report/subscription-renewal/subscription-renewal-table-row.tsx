@@ -134,41 +134,47 @@ export function SubscriptionRenewalTableRow({
                     '&:hover': { color: 'text.secondary' },
                   }}
                 >
-                  {`#Trans-${row.id}`}
+                  {`#Subs-renew-${row.id}`}
                 </Link>
               }
             />
           </Box>
         </TableCell>
 
+        <TableCell>{row.subscription.shopOwner.phoneNumber}</TableCell>
+        <TableCell>{row.subscription.subscriptionType}</TableCell>
+        <TableCell>{fCurrency(row.newFee)}</TableCell>
+
         <TableCell>
           <ListItemText
-            primary={fDate(row.renewedAt)}
-            secondary={fTime(row.renewedAt)}
+            primary={fDate(row.newStartDate)}
+            secondary={fTime(row.newStartDate)}
+            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+            secondaryTypographyProps={{ mt: 0.5, component: 'span', typography: 'caption' }}
+          />
+        </TableCell>
+        <TableCell>
+          <ListItemText
+            primary={fDate(row.newEndDate)}
+            secondary={fTime(row.newEndDate)}
             primaryTypographyProps={{ typography: 'body2', noWrap: true }}
             secondaryTypographyProps={{ mt: 0.5, component: 'span', typography: 'caption' }}
           />
         </TableCell>
 
-        <TableCell>{fCurrency(row.newFee)}</TableCell>
-
-        <TableCell>{row.subscription.subscriptionType}</TableCell>
-
-        <TableCell>{row.subscription.subscriptionType}</TableCell>
-
-        {/* <TableCell>
+        <TableCell>
           <Label
             variant="soft"
             color={
-              (row.transactionStatus === 'COMPLETED' && 'success') ||
-              (row.transactionStatus === 'PENDING' && 'warning') ||
-              (row.transactionStatus === 'FAILED' && 'error') ||
+              (row.subscription.subscriptionStatus === 'PENDING' && 'warning') ||
+              (row.subscription.subscriptionStatus === 'ACTIVE' && 'success') ||
+              (row.subscription.subscriptionStatus === 'EXPIRED' && 'error') ||
               'default'
             }
           >
-            {row.transactionStatus}
+            {row.subscription.subscriptionStatus}
           </Label>
-        </TableCell> */}
+        </TableCell>
 
         <TableCell align="right" sx={{ px: 1 }}>
           <IconButton color={menuActions.open ? 'inherit' : 'default'} onClick={menuActions.onOpen}>

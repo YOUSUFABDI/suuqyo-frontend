@@ -3,6 +3,7 @@ import { API } from '../api';
 import { ApiResponseDT } from 'src/types/api-response';
 import {
   ReminderResponseDataDT,
+  RenewResponseDataDT,
   SubscriptionReqDT,
   SubscriptionResDT,
 } from 'src/sections/admin/subscription/types/subscription';
@@ -114,6 +115,17 @@ export const shopOwnerApi = createApi({
       }),
       invalidatesTags: ['subscription'],
     }),
+    renewSubscription: builder.mutation<
+      ApiResponseDT<RenewResponseDataDT>,
+      { shopOwnerId: number }
+    >({
+      query: ({ shopOwnerId }) => ({
+        url: '/subscription/renew',
+        method: 'POST',
+        body: { shopOwnerId },
+      }),
+      invalidatesTags: ['subscription'],
+    }),
   }),
 });
 
@@ -130,4 +142,5 @@ export const {
   useGetSubscriptionsQuery,
   useGetOneSubscriptionQuery,
   useSendReminderMutation,
+  useRenewSubscriptionMutation,
 } = shopOwnerApi;

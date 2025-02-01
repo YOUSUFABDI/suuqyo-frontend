@@ -58,3 +58,24 @@ export interface ReminderResponseDataDT {
   message: string;
   subscriptionDetails: ReminderSubscriptionDetailsDT;
 }
+
+export interface RenewSubscriptionDetailsDT {
+  id: number;
+  shopOwnerId: number;
+  startDate: string;
+  endDate: string;
+  subscriptionType: string;
+  subscriptionFee: number;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  discount: number;
+  isFree: number;
+  remainingTime: number;
+  subscriptionStatus: string;
+}
+
+export interface RenewResponseDataDT {
+  message: string;
+  subscriptionDetails: RenewSubscriptionDetailsDT;
+}

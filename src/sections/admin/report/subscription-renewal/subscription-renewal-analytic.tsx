@@ -64,7 +64,7 @@ export function SubscriptionRenewalAnalytic({ title, total, icon, color, percent
         <Typography variant="subtitle1">{title}</Typography>
 
         <Box component="span" sx={{ color: 'text.disabled', typography: 'body2' }}>
-          {fShortenNumber(total)} transactions
+          {fShortenNumber(total)} subscription renewal
         </Box>
 
         <Typography variant="subtitle2">{fCurrency(price)}</Typography>
