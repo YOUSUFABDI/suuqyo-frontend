@@ -49,7 +49,7 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
         const { message } = response.payload.data;
 
         // Display success message
-        toast.success('Renewed subscription.');
+        toast.success(message);
       }
     } catch (error: any) {
       console.error(error);
@@ -63,11 +63,12 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
   const handleRenew = async () => {
     try {
       const response = await renewSubscription({ shopOwnerId: Number(row.shopOwner.id) }).unwrap();
-      if ('payload' in response) {
-        const { message } = response.payload.data;
-        // Display success message
-        toast.success(message);
-      }
+      toast.success('Renewed subscription.');
+      // if ('payload' in response) {
+      //   const { message } = response.payload.data;
+      //   // Display success message
+      //   toast.success(message);
+      // }
     } catch (error: any) {
       console.error(error);
       const errorMessage = getErrorMessage(error);
