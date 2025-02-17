@@ -77,6 +77,7 @@ export interface UpdateShopOwnerRequestDT {
   country?: string;
   state?: string;
   profileImage?: File; // Optional profile image
+  password?: string;
 }
 
 export interface UpdateShopOwnerResponseDT {

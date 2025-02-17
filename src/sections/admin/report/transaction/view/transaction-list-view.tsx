@@ -70,7 +70,6 @@ export const TRANSACTION_STATUS_OPTIONS = ['PENDING', 'COMPLETED', 'FAILED'];
 
 export function TransactionListView() {
   const { transactions } = UseTransactions();
-  console.log('transactions', transactions);
   const theme = useTheme();
 
   const table = useTable({ defaultOrderBy: 'createDate' });

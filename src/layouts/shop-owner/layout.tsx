@@ -127,10 +127,10 @@ export function ShopOwnerLayout({
           )}
 
           {/** @slot Workspace popover */}
-          <WorkspacesPopover
+          {/* <WorkspacesPopover
             data={_workspaces}
             sx={{ color: 'var(--layout-nav-text-primary-color)' }}
-          />
+          /> */}
         </>
       ),
       rightArea: (

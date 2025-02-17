@@ -196,8 +196,8 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
               {currentUser && (
                 <Label
                   color={
-                    (values.status === 'active' && 'success') ||
-                    (values.status === 'inactive' && 'error') ||
+                    (values.status === 'ACTIVE' && 'success') ||
+                    (values.status === 'INACTIVE' && 'error') ||
                     'warning'
                   }
                   sx={{ position: 'absolute', top: 24, right: 24 }}

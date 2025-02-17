@@ -12,10 +12,13 @@ import { SimpleLayout } from 'src/layouts/simple';
 import { ServerErrorIllustration } from 'src/assets/illustrations';
 
 import { varBounce, MotionContainer } from 'src/components/animate';
+import { useLogout } from '../auth/hooks';
 
 // ----------------------------------------------------------------------
 
 export function View500() {
+  const { handleLogout } = useLogout();
+
   return (
     <SimpleLayout
       slotProps={{
@@ -39,7 +42,13 @@ export function View500() {
           <ServerErrorIllustration sx={{ my: { xs: 5, sm: 10 } }} />
         </m.div>
 
-        <Button component={RouterLink} href="/" size="large" variant="contained">
+        <Button
+          onClick={handleLogout}
+          component={RouterLink}
+          href="/"
+          size="large"
+          variant="contained"
+        >
           Go to home
         </Button>
       </Container>

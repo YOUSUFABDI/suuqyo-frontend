@@ -44,11 +44,22 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/report`,
       subscriptionRenewal: `${ROOTS.DASHBOARD}/report/subs-renewal`,
     },
+    account: {
+      root: `${ROOTS.DASHBOARD}/account-setting`,
+      changePassword: `${ROOTS.DASHBOARD}/account-setting/change-password`,
+    },
   },
 
   // SHOP OWNER DASHBOARD
   shopOwner: {
     root: ROOTS.SHOP_OWNER,
+    product: {
+      root: `${ROOTS.SHOP_OWNER}/product`,
+      new: `${ROOTS.SHOP_OWNER}/product/new`,
+      details: (id: string) => `${ROOTS.SHOP_OWNER}/product/${id}`,
+      edit: (id: string) => `${ROOTS.SHOP_OWNER}/product/${id}/edit`,
+      checkout: `/product/checkout`,
+    },
   },
 
   // DELIVERY USER DASHBOARD

@@ -49,7 +49,7 @@ export const navData: NavSectionProps['data'] = [
    */
   {
     subheader: 'Overview',
-    items: [{ title: 'Analytics', path: paths.dashboard.root, icon: ICONS.dashboard }],
+    items: [{ title: 'Analytics', path: paths.dashboard.root, icon: ICONS.analytics }],
   },
   /**
    * Management
@@ -74,6 +74,20 @@ export const navData: NavSectionProps['data'] = [
           { title: 'List', path: paths.dashboard.subscription.root },
           { title: 'Create', path: paths.dashboard.subscription.new },
         ],
+      },
+    ],
+  },
+
+  /**
+   * Account setting
+   */
+  {
+    subheader: 'Account setting',
+    items: [
+      {
+        title: 'Account',
+        path: paths.dashboard.account.root,
+        icon: ICONS.user,
       },
     ],
   },

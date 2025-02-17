@@ -4,6 +4,8 @@ import { authApi } from './auth/authApi';
 import { shopOwnerApi } from './admin/shop-owner';
 import { reportApi } from './admin/report';
 import { analyticApi } from './admin/analytic';
+import { adminApi } from './admin/admin';
+import { productApi } from './shop-owner/product';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +14,11 @@ export const store = configureStore({
     [shopOwnerApi.reducerPath]: shopOwnerApi.reducer,
     [reportApi.reducerPath]: reportApi.reducer,
     [analyticApi.reducerPath]: analyticApi.reducer,
+    [adminApi.reducerPath]: adminApi.reducer,
+
+    // shop-owner
+    [productApi.reducerPath]: productApi.reducer,
+    // shop-owner
   },
   devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) =>
@@ -19,7 +26,12 @@ export const store = configureStore({
       authApi.middleware,
       shopOwnerApi.middleware,
       reportApi.middleware,
-      analyticApi.middleware
+      analyticApi.middleware,
+      adminApi.middleware,
+
+      // shop-owner
+      productApi.middleware
+      // shop-owner
     ),
 });
 

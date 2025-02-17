@@ -3,6 +3,11 @@ export interface LoginReqDT {
   password: string;
 }
 
+export interface ChangePasswordReqDT {
+  currentPassword: string;
+  newPassword: string;
+}
+
 export interface LoginDT {
   email: string;
   access_token: string;
@@ -21,6 +26,10 @@ export interface UserDT {
   userId: number;
   fullName: string;
   phoneNumber: string;
+  country: string;
+  city: string;
+  state: string;
+  address: string;
 }
 
 export interface LoginResDT {
@@ -41,4 +50,8 @@ export type UserResDT = {
   userId: number;
   fullName: string;
   phoneNumber: string;
+  country: string;
+  city: string;
+  state: string;
+  address: string;
 };

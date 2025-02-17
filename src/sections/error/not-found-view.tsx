@@ -12,10 +12,13 @@ import { SimpleLayout } from 'src/layouts/simple';
 import { PageNotFoundIllustration } from 'src/assets/illustrations';
 
 import { varBounce, MotionContainer } from 'src/components/animate';
+import { useLogout } from '../auth/hooks';
 
 // ----------------------------------------------------------------------
 
 export function NotFoundView() {
+  const { handleLogout } = useLogout();
+
   return (
     <SimpleLayout
       slotProps={{
@@ -40,7 +43,13 @@ export function NotFoundView() {
           <PageNotFoundIllustration sx={{ my: { xs: 5, sm: 10 } }} />
         </m.div>
 
-        <Button component={RouterLink} href="/" size="large" variant="contained">
+        <Button
+          onClick={handleLogout}
+          component={RouterLink}
+          href="/"
+          size="large"
+          variant="contained"
+        >
           Go to home
         </Button>
       </Container>

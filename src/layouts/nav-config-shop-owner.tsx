@@ -49,7 +49,7 @@ export const shopOwnerData: NavSectionProps['data'] = [
    */
   {
     subheader: 'Overview',
-    items: [{ title: 'App', path: paths.dashboard.root, icon: ICONS.dashboard }],
+    items: [{ title: 'Analytics', path: paths.shopOwner.root, icon: ICONS.analytics }],
   },
   /**
    * Management
@@ -58,12 +58,12 @@ export const shopOwnerData: NavSectionProps['data'] = [
     subheader: 'Management',
     items: [
       {
-        title: 'Delivery users',
-        path: paths.dashboard.shopOwner.root,
-        icon: ICONS.user,
+        title: 'Product',
+        path: paths.shopOwner.product.root,
+        icon: ICONS.product,
         children: [
-          { title: 'List', path: paths.dashboard.shopOwner.root },
-          { title: 'Create', path: paths.dashboard.shopOwner.new },
+          { title: 'List', path: paths.shopOwner.product.root },
+          { title: 'Create', path: paths.shopOwner.product.new },
         ],
       },
     ],
