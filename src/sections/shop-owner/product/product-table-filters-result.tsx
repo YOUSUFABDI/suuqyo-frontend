@@ -27,14 +27,14 @@ export function ProductTableFiltersResult({ filters, totalResults, sx }: Props) 
     [updateFilters, currentFilters.stock]
   );
 
-  const handleRemovePublish = useCallback(
-    (inputValue: string) => {
-      const newValue = currentFilters.publish.filter((item) => item !== inputValue);
+  // const handleRemovePublish = useCallback(
+  //   (inputValue: string) => {
+  //     const newValue = currentFilters.publish.filter((item) => item !== inputValue);
 
-      updateFilters({ publish: newValue });
-    },
-    [updateFilters, currentFilters.publish]
-  );
+  //     updateFilters({ publish: newValue });
+  //   },
+  //   [updateFilters, currentFilters.publish]
+  // );
 
   return (
     <FiltersResult totalResults={totalResults} onReset={() => resetFilters()} sx={sx}>
@@ -49,7 +49,7 @@ export function ProductTableFiltersResult({ filters, totalResults, sx }: Props) 
         ))}
       </FiltersBlock>
 
-      <FiltersBlock label="Publish:" isShow={!!currentFilters.publish.length}>
+      {/* <FiltersBlock label="Publish:" isShow={!!currentFilters.publish.length}>
         {currentFilters.publish.map((item) => (
           <Chip
             {...chipProps}
@@ -58,7 +58,7 @@ export function ProductTableFiltersResult({ filters, totalResults, sx }: Props) 
             onDelete={() => handleRemovePublish(item)}
           />
         ))}
-      </FiltersBlock>
+      </FiltersBlock> */}
     </FiltersResult>
   );
 }
