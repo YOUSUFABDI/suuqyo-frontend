@@ -34,7 +34,6 @@ import {
 import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
 
-import { PRODUCT_STOCK_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -145,7 +144,7 @@ export function ProductListView() {
       headerName: 'Stock',
       width: 160,
       type: 'singleSelect',
-      valueOptions: PRODUCT_STOCK_OPTIONS,
+      valueOptions: [],
       renderCell: (params) => <RenderCellStock params={params} />,
     },
     {
@@ -312,7 +311,7 @@ function CustomToolbar({
   return (
     <>
       <GridToolbarContainer>
-        <ProductTableToolbar filters={filters} options={{ stocks: PRODUCT_STOCK_OPTIONS }} />
+        <ProductTableToolbar filters={filters} options={{ stocks: [] }} />
 
         <GridToolbarQuickFilter />
 

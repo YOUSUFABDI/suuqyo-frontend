@@ -1,3 +1,5 @@
+import { ApiResponseDT } from 'src/types/api-response';
+
 interface Image {
   id: number;
   productId: number;
@@ -19,6 +21,7 @@ export interface ProductResDT {
   categoryId: number;
   name: string;
   description: string;
+  content: string;
   purchasePrice: number;
   sellingPrice: number;
   discount: number;
@@ -31,3 +34,23 @@ export interface ProductResDT {
   images: Image[];
   category: Category;
 }
+
+export type CreatProductReqDT = {
+  createProductDto: string;
+  images?: File;
+};
+
+export type CreateProductResDT = ApiResponseDT<{
+  data: ProductResDT;
+}>;
+
+export type UpdatedProductResDT = ApiResponseDT<{
+  data: ProductResDT;
+}>;
+
+export type CategoryDT = {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+};

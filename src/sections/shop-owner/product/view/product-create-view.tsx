@@ -6,7 +6,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { ProductNewEditForm } from '../product-new-edit-form';
+import { ProductNewCreateForm } from '../product-new-create-form';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ export function ProductCreateView() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <ProductNewEditForm />
+      <ProductNewCreateForm />
     </DashboardContent>
   );
 }

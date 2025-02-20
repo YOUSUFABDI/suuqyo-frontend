@@ -1,28 +1,27 @@
-import { z as zod } from 'zod';
-import { useForm } from 'react-hook-form';
-import { useState, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z as zod } from 'zod';
 
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
+// import Chip from '@mui/material/Chip';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
-import Divider from '@mui/material/Divider';
-import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { toast } from 'src/components/snackbar';
-import { Form, Field, schemaHelper } from 'src/components/hook-form';
-import { ProductResDT } from './types/types';
+import { Field, Form, schemaHelper } from 'src/components/hook-form';
 import { UseCategories } from './hooks';
-import { useUpdateProductMutation } from 'src/store/shop-owner/product';
+import { useCreateProductMutation } from 'src/store/shop-owner/product';
+import { paths } from 'src/routes/paths';
 import { getErrorMessage } from 'src/utils/error.message';
 
 // ----------------------------------------------------------------------
@@ -49,6 +48,13 @@ export const NewProductSchema = zod.object({
       message: 'Price is required!',
     }
   ),
+  // purchasePrice: schemaHelper.nullableInput(
+  //   zod.number({ coerce: true }).min(1, { message: 'Price is required!' }),
+  //   {
+  //     // message for null value
+  //     message: 'Price is required!',
+  //   }
+  // ),
   // Not required
   categoryId: zod.number({ coerce: true }).nullable(),
   condition: zod.string(),
@@ -59,15 +65,11 @@ export const NewProductSchema = zod.object({
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  currentProduct?: ProductResDT;
-};
-
-export function ProductNewEditForm({ currentProduct }: Props) {
+export function ProductNewCreateForm() {
   const router = useRouter();
 
   const { categories } = UseCategories();
-  const [updateProduct, { isLoading }] = useUpdateProductMutation();
+  const [createProduct, { isLoading }] = useCreateProductMutation();
 
   const [includeTaxes, setIncludeTaxes] = useState(false);
 
@@ -77,6 +79,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
     description: '',
     images: [],
     sellingPrice: null,
+    // purchasePrice: null,
     discount: null,
     quantity: null,
     categoryId: null,
@@ -87,14 +90,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
   const methods = useForm<NewProductSchemaType>({
     resolver: zodResolver(NewProductSchema),
     defaultValues,
-    values: currentProduct
-      ? {
-          ...currentProduct,
-          images: currentProduct.images.map(
-            (image) => (typeof image === 'string' ? image : image.image) // Assuming Image has a 'url' property
-          ),
-        }
-      : undefined,
   });
 
   const {
@@ -108,12 +103,13 @@ export function ProductNewEditForm({ currentProduct }: Props) {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
-    const updateProductDto = {
+    const createProductDto = {
       categoryId: data.categoryId,
       name: data.name,
       description: data.description,
       content: data.content,
       sellingPrice: data.sellingPrice,
+      // purchasePrice: data.purchasePrice,
       discount: data.discount,
       quantity: data.quantity,
       model: data.model,
@@ -122,7 +118,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
     const images = data.images;
 
     const formData = new FormData();
-    formData.append('updateProductDto', JSON.stringify(updateProductDto));
+    formData.append('createProductDto', JSON.stringify(createProductDto));
     if (images && images.length > 0) {
       images.forEach((image) => {
         formData.append('images', image);
@@ -130,15 +126,11 @@ export function ProductNewEditForm({ currentProduct }: Props) {
     }
 
     try {
-      await updateProduct({
-        formData,
-        id: Number(currentProduct?.id) || 0,
-      }).unwrap();
+      await createProduct(formData).unwrap();
       reset();
-      toast.success('Updated!');
+      toast.success('Create success!');
       router.push(paths.shopOwner.product.root);
     } catch (error) {
-      console.error(error);
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     }
@@ -327,7 +319,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
         size="large"
         loading={isSubmitting || isLoading}
       >
-        Save changes
+        Create product
       </LoadingButton>
     </Box>
   );

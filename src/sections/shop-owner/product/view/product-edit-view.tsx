@@ -1,7 +1,5 @@
 'use client';
 
-import type { IProductItem } from 'src/types/product';
-
 import { paths } from 'src/routes/paths';
 
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -9,11 +7,12 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { ProductNewEditForm } from '../product-new-edit-form';
+import { ProductResDT } from '../types/types';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  product?: IProductItem;
+  product?: ProductResDT;
 };
 
 export function ProductEditView({ product }: Props) {
@@ -23,7 +22,7 @@ export function ProductEditView({ product }: Props) {
         heading="Edit"
         backHref={paths.shopOwner.product.root}
         links={[
-          { name: 'Dashboard', href: paths.shopOwner.root },
+          { name: 'Shop owner', href: paths.shopOwner.root },
           { name: 'Product', href: paths.shopOwner.product.root },
           { name: product?.name },
         ]}

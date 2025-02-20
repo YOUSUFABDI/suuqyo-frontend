@@ -1,7 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API } from '../api';
+import {
+  CategoryDT,
+  CreateProductResDT,
+  ProductResDT,
+  UpdatedProductResDT,
+} from 'src/sections/shop-owner/product/types/types';
 import { ApiResponseDT } from 'src/types/api-response';
-import { ProductResDT } from 'src/sections/shop-owner/product/types/types';
+import { API } from '../api';
 
 export const productApi = createApi({
   reducerPath: 'productApi',
@@ -26,7 +31,47 @@ export const productApi = createApi({
       }),
       providesTags: ['productApi'],
     }),
+    getProduct: builder.query<ApiResponseDT<ProductResDT>, { id: number }>({
+      query: ({ id }) => ({
+        url: `/product/get-product/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['productApi'],
+    }),
+    createProduct: builder.mutation<CreateProductResDT, FormData>({
+      query: (formData) => {
+        return {
+          url: '/product/create-product',
+          method: 'POST',
+          body: formData,
+        };
+      },
+      invalidatesTags: ['productApi'],
+    }),
+    updateProduct: builder.mutation<UpdatedProductResDT, { id: number; formData: FormData }>({
+      query: ({ formData, id }) => {
+        return {
+          url: `/product/update-product/${id}`,
+          method: 'PATCH',
+          body: formData,
+        };
+      },
+      invalidatesTags: ['productApi'],
+    }),
+    getProductCategories: builder.query<ApiResponseDT<CategoryDT[]>, void>({
+      query: () => ({
+        url: '/product/get-categories',
+        method: 'GET',
+      }),
+      providesTags: ['productApi'],
+    }),
   }),
 });
 
-export const { useGetProductsQuery } = productApi;
+export const {
+  useGetProductsQuery,
+  useGetProductQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useGetProductCategoriesQuery,
+} = productApi;
