@@ -38,7 +38,23 @@ export const authApi = createApi({
       }),
       invalidatesTags: ['auth'],
     }),
+
+    updateAdmin: builder.mutation<any, { id: number; formData: FormData }>({
+      query: ({ id, formData }) => {
+        return {
+          url: `user/update-admin/${id}`,
+          method: 'PATCH',
+          body: formData,
+        };
+      },
+      invalidatesTags: ['auth'],
+    }),
   }),
 });
 
-export const { useLoginMutation, useGetUserQuery, useChangePasswordMutation } = authApi;
+export const {
+  useLoginMutation,
+  useGetUserQuery,
+  useChangePasswordMutation,
+  useUpdateAdminMutation,
+} = authApi;

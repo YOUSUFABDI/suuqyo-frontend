@@ -16,28 +16,31 @@ import { Field, Form, schemaHelper } from 'src/components/hook-form';
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { useUser } from 'src/sections/auth/hooks';
-import { useUpdateAdminMutation } from 'src/store/admin/admin';
+import { useUpdateAdminMutation } from 'src/store/auth/authApi';
 
 // ----------------------------------------------------------------------
 
 export type UpdateUserSchemaType = zod.infer<typeof UpdateUserSchema>;
 
 export const UpdateUserSchema = zod.object({
-  fullName: zod.string().min(1, { message: 'Name is required!' }),
-  username: zod.string().min(1, { message: 'Username is required!' }),
+  fullName: zod.string().min(1, { message: 'Name is required!' }).optional(),
+  username: zod.string().min(1, { message: 'Username is required!' }).optional(),
   email: zod
     .string()
     .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' }),
-  profileImage: schemaHelper.file({ message: 'Avatar is required!' }),
-  phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
-  country: schemaHelper.nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
-    // message for null value
-    message: 'Country is required!',
-  }),
-  address: zod.string().min(1, { message: 'Address is required!' }),
-  state: zod.string().min(1, { message: 'State is required!' }),
-  city: zod.string().min(1, { message: 'City is required!' }),
+    .email({ message: 'Email must be a valid email address!' })
+    .optional(),
+  profileImage: schemaHelper.file({ message: 'Avatar is required!' }).optional(),
+  phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }).optional(),
+  country: schemaHelper
+    .nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
+      // message for null value
+      message: 'Country is required!',
+    })
+    .optional(),
+  address: zod.string().min(1, { message: 'Address is required!' }).optional(),
+  state: zod.string().min(1, { message: 'State is required!' }).optional(),
+  city: zod.string().min(1, { message: 'City is required!' }).optional(),
 });
 
 // ----------------------------------------------------------------------
@@ -101,7 +104,6 @@ export function AccountGeneral() {
       if (profileImage) {
         formData.append('profileImage', profileImage);
       }
-      console.log(updateadminDto);
 
       await updateAdmin({
         id: Number(user?.id) || 0,

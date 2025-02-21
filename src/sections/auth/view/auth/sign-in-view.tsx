@@ -73,7 +73,6 @@ export function SignInView() {
         emailOrUsername: data.email,
         password: data.password,
       }).unwrap();
-      console.log('response', response);
 
       if (response.error === null) {
         dispatch(
@@ -96,8 +95,6 @@ export function SignInView() {
         router.push('/customer');
       }
     } catch (error: any) {
-      console.error(error);
-
       const errorMessage = getErrorMessage(error);
 
       setErrorMessage(errorMessage);

@@ -79,20 +79,6 @@ export const navData: NavSectionProps['data'] = [
   },
 
   /**
-   * Account setting
-   */
-  {
-    subheader: 'Account setting',
-    items: [
-      {
-        title: 'Account',
-        path: paths.dashboard.account.root,
-        icon: ICONS.user,
-      },
-    ],
-  },
-
-  /**
    * Report
    */
   {
@@ -106,6 +92,20 @@ export const navData: NavSectionProps['data'] = [
           { title: 'Transactions', path: paths.dashboard.report.root },
           { title: 'subscription Renewal', path: paths.dashboard.report.subscriptionRenewal },
         ],
+      },
+    ],
+  },
+
+  /**
+   * Account setting
+   */
+  {
+    subheader: 'Account setting',
+    items: [
+      {
+        title: 'Account',
+        path: paths.dashboard.account.root,
+        icon: ICONS.user,
       },
     ],
   },

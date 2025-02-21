@@ -4,7 +4,6 @@ import { authApi } from './auth/authApi';
 import { shopOwnerApi } from './admin/shop-owner';
 import { reportApi } from './admin/report';
 import { analyticApi } from './admin/analytic';
-import { adminApi } from './admin/admin';
 import { productApi } from './shop-owner/product';
 
 export const store = configureStore({
@@ -14,7 +13,6 @@ export const store = configureStore({
     [shopOwnerApi.reducerPath]: shopOwnerApi.reducer,
     [reportApi.reducerPath]: reportApi.reducer,
     [analyticApi.reducerPath]: analyticApi.reducer,
-    [adminApi.reducerPath]: adminApi.reducer,
 
     // shop-owner
     [productApi.reducerPath]: productApi.reducer,
@@ -24,10 +22,12 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authApi.middleware,
+
+      // admin
       shopOwnerApi.middleware,
       reportApi.middleware,
       analyticApi.middleware,
-      adminApi.middleware,
+      // admin
 
       // shop-owner
       productApi.middleware

@@ -311,7 +311,16 @@ function CustomToolbar({
   return (
     <>
       <GridToolbarContainer>
-        <ProductTableToolbar filters={filters} options={{ stocks: [] }} />
+        <ProductTableToolbar
+          filters={filters}
+          options={{
+            stocks: [
+              { value: 'out_of_stock', label: 'Out of Stock' },
+              { value: 'low_stock', label: 'Low Stock' },
+              { value: 'in_stock', label: 'In Stock' },
+            ],
+          }}
+        />
 
         <GridToolbarQuickFilter />
 
@@ -391,7 +400,12 @@ function applyFilter({ inputData, filters }: ApplyFilterProps) {
   const { stock } = filters;
 
   if (stock.length) {
-    // inputData = inputData.filter((product) => stock.includes(product.));
+    inputData = inputData.filter((product) => {
+      if (stock.includes('out_of_stock')) return product.quantity === 0;
+      if (stock.includes('low_stock')) return product.quantity > 0 && product.quantity <= 10;
+      if (stock.includes('in_stock')) return product.quantity > 0;
+      return stock.length === 0;
+    });
   }
 
   return inputData;
