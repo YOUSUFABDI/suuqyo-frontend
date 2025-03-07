@@ -55,10 +55,14 @@ export const paths = {
     root: ROOTS.SHOP_OWNER,
     product: {
       root: `${ROOTS.SHOP_OWNER}/product`,
+      trash: `${ROOTS.SHOP_OWNER}/product/trash`,
       new: `${ROOTS.SHOP_OWNER}/product/new`,
-      details: (id: string) => `${ROOTS.SHOP_OWNER}/product/${id}`,
       edit: (id: string) => `${ROOTS.SHOP_OWNER}/product/${id}/edit`,
-      checkout: `/product/checkout`,
+    },
+    setupShop: {
+      root: `${ROOTS.SHOP_OWNER}/setup-shop`,
+      new: `${ROOTS.SHOP_OWNER}/setup-shop/new`,
+      edit: (id: string) => `${ROOTS.SHOP_OWNER}/setup-shop/${id}/edit`,
     },
   },
 

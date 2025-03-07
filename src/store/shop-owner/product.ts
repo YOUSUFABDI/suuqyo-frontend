@@ -38,6 +38,13 @@ export const productApi = createApi({
       }),
       providesTags: ['productApi'],
     }),
+    getTrashProducts: builder.query<ApiResponseDT<ProductResDT[]>, void>({
+      query: () => ({
+        url: '/product/get-trash-products',
+        method: 'GET',
+      }),
+      providesTags: ['productApi'],
+    }),
     createProduct: builder.mutation<CreateProductResDT, FormData>({
       query: (formData) => {
         return {
@@ -58,6 +65,34 @@ export const productApi = createApi({
       },
       invalidatesTags: ['productApi'],
     }),
+    deleteProduct: builder.mutation<void, number>({
+      query: (productId) => ({
+        url: `/product/delete-product/${productId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['productApi'],
+    }),
+    deleteProducts: builder.mutation<void, number[]>({
+      query: (productIds) => ({
+        url: `/product/delete-products`,
+        method: 'DELETE',
+        body: { productIds },
+      }),
+    }),
+    moveToTrash: builder.mutation<void, number>({
+      query: (productId) => ({
+        url: `/product/move-to-trash-product/${productId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['productApi'],
+    }),
+    restoreFromTrash: builder.mutation<void, number>({
+      query: (productId) => ({
+        url: `/product/restore-product/${productId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['productApi'],
+    }),
     getProductCategories: builder.query<ApiResponseDT<CategoryDT[]>, void>({
       query: () => ({
         url: '/product/get-categories',
@@ -71,7 +106,13 @@ export const productApi = createApi({
 export const {
   useGetProductsQuery,
   useGetProductQuery,
+  useGetTrashProductsQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
+  useDeleteProductMutation,
+  useDeleteProductsMutation,
+  useMoveToTrashMutation,
+  useRestoreFromTrashMutation,
+
   useGetProductCategoriesQuery,
 } = productApi;

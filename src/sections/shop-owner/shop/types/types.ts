@@ -22,41 +22,13 @@ export interface RegisterShopOwnerReqDT {
 }
 
 export type RegisterShopOwnerResDT = ApiResponseDT<{
-  data: ShopOwnerDT;
+  data: ShopDT;
 }>;
 
 export const SHOP_OWNER_STATUS_OPTIONS = [
   { value: 'ACTIVE', label: 'Active' },
   { value: 'INACTIVE', label: 'Inactive' },
 ];
-
-export interface ShopOwnerDT {
-  id: string;
-  username: string;
-  email: string;
-  password: string;
-  createdAt: string;
-  profileImage: string;
-  role: string;
-  status: string;
-  updatedAt: string;
-  shopOwnerId: number;
-  shopOwnerUserId: number;
-  fullName: string;
-  phoneNumber: string;
-  addressId: number;
-  addressUserId: number;
-  address: string;
-  city: string;
-  country: string;
-  state: string;
-  // shop detail
-  shopName: string;
-  shopLogo: string;
-  shopDescription: string;
-  shopAddress: string;
-  businessProof: string;
-}
 
 export interface ShopOwnersDataDT {
   shopOwners: ShopOwnerDT[];
@@ -88,4 +60,39 @@ export interface UpdateShopOwnerRequestDT {
 
 export interface UpdateShopOwnerResponseDT {
   message: string;
+}
+
+//....
+export type ShopOwnerDT = {
+  id: string;
+  userId: number;
+  fullName: string;
+  phoneNumber: string;
+  createdAt: string; // Change to Date if needed
+  updatedAt: string;
+};
+
+export type UserDT = {
+  id: string;
+  username: string;
+  email: string;
+  password: string;
+  profileImage: string;
+  role: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  ShopOwner: ShopOwnerDT;
+};
+
+export interface ShopDT {
+  id: string;
+  userId: number;
+  shopName: string;
+  shopDescription: string;
+  shopLogo: string;
+  shopAddress: string;
+  createdAt: string;
+  updatedAt: string;
+  user: UserDT;
 }

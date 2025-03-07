@@ -28,10 +28,12 @@ import { useBoolean } from 'minimal-shared/hooks';
 
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
+import { CardHeader, Divider } from '@mui/material';
+import { MultiFilePreview } from 'src/components/upload';
 import { useUpdateShopOwnerMutation } from 'src/store/admin/shop-owner';
-import { ShopOwnerDT } from './types/types';
-import { UseDeleteShopOwner } from './hooks';
 import { getErrorMessage } from 'src/utils/error.message';
+import { UseDeleteShopOwner } from './hooks';
+import { ShopOwnerDT } from './types/types';
 
 // ----------------------------------------------------------------------
 
@@ -59,6 +61,12 @@ export const NewUserSchema = zod.object({
     .min(1, { message: 'Password is required!' })
     .min(6, { message: 'Password must be at least 6 characters!' })
     .optional(),
+  // Shop detail
+  shopLogo: schemaHelper.file().nullable().optional(),
+  businessProof: schemaHelper.file().nullable().optional(),
+  shopName: zod.string().min(1, { message: 'Shop name is required!' }),
+  shopDescription: zod.string().min(1, { message: 'Shop description is required!' }),
+  shopAddress: zod.string().min(1, { message: 'Shop address is required!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -89,6 +97,12 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
     password: '',
     role: '',
     status: '',
+    // Shop detail
+    shopLogo: null,
+    businessProof: null,
+    shopName: '',
+    shopDescription: '',
+    shopAddress: '',
   };
 
   const methods = useForm<NewUserSchemaType>({
@@ -102,10 +116,12 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
     watch,
     control,
     handleSubmit,
+    setValue,
     formState: { isSubmitting },
   } = methods;
 
   const values = watch();
+  const businessProof = watch('businessProof');
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -114,18 +130,31 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
         username: data.username,
         email: data.email,
         phoneNumber: data.phoneNumber,
+        password: data.password,
+        // address
         country: data.country,
         state: data.state,
         city: data.city,
         address: data.address,
-        password: data.password,
+        // shop detail
+        shopName: data.shopName,
+        shopDescription: data.shopDescription,
+        shopAddress: data.shopAddress,
       };
       const profileImage = data.profileImage;
+      const shopLogo = data.shopLogo;
+      const businessProof = data.businessProof;
 
       const formData = new FormData();
       formData.append('updateShopOwnerDto', JSON.stringify(updateShopOwnerDto));
       if (profileImage) {
         formData.append('profileImage', profileImage);
+      }
+      if (shopLogo) {
+        formData.append('shopLogo', shopLogo);
+      }
+      if (businessProof) {
+        formData.append('businessProof', businessProof);
       }
 
       await updateShopOwner({
@@ -165,6 +194,10 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
     }
   };
 
+  const handleRemove = () => {
+    setValue('businessProof', null, { shouldValidate: true });
+  };
+
   const renderConfirmDialog = () => (
     <ConfirmDialog
       open={confirmDialog.value}
@@ -190,124 +223,269 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
   return (
     <>
       <Form methods={methods} onSubmit={onSubmit}>
-        <Grid container spacing={3}>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Card sx={{ pt: 10, pb: 5, px: 3 }}>
-              {currentUser && (
-                <Label
-                  color={
-                    (values.status === 'ACTIVE' && 'success') ||
-                    (values.status === 'INACTIVE' && 'error') ||
-                    'warning'
-                  }
-                  sx={{ position: 'absolute', top: 24, right: 24 }}
-                >
-                  {values.status}
-                </Label>
-              )}
+        <Stack spacing={{ xs: 3, md: 5 }}>
+          {/* shop owner detail */}
+          <Card sx={{ width: '100%' }}>
+            <CardHeader
+              title="Shop owner detail"
+              subheader="Full name, Phone number, image..."
+              sx={{ mb: 3 }}
+            />
+            <Divider />
 
-              <Box sx={{ mb: 5 }}>
-                <Field.UploadAvatar
-                  name="profileImage"
-                  maxSize={3145728}
-                  helperText={
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        mt: 3,
-                        mx: 'auto',
-                        display: 'block',
-                        textAlign: 'center',
-                        color: 'text.disabled',
-                      }}
+            <Grid container spacing={3} sx={{ p: 3 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
+                <Card sx={{ pt: 10, pb: 5, px: 3 }}>
+                  {currentUser && (
+                    <Label
+                      color={
+                        (values.status === 'ACTIVE' && 'success') ||
+                        (values.status === 'INACTIVE' && 'error') ||
+                        'warning'
+                      }
+                      sx={{ position: 'absolute', top: 24, right: 24 }}
                     >
-                      Allowed *.jpeg, *.jpg, *.png, *.gif
-                      <br /> max size of {fData(3145728)}
-                    </Typography>
-                  }
-                />
-              </Box>
+                      {values.status}
+                    </Label>
+                  )}
 
-              {currentUser && (
-                <Stack sx={{ mt: 3, alignItems: 'center', justifyContent: 'center' }}>
-                  <Button
-                    variant="soft"
-                    color="error"
-                    onClick={() => {
-                      console.log('Opening delete confirmation dialog');
-                      confirmDialog.onTrue();
+                  <Box sx={{ mb: 5 }}>
+                    <Field.UploadAvatar
+                      name="profileImage"
+                      maxSize={3145728}
+                      helperText={
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            mt: 3,
+                            mx: 'auto',
+                            display: 'block',
+                            textAlign: 'center',
+                            color: 'text.disabled',
+                          }}
+                        >
+                          Allowed *.jpeg, *.jpg, *.png, *.gif
+                          <br /> max size of {fData(3145728)}
+                        </Typography>
+                      }
+                    />
+                  </Box>
+
+                  {currentUser && (
+                    <Stack sx={{ mt: 3, alignItems: 'center', justifyContent: 'center' }}>
+                      <Button
+                        variant="soft"
+                        color="error"
+                        onClick={() => {
+                          console.log('Opening delete confirmation dialog');
+                          confirmDialog.onTrue();
+                        }}
+                      >
+                        Delete user
+                      </Button>
+                    </Stack>
+                  )}
+                </Card>
+              </Grid>
+
+              <Grid size={{ xs: 12, md: 8 }}>
+                <Card sx={{ p: 3 }}>
+                  <Box
+                    sx={{
+                      rowGap: 3,
+                      columnGap: 2,
+                      display: 'grid',
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                     }}
                   >
-                    Delete user
-                  </Button>
-                </Stack>
-              )}
-            </Card>
-          </Grid>
+                    <Field.Text name="fullName" label="Full name" />
+                    <Field.Text name="username" label="Username" />
+                    <Field.Text name="email" label="Email address" />
+                    <Field.Phone name="phoneNumber" label="Phone number" />
 
-          <Grid size={{ xs: 12, md: 8 }}>
-            <Card sx={{ p: 3 }}>
-              <Box
-                sx={{
-                  rowGap: 3,
-                  columnGap: 2,
-                  display: 'grid',
-                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                }}
-              >
-                <Field.Text name="fullName" label="Full name" />
-                <Field.Text name="username" label="Username" />
-                <Field.Text name="email" label="Email address" />
-                <Field.Phone
-                  name="phoneNumber"
-                  label="Phone number"
-                  country={!currentUser ? 'DE' : undefined}
-                />
+                    <Field.CountrySelect
+                      fullWidth
+                      name="country"
+                      label="Country"
+                      placeholder="Choose a country"
+                    />
 
-                <Field.CountrySelect
-                  fullWidth
-                  name="country"
-                  label="Country"
-                  placeholder="Choose a country"
-                />
+                    <Field.Text name="state" label="State/region" />
+                    <Field.Text name="city" label="City" />
+                    <Field.Text name="address" label="Address" />
+                    <Field.Text
+                      name="password"
+                      label="Password"
+                      placeholder="6+ characters"
+                      type={showPassword.value ? 'text' : 'password'}
+                      slotProps={{
+                        inputLabel: { shrink: true },
+                        input: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={showPassword.onToggle} edge="end">
+                                <Iconify
+                                  icon={
+                                    showPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'
+                                  }
+                                />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
+                    />
+                  </Box>
 
-                <Field.Text name="state" label="State/region" />
-                <Field.Text name="city" label="City" />
-                <Field.Text name="address" label="Address" />
-                <Field.Text
-                  name="password"
-                  label="Password"
-                  placeholder="6+ characters"
-                  type={showPassword.value ? 'text' : 'password'}
-                  slotProps={{
-                    inputLabel: { shrink: true },
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton onClick={showPassword.onToggle} edge="end">
-                            <Iconify
-                              icon={showPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
-                            />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    },
-                  }}
-                />
-              </Box>
+                  {/* <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
+                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                    Create shop owner
+                  </LoadingButton>
+                </Stack> */}
+                </Card>
+              </Grid>
+            </Grid>
+          </Card>
+          {/* shop owner detail */}
 
-              <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
-                <LoadingButton
-                  type="submit"
-                  variant="contained"
-                  loading={isSubmitting || isLoading}
-                >
-                  Save changes
-                </LoadingButton>
-              </Stack>
-            </Card>
-          </Grid>
-        </Grid>
+          {/* shop detail */}
+          <Card sx={{ width: '100%' }}>
+            <CardHeader
+              title="Shop detail"
+              subheader="Shop name, Shop address, shop logo..."
+              sx={{ mb: 3 }}
+            />
+            <Divider />
+
+            <Grid container spacing={3} sx={{ p: 3 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
+                {/* shop logo */}
+                <Card sx={{ pt: 10, pb: 5, px: 3 }}>
+                  <Box sx={{ mb: 5 }}>
+                    <Field.UploadAvatar
+                      name="shopLogo"
+                      maxSize={3145728}
+                      helperText={
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            mt: 3,
+                            mx: 'auto',
+                            display: 'block',
+                            textAlign: 'center',
+                            color: 'text.disabled',
+                          }}
+                        >
+                          Shop logo, allowed *.jpeg, *.jpg, *.png, *.gif
+                          <br /> max size of {fData(3145728)}
+                        </Typography>
+                      }
+                    />
+                  </Box>
+                </Card>
+                {/* shop logo */}
+
+                {/* businessProof */}
+                <Card sx={{ pt: 10, pb: 5, px: 3, mt: 3 }}>
+                  <Box sx={{ mb: 5 }}>
+                    <Field.Upload
+                      onDelete={() => {
+                        methods.setValue('businessProof', null, { shouldValidate: true });
+                      }}
+                      name="businessProof"
+                      accept={{ 'application/pdf': ['.pdf'] }}
+                      maxSize={5242880}
+                      helperText={
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            mt: 3,
+                            mx: 'auto',
+                            display: 'block',
+                            textAlign: 'center',
+                            color: 'text.disabled',
+                          }}
+                        >
+                          Business proof / Shatiga Ganacsiga, allowed *.pdf
+                          <br /> Max size of {fData(5242880)}
+                        </Typography>
+                      }
+                    />
+                    {businessProof && (
+                      <>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mt: 3,
+                          }}
+                        >
+                          Download
+                        </Typography>
+                        <MultiFilePreview
+                          files={[businessProof]}
+                          thumbnail={false}
+                          onRemove={handleRemove}
+                          sx={{ my: 1, cursor: 'pointer' }}
+                          onClick={() => {
+                            const file = businessProof;
+                            console.log('file', file);
+
+                            const a = document.createElement('a');
+
+                            if (typeof file === 'string') {
+                              // Case 1: businessProof is a URL (already uploaded to Cloudinary)
+                              a.href = `${file}?download=business-proof.pdf`; // Force download by appending query param
+                              a.setAttribute('download', 'business-proof.pdf'); // Ensure it's treated as a download
+                            } else if (file instanceof Blob) {
+                              // Case 2: businessProof is a newly selected File
+                              const url = URL.createObjectURL(file);
+                              a.href = url;
+                              a.setAttribute('download', file.name || 'business-proof.pdf');
+                              URL.revokeObjectURL(url);
+                            } else {
+                              console.error('Invalid file type:', file);
+                              return;
+                            }
+
+                            // Trigger download
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                          }}
+                        />
+                      </>
+                    )}
+                  </Box>
+                </Card>
+                {/* businessProof */}
+              </Grid>
+
+              <Grid size={{ xs: 12, md: 8 }}>
+                <Card sx={{ p: 3 }}>
+                  <Box
+                    sx={{
+                      rowGap: 3,
+                      columnGap: 2,
+                      display: 'grid',
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                    }}
+                  >
+                    <Field.Text name="shopName" label="Shop name" />
+                    <Field.Text name="shopDescription" label="Shop description" />
+                    <Field.Text name="shopAddress" label="Shop address" />
+                  </Box>
+                </Card>
+              </Grid>
+            </Grid>
+          </Card>
+          {/* shop detail */}
+
+          <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+              Save changes
+            </LoadingButton>
+          </Stack>
+        </Stack>
       </Form>
 
       {renderConfirmDialog()}

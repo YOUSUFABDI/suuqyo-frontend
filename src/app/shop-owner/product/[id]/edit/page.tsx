@@ -4,7 +4,6 @@ import { CONFIG } from 'src/global-config';
 import { UseProducts } from 'src/sections/shop-owner/product/hooks';
 
 import { ProductEditView } from 'src/sections/shop-owner/product/view';
-import { useGetProductsQuery } from 'src/store/shop-owner/product';
 
 // ----------------------------------------------------------------------
 

@@ -6,7 +6,7 @@ import { ProductListView } from 'src/sections/shop-owner/product/view';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = { title: `Product list | Dashboard - ${CONFIG.appName}` };
+export const metadata: Metadata = { title: `Product list | Shop owner - ${CONFIG.appName}` };
 
 export default function Page() {
   return <ProductListView />;

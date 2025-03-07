@@ -31,9 +31,7 @@ export type NewProductSchemaType = zod.infer<typeof NewProductSchema>;
 
 export const NewProductSchema = zod.object({
   name: zod.string().min(1, { message: 'Name is required!' }),
-  content: schemaHelper
-    .editor({ message: 'Content is required!' })
-    .min(100, { message: 'Content must be at least 100 characters' }),
+  content: schemaHelper.editor({ message: 'Content is required!' }),
   images: schemaHelper.files({ message: 'Images is required!' }),
   quantity: schemaHelper.nullableInput(
     zod.number({ coerce: true }).min(1, { message: 'Quantity is required!' }),
@@ -120,6 +118,8 @@ export function ProductNewEditForm({ currentProduct }: Props) {
       condition: data.condition,
     };
     const images = data.images;
+
+    console.log('images', images);
 
     const formData = new FormData();
     formData.append('updateProductDto', JSON.stringify(updateProductDto));

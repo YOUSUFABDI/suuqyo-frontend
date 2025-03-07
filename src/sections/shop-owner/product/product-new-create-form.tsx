@@ -30,9 +30,7 @@ export type NewProductSchemaType = zod.infer<typeof NewProductSchema>;
 
 export const NewProductSchema = zod.object({
   name: zod.string().min(1, { message: 'Name is required!' }),
-  content: schemaHelper
-    .editor({ message: 'Content is required!' })
-    .min(100, { message: 'Content must be at least 100 characters' }),
+  content: schemaHelper.editor({ message: 'Content is required!' }),
   images: schemaHelper.files({ message: 'Images is required!' }),
   quantity: schemaHelper.nullableInput(
     zod.number({ coerce: true }).min(1, { message: 'Quantity is required!' }),
@@ -48,13 +46,6 @@ export const NewProductSchema = zod.object({
       message: 'Price is required!',
     }
   ),
-  // purchasePrice: schemaHelper.nullableInput(
-  //   zod.number({ coerce: true }).min(1, { message: 'Price is required!' }),
-  //   {
-  //     // message for null value
-  //     message: 'Price is required!',
-  //   }
-  // ),
   // Not required
   categoryId: zod.number({ coerce: true }).nullable(),
   condition: zod.string(),
@@ -109,7 +100,6 @@ export function ProductNewCreateForm() {
       description: data.description,
       content: data.content,
       sellingPrice: data.sellingPrice,
-      // purchasePrice: data.purchasePrice,
       discount: data.discount,
       quantity: data.quantity,
       model: data.model,
@@ -219,6 +209,7 @@ export function ProductNewCreateForm() {
               inputLabel: { shrink: true },
             }}
           >
+            <option value=""></option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}

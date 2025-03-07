@@ -1,15 +1,17 @@
+import { Box } from '@mui/material';
 import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';
 
-import { ProductCreateView } from 'src/sections/shop-owner/product/view';
+// import { ShopOwnerCreateView } from 'src/sections/admin/shop-owner/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: `Create a new product | Shop owner - ${CONFIG.appName}`,
+  title: `Setup shop | Shop owner - ${CONFIG.appName}`,
 };
 
 export default function Page() {
-  return <ProductCreateView />;
+  // return <ShopOwnerCreateView />;
+  return <Box>create</Box>;
 }

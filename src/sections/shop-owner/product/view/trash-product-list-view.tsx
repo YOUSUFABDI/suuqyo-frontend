@@ -43,8 +43,12 @@ import { Iconify } from 'src/components/iconify';
 import { toast } from 'src/components/snackbar';
 
 import { getErrorMessage } from 'src/utils/error.message';
-import { UseDeleteProducts, UseProducts } from '../hooks';
-import { UseMoveToTrash } from '../hooks/use-move-to-trash-product';
+import {
+  UseDeleteProduct,
+  UseDeleteProducts,
+  UseRestoreFromTrash,
+  UseTrashProducts,
+} from '../hooks';
 import { ProductTableFiltersResult } from '../product-table-filters-result';
 import {
   RenderCellCondition,
@@ -64,14 +68,15 @@ const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
 // ----------------------------------------------------------------------
 
-export function ProductListView() {
+export function TrashProductListView() {
   const confirmDialog = useBoolean();
 
-  const { products, isLoading } = UseProducts();
-  const { moveToTrash, isDeleting } = UseMoveToTrash();
+  const { trashProducts, isLoading } = UseTrashProducts();
+  const { deleteProduct, isDeleting } = UseDeleteProduct();
+  const { restoreFromTrash, isRestoring } = UseRestoreFromTrash();
   const { deleteProducts, areDeleting } = UseDeleteProducts();
 
-  const [tableData, setTableData] = useState<ProductResDT[]>(products);
+  const [tableData, setTableData] = useState<ProductResDT[]>(trashProducts);
   const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>([]);
   const [filterButtonEl, setFilterButtonEl] = useState<HTMLButtonElement | null>(null);
 
@@ -82,20 +87,20 @@ export function ProductListView() {
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
 
   useEffect(() => {
-    if (products.length) {
-      setTableData(products);
+    if (trashProducts.length) {
+      setTableData(trashProducts);
     }
-  }, [products]);
+  }, [trashProducts]);
 
   const canReset = currentFilters.stock.length > 0;
 
-  const dataFiltered = applyFilter({ inputData: products, filters: currentFilters });
+  const dataFiltered = applyFilter({ inputData: trashProducts, filters: currentFilters });
 
-  const handleTrashRow = useCallback(
+  const handleDeleteRow = useCallback(
     async (id: string) => {
       try {
-        await moveToTrash(parseInt(id)).unwrap();
-        toast.success('Moved to trash!');
+        await deleteProduct(parseInt(id)).unwrap();
+        toast.success('Deleted!');
         const deleteRow = tableData.filter((row) => row.id !== id);
         setTableData(deleteRow);
       } catch (error) {
@@ -103,7 +108,22 @@ export function ProductListView() {
         toast.error(errorMessage);
       }
     },
-    [tableData, moveToTrash]
+    [tableData, deleteProduct]
+  );
+
+  const handleRestoreRow = useCallback(
+    async (id: string) => {
+      try {
+        await restoreFromTrash(parseInt(id)).unwrap();
+        toast.success('Restored!');
+        const deleteRow = tableData.filter((row) => row.id !== id);
+        setTableData(deleteRow);
+      } catch (error) {
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+      }
+    },
+    [tableData, restoreFromTrash]
   );
 
   const handleDeleteRows = useCallback(async () => {
@@ -187,17 +207,18 @@ export function ProductListView() {
       filterable: false,
       disableColumnMenu: true,
       getActions: (params) => [
-        <GridActionsLinkItem
+        <GridActionsCellItem
           showInMenu
-          icon={<Iconify icon="solar:pen-bold" />}
-          label="Edit"
-          href={paths.shopOwner.product.edit(params.row.id)}
+          icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+          label="Restore"
+          onClick={() => handleRestoreRow(params.row.id)}
+          sx={{ color: 'error.main' }}
         />,
         <GridActionsCellItem
           showInMenu
           icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-          label="Trash"
-          onClick={() => handleTrashRow(params.row.id)}
+          label="Delete"
+          onClick={() => handleDeleteRow(params.row.id)}
           sx={{ color: 'error.main' }}
         />,
       ],
@@ -216,7 +237,7 @@ export function ProductListView() {
       title="Delete"
       content={
         <>
-          Are you sure want to move on trash <strong> {selectedRowIds.length} </strong> items?
+          Are you sure want to delete <strong> {selectedRowIds.length} </strong> items?
         </>
       }
       action={
@@ -228,7 +249,7 @@ export function ProductListView() {
             confirmDialog.onFalse();
           }}
         >
-          Trash
+          Delete
         </Button>
       }
     />
@@ -240,7 +261,7 @@ export function ProductListView() {
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: 'Shop owner', href: paths.dashboard.root },
+            { name: 'Dashboard', href: paths.dashboard.root },
             { name: 'Product', href: paths.shopOwner.product.root },
             { name: 'List' },
           ]}
