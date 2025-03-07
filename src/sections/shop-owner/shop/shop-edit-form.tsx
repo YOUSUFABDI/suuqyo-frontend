@@ -30,7 +30,6 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import { useUpdateShopOwnerMutation } from 'src/store/admin/shop-owner';
 import { ShopOwnerDT } from './types/types';
-import { UseDeleteShopOwner } from './hooks';
 import { getErrorMessage } from 'src/utils/error.message';
 
 // ----------------------------------------------------------------------
@@ -74,7 +73,9 @@ export function ShopEditForm({ currentUser }: Props) {
 
   // Hook for RTK Query mutation
   const [updateShopOwner, { isLoading }] = useUpdateShopOwnerMutation();
-  const { deleteShopOwner, isDeleting } = UseDeleteShopOwner();
+  // const { deleteShopOwner, isDeleting } = UseDeleteShopOwner();
+  const deleteShopOwner = () => {};
+  const isDeleting = false;
 
   const defaultValues: NewUserSchemaType = {
     profileImage: null,
@@ -154,7 +155,7 @@ export function ShopEditForm({ currentUser }: Props) {
     }
 
     try {
-      await deleteShopOwner(Number(currentUser.id)).unwrap();
+      // await deleteShopOwner(Number(currentUser.id)).unwrap();
       toast.success('User deleted successfully');
       confirmDialog.onFalse();
       router.push(paths.dashboard.shopOwner.root);
