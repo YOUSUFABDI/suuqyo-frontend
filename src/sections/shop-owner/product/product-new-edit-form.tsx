@@ -117,16 +117,30 @@ export function ProductNewEditForm({ currentProduct }: Props) {
       model: data.model,
       condition: data.condition,
     };
-    const images = data.images;
-
-    console.log('images', images);
+    // const images = data.images;
 
     const formData = new FormData();
     formData.append('updateProductDto', JSON.stringify(updateProductDto));
-    if (images && images.length > 0) {
-      images.forEach((image) => {
-        formData.append('images', image);
+
+    // if (images && images.length > 0) {
+    //   images.forEach((image) => {
+    //     formData.append('images', image);
+    //   });
+    // }
+
+    // Ensure we only update images if they were modified
+    const existingImages = currentProduct?.images || [];
+    const hasNewImages = data.images.some((image: any) => !existingImages.includes(image));
+
+    if (hasNewImages) {
+      data.images.forEach((image) => {
+        if (typeof image !== 'string') {
+          formData.append('images', image); // Only append new files
+        }
       });
+    } else {
+      // Retain existing images if unchanged
+      formData.append('images', JSON.stringify(existingImages));
     }
 
     try {
