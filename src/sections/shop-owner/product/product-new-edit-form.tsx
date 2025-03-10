@@ -1,29 +1,28 @@
-import { z as zod } from 'zod';
-import { useForm } from 'react-hook-form';
-import { useState, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z as zod } from 'zod';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
-import Divider from '@mui/material/Divider';
-import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
 
+import { Field, Form, schemaHelper } from 'src/components/hook-form';
 import { toast } from 'src/components/snackbar';
-import { Form, Field, schemaHelper } from 'src/components/hook-form';
-import { ProductResDT } from './types/types';
-import { UseCategories } from './hooks';
 import { useUpdateProductMutation } from 'src/store/shop-owner/product';
 import { getErrorMessage } from 'src/utils/error.message';
+import { UseCategories } from './hooks';
+import { ProductResDT } from './types/types';
 
 // ----------------------------------------------------------------------
 
@@ -106,6 +105,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
+    // Prepare the product data (excluding files)
     const updateProductDto = {
       categoryId: data.categoryId,
       name: data.name,
@@ -117,42 +117,52 @@ export function ProductNewEditForm({ currentProduct }: Props) {
       model: data.model,
       condition: data.condition,
     };
-    // const images = data.images;
 
+    // Create FormData object
     const formData = new FormData();
+
+    // Append the product data (non-file fields) as a JSON string
     formData.append('updateProductDto', JSON.stringify(updateProductDto));
 
-    // if (images && images.length > 0) {
-    //   images.forEach((image) => {
-    //     formData.append('images', image);
-    //   });
-    // }
+    // Handle the images: check if they're strings and convert them to files
+    const imageFiles = data.images.map((image: any) => {
+      if (typeof image === 'string') {
+        // If the image is a string (URL or base64), convert it to a File object
+        // Here we would need to fetch the image or create a Blob from base64 data
+        return fetch(image)
+          .then((response) => response.blob())
+          .then((blob) => {
+            const file = new File([blob], 'image.jpg', { type: blob.type });
+            return file;
+          });
+      }
+      return image instanceof File ? image : null;
+    });
 
-    // Ensure we only update images if they were modified
-    const existingImages = currentProduct?.images || [];
-    const hasNewImages = data.images.some((image: any) => !existingImages.includes(image));
+    // Wait for all promises (if images are being converted from strings to Files)
+    const resolvedImageFiles = await Promise.all(imageFiles);
 
-    if (hasNewImages) {
-      data.images.forEach((image) => {
-        if (typeof image !== 'string') {
-          formData.append('images', image); // Only append new files
-        }
-      });
-    } else {
-      // Retain existing images if unchanged
-      formData.append('images', JSON.stringify(existingImages));
-    }
+    // Filter out any null values (in case there were invalid images)
+    const validImageFiles = resolvedImageFiles.filter((file) => file instanceof File);
+
+    // Append the image files to the FormData
+    validImageFiles.forEach((file) => {
+      formData.append('images', file);
+    });
 
     try {
+      // Send the FormData to the API
       await updateProduct({
         formData,
         id: Number(currentProduct?.id) || 0,
       }).unwrap();
+
+      // Reset the form and show success message
       reset();
-      toast.success('Updated!');
+      toast.success('Product updated successfully!');
       router.push(paths.shopOwner.product.root);
     } catch (error) {
-      console.error(error);
+      // Handle any error that occurred during the API call
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     }
@@ -199,7 +209,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
             maxSize={3145728}
             onRemove={handleRemoveFile}
             onRemoveAll={handleRemoveAllFiles}
-            onUpload={() => console.info('ON UPLOAD')}
           />
         </Stack>
       </Stack>

@@ -121,6 +121,7 @@ export function ProductNewCreateForm() {
       toast.success('Create success!');
       router.push(paths.shopOwner.product.root);
     } catch (error) {
+      console.log(error);
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     }
@@ -167,7 +168,6 @@ export function ProductNewCreateForm() {
             maxSize={3145728}
             onRemove={handleRemoveFile}
             onRemoveAll={handleRemoveAllFiles}
-            // onUpload={() => console.info('ON UPLOAD')}
           />
         </Stack>
       </Stack>
