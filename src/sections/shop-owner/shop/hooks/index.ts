@@ -1,1 +1,1 @@
-export { UseShops } from './use-shops';
+export { UseShopDetail } from './use-shop-detail';

@@ -1,5 +1,1 @@
-export * from './shop-edit-view';
-
-export * from './shop-list-view';
-
-export * from './shop-create-view';
+export * from './my-shop-view';

@@ -59,10 +59,8 @@ export const paths = {
       new: `${ROOTS.SHOP_OWNER}/product/new`,
       edit: (id: string) => `${ROOTS.SHOP_OWNER}/product/${id}/edit`,
     },
-    setupShop: {
-      root: `${ROOTS.SHOP_OWNER}/setup-shop`,
-      new: `${ROOTS.SHOP_OWNER}/setup-shop/new`,
-      edit: (id: string) => `${ROOTS.SHOP_OWNER}/setup-shop/${id}/edit`,
+    myShop: {
+      root: `${ROOTS.SHOP_OWNER}/my-shop`,
     },
   },
 

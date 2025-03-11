@@ -18,14 +18,24 @@ export const shopApi = createApi({
   }),
   tagTypes: ['shopApi'],
   endpoints: (builder) => ({
-    getShops: builder.query<ApiResponseDT<any[]>, void>({
+    getShopDetail: builder.query<ApiResponseDT<any>, void>({
       query: () => ({
-        url: '/shop/get-all-shops',
+        url: '/shop/get-shop-detail',
         method: 'GET',
       }),
       providesTags: ['shopApi'],
     }),
+    updateShopDetail: builder.mutation<any, { formData: FormData }>({
+      query: ({ formData }) => {
+        return {
+          url: `shop/update-shop`,
+          method: 'PATCH',
+          body: formData,
+        };
+      },
+      invalidatesTags: ['shopApi'],
+    }),
   }),
 });
 
-export const { useGetShopsQuery } = shopApi;
+export const { useGetShopDetailQuery, useUpdateShopDetailMutation } = shopApi;

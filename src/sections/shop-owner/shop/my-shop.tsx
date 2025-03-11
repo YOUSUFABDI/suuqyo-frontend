@@ -16,62 +16,39 @@ import { Field, Form, schemaHelper } from 'src/components/hook-form';
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { useUser } from 'src/sections/auth/hooks';
-import { useUpdateAdminMutation } from 'src/store/admin/admin';
-import { getErrorMessage } from 'src/utils/error.message';
+import { useUpdateAdminMutation } from 'src/store/auth/authApi';
+import { UseShopDetail } from './hooks';
+import { useUpdateShopDetailMutation } from 'src/store/shop-owner/shopApi';
 
 // ----------------------------------------------------------------------
 
 export type UpdateUserSchemaType = zod.infer<typeof UpdateUserSchema>;
 
 export const UpdateUserSchema = zod.object({
-  fullName: zod.string().min(1, { message: 'Name is required!' }).optional(),
-  username: zod.string().min(1, { message: 'Username is required!' }).optional(),
-  email: zod
-    .string()
-    .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' })
-    .optional(),
-  profileImage: schemaHelper.file({ message: 'Avatar is required!' }).optional(),
-  phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }).optional(),
-  country: schemaHelper
-    .nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
-      // message for null value
-      message: 'Country is required!',
-    })
-    .optional(),
-  address: zod.string().min(1, { message: 'Address is required!' }).optional(),
-  state: zod.string().min(1, { message: 'State is required!' }).optional(),
-  city: zod.string().min(1, { message: 'City is required!' }).optional(),
+  shopName: zod.string().min(1, { message: 'shopName is required!' }).optional(),
+  shopDescription: zod.string().min(1, { message: 'shopDescription is required!' }).optional(),
+  shopAddress: zod.string().min(1, { message: 'shopAddress is required!' }).optional(),
+  shopLogo: schemaHelper.file({ message: 'Avatar is required!' }).optional(),
 });
 
 // ----------------------------------------------------------------------
 
-export function AccountGeneral() {
-  const { user } = useUser();
-  const [updateAdmin, { isLoading }] = useUpdateAdminMutation();
+export function MyShop() {
+  const { shopDetail } = UseShopDetail();
+  const [updateShopDetail, { isLoading }] = useUpdateShopDetailMutation();
 
   const currentUser: UpdateUserSchemaType = {
-    fullName: user?.fullName || '',
-    username: user?.username || '',
-    email: user?.email || '',
-    profileImage: user?.profileImage || null,
-    phoneNumber: user?.phoneNumber || '',
-    country: user?.country || null,
-    city: user?.city || '',
-    state: user?.state || '',
-    address: user?.address || '',
+    shopName: shopDetail?.shopName || '',
+    shopDescription: shopDetail?.shopDescription || '',
+    shopAddress: shopDetail?.shopAddress || '',
+    shopLogo: shopDetail?.shopLogo || null,
   };
 
   const defaultValues: UpdateUserSchemaType = {
-    fullName: '',
-    username: '',
-    email: '',
-    profileImage: null,
-    phoneNumber: '',
-    country: null,
-    city: '',
-    address: '',
-    state: '',
+    shopName: '',
+    shopDescription: '',
+    shopAddress: '',
+    shopLogo: null,
   };
 
   const methods = useForm<UpdateUserSchemaType>({
@@ -88,33 +65,25 @@ export function AccountGeneral() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const updateadminDto = {
-        fullName: data.fullName,
-        username: data.username,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        country: data.country,
-        state: data.state,
-        city: data.city,
-        address: data.address,
+      const updateShopDto = {
+        shopName: data.shopName,
+        shopDescription: data.shopDescription,
+        shopAddress: data.shopAddress,
       };
-      const profileImage = data.profileImage;
+      const shopLogo = data.shopLogo;
 
       const formData = new FormData();
-      formData.append('updateAdminDto', JSON.stringify(updateadminDto));
-      if (profileImage) {
-        formData.append('profileImage', profileImage);
+      formData.append('updateShopDto', JSON.stringify(updateShopDto));
+      if (shopLogo) {
+        formData.append('shopLogo', shopLogo);
       }
 
-      await updateAdmin({
-        id: Number(user?.id) || 0,
+      await updateShopDetail({
         formData,
       }).unwrap();
-
       toast.success('Saved changes');
     } catch (error) {
-      const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
+      console.error(error);
     }
   });
 
@@ -130,20 +99,9 @@ export function AccountGeneral() {
               textAlign: 'center',
             }}
           >
-            <Label
-              color={
-                (user?.status === 'ACTIVE' && 'success') ||
-                (user?.status === 'INACTIVE' && 'error') ||
-                'warning'
-              }
-              sx={{ position: 'absolute', top: 24, right: 24 }}
-            >
-              {user?.status}
-            </Label>
-
             <Box sx={{ mb: 5 }}>
               <Field.UploadAvatar
-                name="profileImage"
+                name="shopLogo"
                 maxSize={3145728}
                 helperText={
                   <Typography
@@ -175,16 +133,9 @@ export function AccountGeneral() {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <Field.Text name="fullName" label="Name" />
-              <Field.Text name="username" label="Username" />
-              <Field.Text name="email" label="Email address" />
-              <Field.Phone name="phoneNumber" label="Phone number" />
-              <Field.Text name="address" label="Address" />
-
-              <Field.CountrySelect name="country" label="Country" placeholder="Choose a country" />
-
-              <Field.Text name="state" label="State/region" />
-              <Field.Text name="city" label="City" />
+              <Field.Text name="shopName" label="Shop name" />
+              <Field.Text name="shopDescription" label="Shop description" />
+              <Field.Text name="shopAddress" label="Shop address" />
             </Box>
 
             <Stack spacing={3} sx={{ mt: 3, alignItems: 'flex-end' }}>

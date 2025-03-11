@@ -57,15 +57,12 @@ export const shopOwnerData: NavSectionProps['data'] = [
   {
     subheader: 'Management',
     items: [
-      // {
-      //   title: 'Setup shop',
-      //   path: paths.shopOwner.setupShop.root,
-      //   icon: ICONS.ecommerce,
-      //   children: [
-      //     { title: 'List', path: paths.shopOwner.setupShop.root },
-      //     { title: 'Create', path: paths.shopOwner.setupShop.new },
-      //   ],
-      // },
+      {
+        title: 'Shop',
+        path: paths.shopOwner.myShop.root,
+        icon: ICONS.ecommerce,
+        children: [{ title: 'My shop', path: paths.shopOwner.myShop.root }],
+      },
       {
         title: 'Product',
         path: paths.shopOwner.product.root,

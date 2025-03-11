@@ -22,14 +22,14 @@ export const reportApi = createApi({
   endpoints: (builder) => ({
     getTransactions: builder.query<ApiResponseDT<SubscriptionTransactionResDT[]>, void>({
       query: () => ({
-        url: `/subscription/transactions`,
+        url: `/admin/subscription-transactions`,
         method: 'GET',
       }),
       providesTags: ['reportApi'],
     }),
     getSubscriptionRenewals: builder.query<ApiResponseDT<SubscriptionRenewalResDT[]>, void>({
       query: () => ({
-        url: `/subscription/renewal-history`,
+        url: `/admin/subscription-renewal-history`,
         method: 'GET',
       }),
       providesTags: ['reportApi'],
