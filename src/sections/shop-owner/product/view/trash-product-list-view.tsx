@@ -261,9 +261,9 @@ export function TrashProductListView() {
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
+            { name: 'Shop owner', href: paths.dashboard.root },
             { name: 'Product', href: paths.shopOwner.product.root },
-            { name: 'List' },
+            { name: 'Trash' },
           ]}
           action={
             <Button
