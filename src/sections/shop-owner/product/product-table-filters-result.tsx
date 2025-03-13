@@ -1,4 +1,4 @@
-import type { IProductTableFilters } from 'src/types/product';
+import type { IProductTableFilters } from './types/types';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 import type { FiltersResultProps } from 'src/components/filters-result';
 

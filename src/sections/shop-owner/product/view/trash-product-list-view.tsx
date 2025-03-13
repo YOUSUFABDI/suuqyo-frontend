@@ -9,7 +9,7 @@ import type {
   GridSlotProps,
 } from '@mui/x-data-grid';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
-import type { IProductTableFilters } from 'src/types/product';
+import type { IProductTableFilters } from '../types/types';
 
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 import { forwardRef, useCallback, useEffect, useState } from 'react';

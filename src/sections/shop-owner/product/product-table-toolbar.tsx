@@ -1,4 +1,4 @@
-import type { IProductTableFilters } from 'src/types/product';
+import type { IProductTableFilters } from './types/types';
 import type { SelectChangeEvent } from '@mui/material/Select';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 
