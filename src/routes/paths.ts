@@ -62,6 +62,9 @@ export const paths = {
     myShop: {
       root: `${ROOTS.SHOP_OWNER}/my-shop`,
     },
+    account: {
+      root: `${ROOTS.SHOP_OWNER}/account-setting`,
+    },
   },
 
   // DELIVERY USER DASHBOARD

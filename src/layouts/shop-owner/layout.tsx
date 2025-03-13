@@ -21,7 +21,7 @@ import { VerticalDivider } from './content';
 import { NavVertical } from './nav-vertical';
 import { layoutClasses } from '../core/classes';
 import { NavHorizontal } from './nav-horizontal';
-import { _account } from '../nav-config-account';
+import { _account } from '../nav-config-account-shop-owner';
 import { MainSection } from '../core/main-section';
 import { Searchbar } from '../components/searchbar';
 import { _workspaces } from '../nav-config-workspace';
@@ -40,6 +40,7 @@ import { NotificationsDrawer } from '../components/notifications-drawer';
 import type { MainSectionProps } from '../core/main-section';
 import type { HeaderSectionProps } from '../core/header-section';
 import type { LayoutSectionProps } from '../core/layout-section';
+import { useUser } from 'src/sections/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -64,6 +65,7 @@ export function ShopOwnerLayout({
   layoutQuery = 'lg',
 }: ShopOwnerLayoutProps) {
   const theme = useTheme();
+  const { user } = useUser();
 
   const settings = useSettingsContext();
 
