@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetSubscriptionsQuery } from 'src/store/admin/shop-owner';
+import { useGetSubscriptionsQuery } from 'src/store/admin/subscription';
 import { isSuccessResponse } from 'src/utils/is-success-res';
 import { SubscriptionResDT } from 'src/sections/admin/subscription/types/subscription';
 import { getErrorMessage } from 'src/utils/error.message';

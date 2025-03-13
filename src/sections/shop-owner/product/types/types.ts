@@ -35,6 +35,10 @@ export interface ProductResDT {
   category: Category;
 }
 
+export type IProductTableFilters = {
+  stock: string[];
+};
+
 export type CreatProductReqDT = {
   createProductDto: string;
   images?: File;

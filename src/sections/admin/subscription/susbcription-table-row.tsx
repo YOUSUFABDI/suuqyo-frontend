@@ -22,7 +22,10 @@ import { Label } from 'src/components/label';
 import { ListItemText } from '@mui/material';
 import { fDate, fTime } from 'src/utils/format-time';
 import { SubscriptionResDT } from './types/subscription';
-import { useRenewSubscriptionMutation, useSendReminderMutation } from 'src/store/admin/shop-owner';
+import {
+  useRenewSubscriptionMutation,
+  useSendReminderMutation,
+} from 'src/store/admin/subscription';
 import { getErrorMessage } from 'src/utils/error.message';
 import { toast } from 'src/components/snackbar';
 

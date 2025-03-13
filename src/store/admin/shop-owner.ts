@@ -1,18 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API } from '../api';
-import { ApiResponseDT } from 'src/types/api-response';
-import {
-  ReminderResponseDataDT,
-  RenewResponseDataDT,
-  SubscriptionReqDT,
-  SubscriptionResDT,
-} from 'src/sections/admin/subscription/types/subscription';
 import {
   GetAllShopOwnersResponseDT,
   RegisterShopOwnerResDT,
   ShopOwnerDT,
   UpdateShopOwnerResponseDT,
 } from 'src/sections/admin/shop-owner/types/types';
+import { ApiResponseDT } from 'src/types/api-response';
+import { API } from '../api';
 
 export const shopOwnerApi = createApi({
   reducerPath: 'shopOwnerApi',
@@ -28,7 +22,7 @@ export const shopOwnerApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['shopOwnerApi', 'subscription'],
+  tagTypes: ['shopOwnerApi'],
   endpoints: (builder) => ({
     registerShopOwner: builder.mutation<RegisterShopOwnerResDT, FormData>({
       query: (formData) => {
@@ -72,7 +66,7 @@ export const shopOwnerApi = createApi({
         url: `/admin/delete-shop-owner/${userId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['shopOwnerApi', 'subscription'],
+      invalidatesTags: ['shopOwnerApi'],
     }),
 
     deleteShopOwners: builder.mutation<void, number[]>({
@@ -81,50 +75,7 @@ export const shopOwnerApi = createApi({
         method: 'DELETE',
         body: { userIds },
       }),
-      invalidatesTags: ['shopOwnerApi', 'subscription'],
-    }),
-
-    // subscription
-    createSubscription: builder.mutation<ApiResponseDT<SubscriptionResDT>, SubscriptionReqDT>({
-      query: (subscriptionResDT) => ({
-        url: '/admin/create-subscription',
-        method: 'POST',
-        body: subscriptionResDT,
-      }),
-      invalidatesTags: ['subscription', 'shopOwnerApi'],
-    }),
-    getSubscriptions: builder.query<ApiResponseDT<SubscriptionResDT[]>, void>({
-      query: () => ({
-        url: '/admin/get-all-subscriptions',
-        method: 'GET',
-      }),
-      providesTags: ['subscription'],
-    }),
-    getOneSubscription: builder.query<ApiResponseDT<SubscriptionResDT>, { id: number }>({
-      query: ({ id }) => ({
-        url: `/admin/get-one-subscription/${id}`,
-        method: 'GET',
-      }),
-      providesTags: ['subscription'],
-    }),
-    sendReminder: builder.mutation<ApiResponseDT<ReminderResponseDataDT>, { shopOwnerId: number }>({
-      query: ({ shopOwnerId }) => ({
-        url: '/admin/send-subscription-reminder',
-        method: 'POST',
-        body: { shopOwnerId },
-      }),
-      invalidatesTags: ['subscription'],
-    }),
-    renewSubscription: builder.mutation<
-      ApiResponseDT<RenewResponseDataDT>,
-      { shopOwnerId: number }
-    >({
-      query: ({ shopOwnerId }) => ({
-        url: '/admin/renew-subscription',
-        method: 'POST',
-        body: { shopOwnerId },
-      }),
-      invalidatesTags: ['subscription'],
+      invalidatesTags: ['shopOwnerApi'],
     }),
   }),
 });
@@ -136,11 +87,4 @@ export const {
   useUpdateShopOwnerMutation,
   useDeleteShopOwnerMutation,
   useDeleteShopOwnersMutation,
-
-  // subscription
-  useCreateSubscriptionMutation,
-  useGetSubscriptionsQuery,
-  useGetOneSubscriptionQuery,
-  useSendReminderMutation,
-  useRenewSubscriptionMutation,
 } = shopOwnerApi;

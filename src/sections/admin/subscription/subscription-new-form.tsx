@@ -15,7 +15,7 @@ import { Label } from 'src/components/label';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import { LoadingScreen } from 'src/components/loading-screen';
-import { useCreateSubscriptionMutation } from 'src/store/admin/shop-owner';
+import { useCreateSubscriptionMutation } from 'src/store/admin/subscription';
 import { ShopOwnerDT } from '../shop-owner/types/types';
 import { UseShopOwners } from '../shop-owner/hooks';
 

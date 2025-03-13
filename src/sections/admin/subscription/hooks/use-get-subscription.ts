@@ -1,7 +1,7 @@
 'use client';
 
 import { SubscriptionResDT } from 'src/sections/admin/subscription/types/subscription';
-import { useGetOneSubscriptionQuery } from 'src/store/admin/shop-owner';
+import { useGetOneSubscriptionQuery } from 'src/store/admin/subscription';
 import { isSuccessResponse } from 'src/utils/is-success-res';
 import { getErrorMessage } from 'src/utils/error.message';
 
