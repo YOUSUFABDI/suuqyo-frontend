@@ -47,7 +47,7 @@ export const UpdateUserSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export function AccountGeneral() {
-  const { user } = useUser();
+  const { user, refetch } = useUser();
   const [updateAdmin, { isLoading }] = useUpdateAdminMutation();
 
   const currentUser: UpdateUserSchemaType = {
@@ -110,6 +110,8 @@ export function AccountGeneral() {
         id: Number(user?.id) || 0,
         formData,
       }).unwrap();
+
+      refetch();
 
       toast.success('Saved changes');
     } catch (error) {

@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { isValidPhoneNumber } from 'react-phone-number-input/input';
 import { z as zod } from 'zod';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -13,12 +12,9 @@ import Typography from '@mui/material/Typography';
 import { fData } from 'src/utils/format-number';
 
 import { Field, Form, schemaHelper } from 'src/components/hook-form';
-import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
-import { useUser } from 'src/sections/auth/hooks';
-import { useUpdateAdminMutation } from 'src/store/auth/authApi';
-import { UseShopDetail } from './hooks';
 import { useUpdateShopDetailMutation } from 'src/store/shop-owner/shopApi';
+import { UseShopDetail } from './hooks';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +33,7 @@ export function MyShop() {
   const { shopDetail } = UseShopDetail();
   const [updateShopDetail, { isLoading }] = useUpdateShopDetailMutation();
 
-  const currentUser: UpdateUserSchemaType = {
+  const currentShop: UpdateUserSchemaType = {
     shopName: shopDetail?.shopName || '',
     shopDescription: shopDetail?.shopDescription || '',
     shopAddress: shopDetail?.shopAddress || '',
@@ -55,7 +51,7 @@ export function MyShop() {
     mode: 'all',
     resolver: zodResolver(UpdateUserSchema),
     defaultValues,
-    values: currentUser,
+    values: currentShop,
   });
 
   const {
