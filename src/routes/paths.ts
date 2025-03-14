@@ -62,6 +62,10 @@ export const paths = {
     myShop: {
       root: `${ROOTS.SHOP_OWNER}/my-shop`,
     },
+    order: {
+      root: `${ROOTS.SHOP_OWNER}/order`,
+      details: (id: string) => `${ROOTS.SHOP_OWNER}/order/${id}`,
+    },
     account: {
       root: `${ROOTS.SHOP_OWNER}/account-setting`,
     },

@@ -1,6 +1,6 @@
 import { ApiResponseDT } from 'src/types/api-response';
 
-interface Image {
+export interface Image {
   id: number;
   productId: number;
   image: string;

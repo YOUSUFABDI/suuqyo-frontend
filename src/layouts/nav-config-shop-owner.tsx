@@ -73,6 +73,12 @@ export const shopOwnerData: NavSectionProps['data'] = [
           { title: 'Trash', path: paths.shopOwner.product.trash },
         ],
       },
+      {
+        title: 'Order',
+        path: paths.shopOwner.order.root,
+        icon: ICONS.order,
+        children: [{ title: 'List', path: paths.shopOwner.order.root }],
+      },
     ],
   },
 ];

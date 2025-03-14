@@ -10,6 +10,7 @@ import { adminApi } from './admin/admin';
 
 import { productApi } from './shop-owner/product';
 import { shopApi } from './shop-owner/shopApi';
+import { OrderApi } from './shop-owner/orderApi';
 
 export const store = configureStore({
   reducer: {
@@ -27,6 +28,7 @@ export const store = configureStore({
     // shop-owner
     [productApi.reducerPath]: productApi.reducer,
     [shopApi.reducerPath]: shopApi.reducer,
+    [OrderApi.reducerPath]: OrderApi.reducer,
     // shop-owner
   },
   devTools: process.env.NODE_ENV !== 'production',
@@ -44,7 +46,8 @@ export const store = configureStore({
 
       // shop-owner
       productApi.middleware,
-      shopApi.middleware
+      shopApi.middleware,
+      OrderApi.middleware
       // shop-owner
     ),
 });
