@@ -26,7 +26,15 @@ export const OrderApi = createApi({
       }),
       providesTags: ['OrderApi'],
     }),
+    updateOrderStatus: builder.mutation<any, { id: number; status: string }>({
+      query: ({ id, status }) => ({
+        url: `/shop-owner/update-order-status/${id}`,
+        method: 'PATCH',
+        body: { status },
+      }),
+      invalidatesTags: ['OrderApi'],
+    }),
   }),
 });
 
-export const { useGetOrdersQuery } = OrderApi;
+export const { useGetOrdersQuery, useUpdateOrderStatusMutation } = OrderApi;

@@ -173,7 +173,7 @@ export function OrderTableRow({ row, selected, onSelectRow, onDeleteRow, details
       slotProps={{ arrow: { placement: 'right-top' } }}
     >
       <MenuList>
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             confirmDialog.onTrue();
             menuActions.onClose();
@@ -182,7 +182,7 @@ export function OrderTableRow({ row, selected, onSelectRow, onDeleteRow, details
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
-        </MenuItem>
+        </MenuItem> */}
 
         <li>
           <MenuItem component={RouterLink} href={detailsHref} onClick={() => menuActions.onClose()}>

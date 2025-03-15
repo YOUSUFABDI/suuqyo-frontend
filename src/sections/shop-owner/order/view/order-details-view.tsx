@@ -20,7 +20,9 @@ import { OrderDetailsPayment } from '../order-details-payment';
 import { OrderDetailsShipping } from '../order-details-shipping';
 import { OrderDetailsToolbar } from '../order-details-toolbar';
 import { OrderResDT } from '../types/types';
-
+import { useUpdateOrderStatusMutation } from 'src/store/shop-owner/orderApi';
+import { toast } from 'src/components/snackbar';
+import { getErrorMessage } from 'src/utils/error.message';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -28,12 +30,28 @@ type Props = {
 };
 
 export function OrderDetailsView({ order }: Props) {
-  console.log('order-----------', order);
+  const [updateOrderStatus, { isLoading }] = useUpdateOrderStatusMutation();
   const [status, setStatus] = useState(order?.status);
 
-  const handleChangeStatus = useCallback((newValue: string) => {
-    setStatus(newValue);
-  }, []);
+  const handleChangeStatus = useCallback(
+    async (newValue: string) => {
+      if (!order?.id) return;
+
+      // Save the previous status in case of an error
+      const previousStatus = status;
+      setStatus(newValue); // Optimistically update UI
+
+      try {
+        await updateOrderStatus({ id: Number(order.id), status: newValue }).unwrap();
+        toast.success('Order status updated successfully');
+      } catch (error) {
+        setStatus(previousStatus); // Revert on error
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+      }
+    },
+    [order?.id, status, updateOrderStatus]
+  );
 
   return (
     <DashboardContent>
@@ -71,8 +89,8 @@ export function OrderDetailsView({ order }: Props) {
             <Divider sx={{ borderStyle: 'dashed' }} />
             {/* <OrderDetailsDelivery delivery={order?.delivery} /> */}
 
-            {/* <Divider sx={{ borderStyle: 'dashed' }} /> */}
-            {/* <OrderDetailsShipping shippingAddress={order?.shippingAddress} /> */}
+            <Divider sx={{ borderStyle: 'dashed' }} />
+            <OrderDetailsShipping shippingAddress={order?.customer} />
 
             {/* <Divider sx={{ borderStyle: 'dashed' }} /> */}
             {/* <OrderDetailsPayment payment={order?.payment} /> */}
