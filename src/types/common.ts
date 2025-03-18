@@ -12,3 +12,13 @@ export type ISocialLink = {
   linkedin: string;
   instagram: string;
 };
+
+export type IAddressItem = {
+  id?: string;
+  name: string;
+  company?: string;
+  primary?: boolean;
+  fullAddress: string;
+  phoneNumber?: string;
+  addressType?: string;
+};
