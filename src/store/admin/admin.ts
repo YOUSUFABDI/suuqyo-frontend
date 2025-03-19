@@ -20,7 +20,7 @@ export const adminApi = createApi({
     updateAdmin: builder.mutation<any, { id: number; formData: FormData }>({
       query: ({ id, formData }) => {
         return {
-          url: `/admin/update-admin/${id}`,
+          url: `/user/update-user/${id}`,
           method: 'PATCH',
           body: formData,
         };
