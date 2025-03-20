@@ -21,24 +21,26 @@ export type SubscriptionResDT = {
   createdAt: string;
   updatedAt: string;
 
-  shopOwner: {
+  // shopOwner: {
+  //   id: string;
+  //   userId: number;
+  // fullName: string;
+  // phoneNumber: string;
+  //   createdAt: string;
+  //   updatedAt: string;
+  user: {
     id: string;
-    userId: number;
     fullName: string;
     phoneNumber: string;
+    username: string;
+    email: string;
+    profileImage: string;
+    role: string;
+    status: string;
     createdAt: string;
     updatedAt: string;
-    user: {
-      id: string;
-      username: string;
-      email: string;
-      profileImage: string;
-      role: string;
-      status: string;
-      createdAt: string;
-      updatedAt: string;
-    };
   };
+  // };
 };
 
 export const SUBS_STATUS_OPTIONS = [

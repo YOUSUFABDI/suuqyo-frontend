@@ -348,7 +348,7 @@ export function SubscriptionSummary({
     }
 
     const subscriptionData = {
-      shopOwnerId: Number(selectedShopOwner.shopOwnerId),
+      shopOwnerId: Number(selectedShopOwner.id),
       subscriptionType: selectedType,
       discount,
       isFree,

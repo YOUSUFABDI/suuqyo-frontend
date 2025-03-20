@@ -19,12 +19,12 @@ import { CustomPopover } from 'src/components/custom-popover';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 
-import { ShopOwnerDT } from './types/types';
+import { DeliveryUserResDT } from './types/types';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ShopOwnerDT;
+  row: DeliveryUserResDT;
   selected: boolean;
   editHref: string;
   onSelectRow: () => void;
@@ -32,7 +32,7 @@ type Props = {
   isDeleting: boolean;
 };
 
-export function ShopOwnerTableRow({
+export function DeliveryUserTableRow({
   row,
   selected,
   editHref,
@@ -122,11 +122,11 @@ export function ShopOwnerTableRow({
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.phoneNumber}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.country}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.Address?.country}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.address}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.Address?.address}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.role}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.DeliveryUser?.vehicleDetail}</TableCell>
 
         <TableCell>
           <Label variant="soft" color={row?.status ? 'success' : 'error'}>

@@ -53,6 +53,12 @@ export const paths = {
   // SHOP OWNER DASHBOARD
   shopOwner: {
     root: ROOTS.SHOP_OWNER,
+    deliveryUser: {
+      root: `${ROOTS.SHOP_OWNER}/delivery-user`,
+      new: `${ROOTS.SHOP_OWNER}/delivery-user/new`,
+      details: (id: string) => `${ROOTS.SHOP_OWNER}/delivery-user/${id}`,
+      edit: (id: string) => `${ROOTS.SHOP_OWNER}/delivery-user/${id}/edit`,
+    },
     product: {
       root: `${ROOTS.SHOP_OWNER}/product`,
       trash: `${ROOTS.SHOP_OWNER}/product/trash`,

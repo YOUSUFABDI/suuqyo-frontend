@@ -21,6 +21,7 @@ type Props = {
 };
 
 export function SubscriptionRenewalTableRow({ row, selected, onSelectRow }: Props) {
+  console.log('row', row);
   return (
     <>
       <TableRow hover selected={selected}>
@@ -37,27 +38,27 @@ export function SubscriptionRenewalTableRow({ row, selected, onSelectRow }: Prop
 
         <TableCell>
           <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-            <Avatar alt={row.subscription.shopOwner.fullName}>
-              {row?.subscription?.shopOwner?.fullName.charAt(0).toUpperCase()}
+            <Avatar alt={row.subscription.user.fullName}>
+              {row?.subscription?.user?.fullName.charAt(0).toUpperCase()}
             </Avatar>
 
             <ListItemText
               disableTypography
               primary={
                 <Typography variant="body2" noWrap>
-                  {row?.subscription?.shopOwner?.fullName}
+                  {row?.subscription?.user?.fullName}
                 </Typography>
               }
               secondary={
                 <Typography variant="body2" noWrap>
-                  {row?.subscription?.shopOwner.user.email}
+                  {row?.subscription?.user.email}
                 </Typography>
               }
             />
           </Box>
         </TableCell>
 
-        <TableCell>{row.subscription.shopOwner.phoneNumber}</TableCell>
+        <TableCell>{row.subscription.user.phoneNumber}</TableCell>
         <TableCell>{row.subscription.subscriptionType}</TableCell>
         <TableCell>{fCurrency(row.newFee)}</TableCell>
 

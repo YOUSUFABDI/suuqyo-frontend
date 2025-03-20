@@ -22,7 +22,7 @@ export interface UserDT {
   updatedAt: string;
   profileImage: string;
   role: string;
-  status: string;
+  status: boolean;
   userId: number;
   fullName: string;
   phoneNumber: string;

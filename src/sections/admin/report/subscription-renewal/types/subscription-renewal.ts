@@ -25,17 +25,11 @@ export type SubscriptionRenewalResDT = {
     isFree: boolean;
     remainingTime: number;
     subscriptionStatus: string;
-    shopOwner: {
-      id: number;
-      userId: number;
+    user: {
+      profileImage: string;
+      email: string;
       fullName: string;
       phoneNumber: string;
-      createdAt: string; // ISO date string
-      updatedAt: string; // ISO date string
-      user: {
-        profileImage: string;
-        email: string;
-      };
     };
   };
 };

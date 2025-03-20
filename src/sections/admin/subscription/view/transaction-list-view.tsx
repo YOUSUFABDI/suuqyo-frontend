@@ -279,8 +279,8 @@ function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
   if (name || phoneNumber) {
     filteredData = filteredData.filter(
       (user) =>
-        user.shopOwner.fullName.toLowerCase().includes(name.toLowerCase()) ||
-        user.shopOwner.phoneNumber.toLowerCase().includes(phoneNumber.toLowerCase())
+        user.user.fullName.toLowerCase().includes(name.toLowerCase()) ||
+        user.user.phoneNumber.toLowerCase().includes(phoneNumber.toLowerCase())
     );
   }
 

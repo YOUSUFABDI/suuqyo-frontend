@@ -46,7 +46,7 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
 
   const handleSendReminder = async () => {
     try {
-      const response = await sendReminder({ shopOwnerId: Number(row.shopOwner.id) }).unwrap();
+      const response = await sendReminder({ shopOwnerId: Number(row.user.id) }).unwrap();
 
       if ('payload' in response) {
         const { message } = response.payload.data;
@@ -65,7 +65,7 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
 
   const handleRenew = async () => {
     try {
-      const response = await renewSubscription({ shopOwnerId: Number(row.shopOwner.id) }).unwrap();
+      const response = await renewSubscription({ shopOwnerId: Number(row.user.id) }).unwrap();
       toast.success('Renewed subscription.');
     } catch (error: any) {
       console.error(error);
@@ -116,7 +116,7 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
 
         <TableCell>
           <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-            <Avatar alt={row.shopOwner.fullName} src={row.shopOwner.user.profileImage} />
+            <Avatar alt={row.user.fullName} src={row.user.profileImage} />
 
             <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
               <Link
@@ -125,16 +125,16 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
                 color="inherit"
                 sx={{ cursor: 'pointer' }}
               >
-                {row.shopOwner.fullName}
+                {row.user.fullName}
               </Link>
               <Box component="span" sx={{ color: 'text.disabled' }}>
-                {row.shopOwner.user.email}
+                {row.user.email}
               </Box>
             </Stack>
           </Box>
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.shopOwner.phoneNumber}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.user.phoneNumber}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.subscriptionType}</TableCell>
 

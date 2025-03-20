@@ -24,24 +24,33 @@ import { getErrorMessage } from 'src/utils/error.message';
 export type UpdateUserSchemaType = zod.infer<typeof UpdateUserSchema>;
 
 export const UpdateUserSchema = zod.object({
-  fullName: zod.string().min(1, { message: 'Name is required!' }).optional(),
-  username: zod.string().min(1, { message: 'Username is required!' }).optional(),
-  email: zod
-    .string()
-    .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' })
-    .optional(),
-  profileImage: schemaHelper.file({ message: 'Avatar is required!' }).optional(),
+  // fullName: zod.string().min(1, { message: 'Name is required!' }).optional(),
+  // username: zod.string().min(1, { message: 'Username is required!' }).optional(),
+  // email: zod
+  //   .string()
+  //   .min(1, { message: 'Email is required!' })
+  //   .email({ message: 'Email must be a valid email address!' })
+  //   .optional(),
+  // profileImage: schemaHelper.file({ message: 'Avatar is required!' }).optional(),
+  // phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }).optional(),
+  // country: schemaHelper
+  //   .nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
+  //     // message for null value
+  //     message: 'Country is required!',
+  //   })
+  //   .optional(),
+  // address: zod.string().min(1, { message: 'Address is required!' }).optional(),
+  // state: zod.string().min(1, { message: 'State is required!' }).optional(),
+  // city: zod.string().min(1, { message: 'City is required!' }).optional(),
+  fullName: zod.string().optional(),
+  username: zod.string().optional(),
+  email: zod.string().email().optional(),
+  profileImage: schemaHelper.file().optional(),
   phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }).optional(),
-  country: schemaHelper
-    .nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
-      // message for null value
-      message: 'Country is required!',
-    })
-    .optional(),
-  address: zod.string().min(1, { message: 'Address is required!' }).optional(),
-  state: zod.string().min(1, { message: 'State is required!' }).optional(),
-  city: zod.string().min(1, { message: 'City is required!' }).optional(),
+  country: schemaHelper.nullableInput(zod.string(), {}).optional(),
+  address: zod.string().optional(),
+  state: zod.string().optional(),
+  city: zod.string().optional(),
 });
 
 // ----------------------------------------------------------------------
@@ -88,7 +97,7 @@ export function AccountGeneral() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const updateadminDto = {
+      const updateUserDto = {
         fullName: data.fullName,
         username: data.username,
         email: data.email,
@@ -101,7 +110,7 @@ export function AccountGeneral() {
       const profileImage = data.profileImage;
 
       const formData = new FormData();
-      formData.append('updateAdminDto', JSON.stringify(updateadminDto));
+      formData.append('updateUserDto', JSON.stringify(updateUserDto));
       if (profileImage) {
         formData.append('profileImage', profileImage);
       }
@@ -133,14 +142,10 @@ export function AccountGeneral() {
             }}
           >
             <Label
-              color={
-                (user?.status === 'ACTIVE' && 'success') ||
-                (user?.status === 'INACTIVE' && 'error') ||
-                'warning'
-              }
+              color={user?.status ? 'success' : 'error'}
               sx={{ position: 'absolute', top: 24, right: 24 }}
             >
-              {user?.status}
+              {user?.status ? 'Active' : 'Inactive'}
             </Label>
 
             <Box sx={{ mb: 5 }}>

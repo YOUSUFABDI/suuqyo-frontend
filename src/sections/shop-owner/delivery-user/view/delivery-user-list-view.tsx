@@ -1,7 +1,7 @@
 'use client';
 
 import type { TableHeadCellProps } from 'src/components/table';
-import type { IShopOwnerTableFilters } from '../types/types';
+import type { DeliveryUserResDT, IDeliveryUserTableFilters } from '../types/types';
 
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 import { varAlpha } from 'minimal-shared/utils';
@@ -22,8 +22,6 @@ import { paths } from 'src/routes/paths';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { SHOP_OWNER_STATUS_OPTIONS } from '../types/types';
-
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { Iconify } from 'src/components/iconify';
@@ -42,22 +40,21 @@ import {
   useTable,
 } from 'src/components/table';
 
-import { ShopOwnerDT } from '../types/types';
-import { UseDeleteShopOwner, UseShopOwners } from '../hooks';
-import { UseDeleteShopOwners } from '../hooks/use-delete-shop-owners';
-import { ShopOwnerTableFiltersResult } from '../shop-owner-table-filters-result';
-import { ShopOwnerTableRow } from '../shop-owner-table-row';
-import { ShopOwnerTableToolbar } from '../shop-owner-table-toolbar';
+import { DeliveryUserTableFiltersResult } from '../delivery-user-table-filters-result';
+import { DeliveryUserTableRow } from '../delivery-user-table-row';
+import { DeliveryUserTableToolbar } from '../delivery-user-table-toolbar';
+import { UseDeleteDeliveryUser, UseDeliveryUsers } from '../hooks';
+import { UseDeleteDeliveryUsers } from '../hooks/use-delete-delivery-users';
 
 // ----------------------------------------------------------------------
 
-export const _SHOPOWNER_STATUS = [`ACTIVE`, `INACTIVE`];
+// export const _DELIVERY_USER_STATUS = [`ACTIVE`, `INACTIVE`];
+export const _DELIVERY_USER_STATUS = ['All', 'Active', 'Inactive'];
 
-// const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...SHOP_OWNER_STATUS_OPTIONS];
 const STATUS_OPTIONS = [
-  { value: 'all', label: 'All' },
-  { value: 'ACTIVE', label: 'Active' },
-  { value: 'INACTIVE', label: 'Inactive' },
+  { value: 'All', label: 'All' },
+  { value: 'Active', label: 'Active' },
+  { value: 'Inactive', label: 'Inactive' },
 ] as const;
 
 const TABLE_HEAD: TableHeadCellProps[] = [
@@ -65,27 +62,27 @@ const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'phoneNumber', label: 'Phone number', width: 180 },
   { id: 'country', label: 'Country', width: 220 },
   { id: 'address', label: 'Address', width: 220 },
-  { id: 'role', label: 'Role', width: 180 },
+  { id: 'vehicleDetail', label: 'Vehicle detail', width: 180 },
   { id: 'status', label: 'Status', width: 100 },
   { id: '', width: 88 },
 ];
 
 // ----------------------------------------------------------------------
 
-export function ShopwOwnerListView() {
-  const { shopOwners } = UseShopOwners();
-  const { deleteShopOwner, isDeleting } = UseDeleteShopOwner();
-  const { deleteShopOwners, areDeleting } = UseDeleteShopOwners();
+export function DeliveryUserListView() {
+  const { deliveryUsers } = UseDeliveryUsers();
+  const { deleteDeliveryUser, isDeleting } = UseDeleteDeliveryUser();
+  const { deleteDeliveryUsers, areDeleting } = UseDeleteDeliveryUsers();
   const table = useTable();
 
   const confirmDialog = useBoolean();
 
-  const [tableData, setTableData] = useState<ShopOwnerDT[]>(shopOwners);
+  const [tableData, setTableData] = useState<DeliveryUserResDT[]>(deliveryUsers);
 
-  const filters = useSetState<IShopOwnerTableFilters>({
+  const filters = useSetState<IDeliveryUserTableFilters>({
     name: '',
     role: [],
-    status: 'all',
+    status: 'All',
     phoneNumber: '',
   });
   const { state: currentFilters, setState: updateFilters } = filters;
@@ -99,15 +96,15 @@ export function ShopwOwnerListView() {
   const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
 
   const canReset =
-    !!currentFilters.name || currentFilters.role.length > 0 || currentFilters.status !== 'all';
+    !!currentFilters.name || currentFilters.role.length > 0 || currentFilters.status !== 'All';
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
   const handleDeleteRow = useCallback(
     async (id: string) => {
       try {
-        await deleteShopOwner(parseInt(id)).unwrap();
-        toast.success('Shop owner deleted successfully!');
+        await deleteDeliveryUser(parseInt(id)).unwrap();
+        toast.success('Deleted successfully!');
 
         const deleteRow = tableData.filter((row) => row.id !== id);
         setTableData(deleteRow);
@@ -124,7 +121,7 @@ export function ShopwOwnerListView() {
         toast.error(errorMessage);
       }
     },
-    [dataInPage.length, deleteShopOwner, table, tableData]
+    [dataInPage.length, deleteDeliveryUser, table, tableData]
   );
 
   const handleDeleteRows = useCallback(async () => {
@@ -132,8 +129,8 @@ export function ShopwOwnerListView() {
       const selectedIds = table.selected.map((id) => Number(id));
       if (!selectedIds.length) return;
 
-      await deleteShopOwners(selectedIds).unwrap();
-      toast.success('Shop owners deleted successfully!');
+      await deleteDeliveryUsers(selectedIds).unwrap();
+      toast.success('Deleted successfully!');
 
       const deleteRows = tableData.filter((row) => !selectedIds.includes(Number(row.id)));
       setTableData(deleteRows);
@@ -148,10 +145,17 @@ export function ShopwOwnerListView() {
       }
       toast.error(errorMessage);
     }
-  }, [deleteShopOwners, table.selected, dataInPage.length, dataFiltered.length, table, tableData]);
+  }, [
+    deleteDeliveryUsers,
+    table.selected,
+    dataInPage.length,
+    dataFiltered.length,
+    table,
+    tableData,
+  ]);
 
   const handleFilterStatus = useCallback(
-    (event: React.SyntheticEvent, newValue: IShopOwnerTableFilters['status']) => {
+    (event: React.SyntheticEvent, newValue: IDeliveryUserTableFilters['status']) => {
       table.onResetPage();
       updateFilters({ status: newValue });
     },
@@ -185,10 +189,10 @@ export function ShopwOwnerListView() {
   );
 
   useEffect(() => {
-    if (JSON.stringify(shopOwners) !== JSON.stringify(tableData)) {
-      setTableData(shopOwners);
+    if (JSON.stringify(deliveryUsers) !== JSON.stringify(tableData)) {
+      setTableData(deliveryUsers);
     }
-  }, [shopOwners, tableData]);
+  }, [deliveryUsers, tableData]);
 
   return (
     <>
@@ -196,18 +200,18 @@ export function ShopwOwnerListView() {
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Shop owner', href: paths.dashboard.shopOwner.root },
+            { name: 'Shop owner', href: paths.shopOwner.root },
+            { name: 'Delivery user', href: paths.shopOwner.deliveryUser.root },
             { name: 'List' },
           ]}
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.shopOwner.new}
+              href={paths.shopOwner.deliveryUser.new}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              New shop owner
+              New Delivery user
             </Button>
           }
           sx={{ mb: { xs: 3, md: 5 } }}
@@ -234,30 +238,31 @@ export function ShopwOwnerListView() {
                   <Label
                     variant={tab.value === currentFilters.status ? 'filled' : 'soft'}
                     color={
-                      tab.value === 'ACTIVE'
+                      tab.value === 'Active'
                         ? 'success'
-                        : tab.value === 'INACTIVE'
+                        : tab.value === 'Inactive'
                           ? 'error'
                           : 'default'
                     }
                   >
-                    {tab.value === 'all'
+                    {tab.value === 'All'
                       ? tableData.length
-                      : tableData.filter((user) => user.status === (tab.value === 'ACTIVE')).length}
+                      : tableData.filter((user) => user.status === (tab.value === 'Active')).length}
                   </Label>
                 }
               />
             ))}
           </Tabs>
 
-          <ShopOwnerTableToolbar
+          <DeliveryUserTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
-            options={{ status: _SHOPOWNER_STATUS }}
+            // options={{ status: _DELIVERY_USER_STATUS }}
+            options={{ status: ['All', 'Active', 'Inactive'] }}
           />
 
           {canReset && (
-            <ShopOwnerTableFiltersResult
+            <DeliveryUserTableFiltersResult
               filters={filters}
               totalResults={dataFiltered.length}
               onResetPage={table.onResetPage}
@@ -309,13 +314,13 @@ export function ShopwOwnerListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <ShopOwnerTableRow
+                      <DeliveryUserTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        editHref={paths.dashboard.shopOwner.edit(row.id)}
+                        editHref={paths.shopOwner.deliveryUser.edit(row.id)}
                         isDeleting={isDeleting}
                       />
                     ))}
@@ -351,8 +356,8 @@ export function ShopwOwnerListView() {
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-  inputData: ShopOwnerDT[];
-  filters: IShopOwnerTableFilters;
+  inputData: DeliveryUserResDT[];
+  filters: IDeliveryUserTableFilters;
   comparator: (a: any, b: any) => number;
 };
 
@@ -377,8 +382,10 @@ function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
     );
   }
 
-  if (status !== 'all') {
-    inputData = inputData.filter((user) => (status === 'ACTIVE' ? user.status : !user.status));
+  if (status !== 'All') {
+    inputData = inputData.filter((user) =>
+      status === 'Active' ? user.status === true : user.status === false
+    );
   }
 
   if (role.length) {

@@ -3,7 +3,7 @@ import { ApiResponseDT } from 'src/types/api-response';
 export type IShopOwnerTableFilters = {
   name: string;
   role: string[];
-  status: string;
+  status: 'all' | 'ACTIVE' | 'INACTIVE'; // Change to string union type
   phoneNumber: string;
 };
 
@@ -38,7 +38,7 @@ export interface ShopOwnerDT {
   createdAt: string;
   profileImage: string;
   role: string;
-  status: string;
+  status: boolean;
   updatedAt: string;
   shopOwnerId: number;
   shopOwnerUserId: number;
@@ -75,7 +75,7 @@ export interface UpdateShopOwnerRequestDT {
   username?: string;
   email?: string;
   role?: string;
-  status?: string;
+  status?: boolean;
   fullName?: string;
   phoneNumber?: string;
   address?: string;

@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { isValidPhoneNumber } from 'react-phone-number-input/input';
-import { boolean, z as zod } from 'zod';
+import { z as zod } from 'zod';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
@@ -29,11 +29,11 @@ import { useBoolean } from 'minimal-shared/hooks';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import { CardHeader, Divider } from '@mui/material';
-import { MultiFilePreview } from 'src/components/upload';
-import { useUpdateShopOwnerMutation } from 'src/store/admin/shop-owner';
+import { useEffect } from 'react';
+import { useUpdateDeliveryUserMutation } from 'src/store/shop-owner/delivery-user';
 import { getErrorMessage } from 'src/utils/error.message';
-import { UseDeleteShopOwner } from './hooks';
-import { ShopOwnerDT } from './types/types';
+import { UseDeleteDeliveryUser } from './hooks';
+import { DeliveryUserResDT } from './types/types';
 
 // ----------------------------------------------------------------------
 
@@ -54,35 +54,26 @@ export const NewUserSchema = zod.object({
   address: zod.string().min(1, { message: 'Address is required!' }),
   state: zod.string().min(1, { message: 'State is required!' }),
   city: zod.string().min(1, { message: 'City is required!' }),
+  vehicleDetail: zod.string().min(1, { message: 'vehicleDetail is required!' }),
   role: zod.string().min(1, { message: 'Role is required!' }),
   status: zod.boolean(),
-  password: zod
-    .string()
-    .min(1, { message: 'Password is required!' })
-    .min(6, { message: 'Password must be at least 6 characters!' })
-    .optional(),
-  // Shop detail
-  shopLogo: schemaHelper.file().nullable().optional(),
-  businessProof: schemaHelper.file().nullable().optional(),
-  shopName: zod.string().min(1, { message: 'Shop name is required!' }),
-  shopDescription: zod.string().min(1, { message: 'Shop description is required!' }),
-  shopAddress: zod.string().min(1, { message: 'Shop address is required!' }),
+  password: zod.string().optional(),
 });
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  currentUser?: ShopOwnerDT;
+  currentUser?: DeliveryUserResDT;
 };
 
-export function ShopOwnerEditForm({ currentUser }: Props) {
+export function DeliveryUserEditForm({ currentUser }: Props) {
   const router = useRouter();
   const showPassword = useBoolean();
   const confirmDialog = useBoolean();
 
   // Hook for RTK Query mutation
-  const [updateShopOwner, { isLoading }] = useUpdateShopOwnerMutation();
-  const { deleteShopOwner, isDeleting } = UseDeleteShopOwner();
+  const [updateDeliveryUser, { isLoading }] = useUpdateDeliveryUserMutation();
+  const { deleteDeliveryUser, isDeleting } = UseDeleteDeliveryUser();
 
   const defaultValues: NewUserSchemaType = {
     profileImage: null,
@@ -90,25 +81,33 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
     username: '',
     email: '',
     phoneNumber: '',
-    country: '',
-    state: '',
-    city: '',
-    address: '',
     password: '',
     role: '',
     status: false,
-    // Shop detail
-    shopLogo: null,
-    businessProof: null,
-    shopName: '',
-    shopDescription: '',
-    shopAddress: '',
+    vehicleDetail: currentUser?.DeliveryUser?.vehicleDetail || '',
+
+    // address
+    country: currentUser?.Address?.country || '',
+    state: currentUser?.Address?.state || '',
+    city: currentUser?.Address?.city || '',
+    address: currentUser?.Address?.address || '',
   };
 
   const methods = useForm<NewUserSchemaType>({
     mode: 'onSubmit',
     resolver: zodResolver(NewUserSchema),
-    defaultValues: currentUser || defaultValues,
+    // defaultValues: currentUser || defaultValues,
+    defaultValues: currentUser
+      ? {
+          ...currentUser,
+          vehicleDetail: currentUser.DeliveryUser?.vehicleDetail || '',
+          country: currentUser.Address?.country || '',
+          state: currentUser.Address?.state || '',
+          city: currentUser.Address?.city || '',
+          address: currentUser.Address?.address || '',
+          password: '',
+        }
+      : defaultValues,
   });
 
   const {
@@ -121,50 +120,40 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
   } = methods;
 
   const values = watch();
-  const businessProof = watch('businessProof');
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const updateShopOwnerDto = {
+      console.log('data', data);
+      const updateDeliveryUserDto = {
         fullName: data.fullName,
         username: data.username,
         email: data.email,
         phoneNumber: data.phoneNumber,
         password: data.password,
+        vehicleDetail: data.vehicleDetail,
+
         // address
         country: data.country,
         state: data.state,
         city: data.city,
         address: data.address,
-        // shop detail
-        shopName: data.shopName,
-        shopDescription: data.shopDescription,
-        shopAddress: data.shopAddress,
       };
       const profileImage = data.profileImage;
-      const shopLogo = data.shopLogo;
-      const businessProof = data.businessProof;
 
       const formData = new FormData();
-      formData.append('updateShopOwnerDto', JSON.stringify(updateShopOwnerDto));
+      formData.append('updateDeliveryUserDto', JSON.stringify(updateDeliveryUserDto));
       if (profileImage) {
         formData.append('profileImage', profileImage);
       }
-      if (shopLogo) {
-        formData.append('shopLogo', shopLogo);
-      }
-      if (businessProof) {
-        formData.append('businessProof', businessProof);
-      }
 
-      await updateShopOwner({
+      await updateDeliveryUser({
         id: Number(currentUser?.id) || 0,
         formData,
       }).unwrap();
 
       toast.success('Saved changes');
       reset();
-      router.push(paths.dashboard.shopOwner.root);
+      router.push(paths.shopOwner.deliveryUser.root);
     } catch (error: any) {
       let errorMessage = 'An unexpected error occurred';
       if (error?.data?.error?.message) {
@@ -183,19 +172,15 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
     }
 
     try {
-      await deleteShopOwner(Number(currentUser.id)).unwrap();
-      toast.success('User deleted successfully');
+      await deleteDeliveryUser(Number(currentUser.id)).unwrap();
+      toast.success('Deleted successfully');
       confirmDialog.onFalse();
-      router.push(paths.dashboard.shopOwner.root);
+      router.push(paths.shopOwner.deliveryUser.root);
     } catch (error: any) {
       console.error('Error while deleting:', error);
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     }
-  };
-
-  const handleRemove = () => {
-    setValue('businessProof', null, { shouldValidate: true });
   };
 
   const renderConfirmDialog = () => (
@@ -219,6 +204,21 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
       }
     />
   );
+
+  useEffect(() => {
+    if (currentUser) {
+      reset({
+        ...currentUser,
+        password: '',
+        vehicleDetail: currentUser.DeliveryUser?.vehicleDetail || '',
+        country: currentUser.Address?.country || '',
+        state: currentUser.Address?.state || '',
+        city: currentUser.Address?.city || '',
+        address: currentUser.Address?.address || '',
+        profileImage: currentUser.profileImage || null,
+      });
+    }
+  }, [currentUser, reset]);
 
   return (
     <>
@@ -298,6 +298,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                     <Field.Text name="username" label="Username" />
                     <Field.Text name="email" label="Email address" />
                     <Field.Phone name="phoneNumber" label="Phone number" />
+                    <Field.Text name="vehicleDetail" label="Vehicle detail" />
 
                     <Field.CountrySelect
                       fullWidth
@@ -333,154 +334,16 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                     />
                   </Box>
 
-                  {/* <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
-                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Create shop owner
-                  </LoadingButton>
-                </Stack> */}
+                  <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
+                    <LoadingButton type="submit" variant="contained" loading={isLoading}>
+                      Save changes
+                    </LoadingButton>
+                  </Stack>
                 </Card>
               </Grid>
             </Grid>
           </Card>
           {/* shop owner detail */}
-
-          {/* shop detail */}
-          <Card sx={{ width: '100%' }}>
-            <CardHeader
-              title="Shop detail"
-              subheader="Shop name, Shop address, shop logo..."
-              sx={{ mb: 3 }}
-            />
-            <Divider />
-
-            <Grid container spacing={3} sx={{ p: 3 }}>
-              <Grid size={{ xs: 12, md: 4 }}>
-                {/* shop logo */}
-                <Card sx={{ pt: 10, pb: 5, px: 3 }}>
-                  <Box sx={{ mb: 5 }}>
-                    <Field.UploadAvatar
-                      name="shopLogo"
-                      maxSize={3145728}
-                      helperText={
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            mt: 3,
-                            mx: 'auto',
-                            display: 'block',
-                            textAlign: 'center',
-                            color: 'text.disabled',
-                          }}
-                        >
-                          Shop logo, allowed *.jpeg, *.jpg, *.png, *.gif
-                          <br /> max size of {fData(3145728)}
-                        </Typography>
-                      }
-                    />
-                  </Box>
-                </Card>
-                {/* shop logo */}
-
-                {/* businessProof */}
-                <Card sx={{ pt: 10, pb: 5, px: 3, mt: 3 }}>
-                  <Box sx={{ mb: 5 }}>
-                    <Field.Upload
-                      onDelete={() => {
-                        methods.setValue('businessProof', null, { shouldValidate: true });
-                      }}
-                      name="businessProof"
-                      accept={{ 'application/pdf': ['.pdf'] }}
-                      maxSize={5242880}
-                      helperText={
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            mt: 3,
-                            mx: 'auto',
-                            display: 'block',
-                            textAlign: 'center',
-                            color: 'text.disabled',
-                          }}
-                        >
-                          Business proof / Shatiga Ganacsiga, allowed *.pdf
-                          <br /> Max size of {fData(5242880)}
-                        </Typography>
-                      }
-                    />
-                    {businessProof && (
-                      <>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mt: 3,
-                          }}
-                        >
-                          Download
-                        </Typography>
-                        <MultiFilePreview
-                          files={[businessProof]}
-                          thumbnail={false}
-                          onRemove={handleRemove}
-                          sx={{ my: 1, cursor: 'pointer' }}
-                          onClick={() => {
-                            const file = businessProof;
-                            console.log('file', file);
-
-                            const a = document.createElement('a');
-
-                            if (typeof file === 'string') {
-                              // Case 1: businessProof is a URL (already uploaded to Cloudinary)
-                              a.href = `${file}?download=business-proof.pdf`; // Force download by appending query param
-                              a.setAttribute('download', 'business-proof.pdf'); // Ensure it's treated as a download
-                            } else if (file instanceof Blob) {
-                              // Case 2: businessProof is a newly selected File
-                              const url = URL.createObjectURL(file);
-                              a.href = url;
-                              a.setAttribute('download', file.name || 'business-proof.pdf');
-                              URL.revokeObjectURL(url);
-                            } else {
-                              console.error('Invalid file type:', file);
-                              return;
-                            }
-
-                            // Trigger download
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                          }}
-                        />
-                      </>
-                    )}
-                  </Box>
-                </Card>
-                {/* businessProof */}
-              </Grid>
-
-              <Grid size={{ xs: 12, md: 8 }}>
-                <Card sx={{ p: 3 }}>
-                  <Box
-                    sx={{
-                      rowGap: 3,
-                      columnGap: 2,
-                      display: 'grid',
-                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                    }}
-                  >
-                    <Field.Text name="shopName" label="Shop name" />
-                    <Field.Text name="shopDescription" label="Shop description" />
-                    <Field.Text name="shopAddress" label="Shop address" />
-                  </Box>
-                </Card>
-              </Grid>
-            </Grid>
-          </Card>
-          {/* shop detail */}
-
-          <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-              Save changes
-            </LoadingButton>
-          </Stack>
         </Stack>
       </Form>
 
