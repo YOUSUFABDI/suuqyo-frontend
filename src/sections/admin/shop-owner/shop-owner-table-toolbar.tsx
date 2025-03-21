@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import TextField from '@mui/material/TextField';
 
-import { Checkbox, FormControl, InputLabel, OutlinedInput, Select } from '@mui/material';
+import { FormControl, InputLabel, Select } from '@mui/material';
 import { CustomPopover } from 'src/components/custom-popover';
 import { Iconify } from 'src/components/iconify';
 
@@ -38,13 +38,10 @@ export function ShopOwnerTableToolbar({ filters, options, onResetPage }: Props) 
     [onResetPage, updateFilters]
   );
 
-  const handleFilterRole = useCallback(
-    (event: SelectChangeEvent<string[]>) => {
-      const newValue =
-        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value;
-
+  const handleFilterStatus = useCallback(
+    (event: SelectChangeEvent) => {
       onResetPage();
-      updateFilters({ role: newValue });
+      updateFilters({ status: event.target.value as IShopOwnerTableFilters['status'] });
     },
     [onResetPage, updateFilters]
   );
@@ -87,24 +84,11 @@ export function ShopOwnerTableToolbar({ filters, options, onResetPage }: Props) 
           alignItems: { xs: 'flex-end', md: 'center' },
         }}
       >
-        <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
-          <InputLabel htmlFor="filter-role-select">Status</InputLabel>
-          <Select
-            multiple
-            value={currentFilters.role}
-            onChange={handleFilterRole}
-            input={<OutlinedInput label="Status" />}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            inputProps={{ id: 'filter-role-select' }}
-            MenuProps={{ PaperProps: { sx: { maxHeight: 240 } } }}
-          >
+        <FormControl sx={{ width: { xs: 1, md: 200 } }}>
+          <InputLabel>Status</InputLabel>
+          <Select value={currentFilters.status} onChange={handleFilterStatus} label="Status">
             {options.status.map((option) => (
               <MenuItem key={option} value={option}>
-                <Checkbox
-                  disableRipple
-                  size="small"
-                  checked={currentFilters.role.includes(option)}
-                />
                 {option}
               </MenuItem>
             ))}

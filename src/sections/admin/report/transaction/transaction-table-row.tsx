@@ -171,15 +171,15 @@ export function TransactionTableRow({
           </Label>
         </TableCell>
 
-        <TableCell align="right" sx={{ px: 1 }}>
+        {/* <TableCell align="right" sx={{ px: 1 }}>
           <IconButton color={menuActions.open ? 'inherit' : 'default'} onClick={menuActions.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
 
-      {renderMenuActions()}
-      {renderConfirmDialog()}
+      {/* {renderMenuActions()}
+      {renderConfirmDialog()} */}
     </>
   );
 }

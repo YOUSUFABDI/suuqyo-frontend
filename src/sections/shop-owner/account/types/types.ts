@@ -25,11 +25,6 @@ export type RegisterShopOwnerResDT = ApiResponseDT<{
   data: ShopDT;
 }>;
 
-export const SHOP_OWNER_STATUS_OPTIONS = [
-  { value: 'ACTIVE', label: 'Active' },
-  { value: 'INACTIVE', label: 'Inactive' },
-];
-
 export interface ShopOwnersDataDT {
   shopOwners: ShopOwnerDT[];
 }

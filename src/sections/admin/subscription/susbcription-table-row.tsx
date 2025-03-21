@@ -28,6 +28,7 @@ import {
 } from 'src/store/admin/subscription';
 import { getErrorMessage } from 'src/utils/error.message';
 import { toast } from 'src/components/snackbar';
+import { UseSubscriptionRenewals } from '../report/subscription-renewal/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +44,7 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
 
   const [sendReminder, { isLoading }] = useSendReminderMutation();
   const [renewSubscription, { isLoading: renewIsLoading }] = useRenewSubscriptionMutation();
+  const { refetch } = UseSubscriptionRenewals();
 
   const handleSendReminder = async () => {
     try {
@@ -65,8 +67,9 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
 
   const handleRenew = async () => {
     try {
-      const response = await renewSubscription({ shopOwnerId: Number(row.user.id) }).unwrap();
+      await renewSubscription({ shopOwnerId: Number(row.user.id) }).unwrap();
       toast.success('Renewed subscription.');
+      refetch();
     } catch (error: any) {
       console.error(error);
       const errorMessage = getErrorMessage(error);

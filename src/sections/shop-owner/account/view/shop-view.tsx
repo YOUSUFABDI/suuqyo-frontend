@@ -1,9 +1,9 @@
 'use client';
 
-import { MyShop } from '../my-shop';
+import { MyShop } from '../shop';
 
 // ----------------------------------------------------------------------
 
-export function MyShopView() {
+export function ShopView() {
   return <MyShop />;
 }

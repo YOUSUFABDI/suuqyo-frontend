@@ -22,8 +22,6 @@ import { paths } from 'src/routes/paths';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { SHOP_OWNER_STATUS_OPTIONS } from '../types/types';
-
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { Iconify } from 'src/components/iconify';
@@ -42,22 +40,20 @@ import {
   useTable,
 } from 'src/components/table';
 
-import { ShopOwnerDT } from '../types/types';
 import { UseDeleteShopOwner, UseShopOwners } from '../hooks';
 import { UseDeleteShopOwners } from '../hooks/use-delete-shop-owners';
 import { ShopOwnerTableFiltersResult } from '../shop-owner-table-filters-result';
 import { ShopOwnerTableRow } from '../shop-owner-table-row';
 import { ShopOwnerTableToolbar } from '../shop-owner-table-toolbar';
+import { ShopOwnerDT } from '../types/types';
 
 // ----------------------------------------------------------------------
+export const _SHOPOWNER_STATUS = ['All', 'Active', 'Inactive'];
 
-export const _SHOPOWNER_STATUS = [`ACTIVE`, `INACTIVE`];
-
-// const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...SHOP_OWNER_STATUS_OPTIONS];
 const STATUS_OPTIONS = [
-  { value: 'all', label: 'All' },
-  { value: 'ACTIVE', label: 'Active' },
-  { value: 'INACTIVE', label: 'Inactive' },
+  { value: 'All', label: 'All' },
+  { value: 'Active', label: 'Active' },
+  { value: 'Inactive', label: 'Inactive' },
 ] as const;
 
 const TABLE_HEAD: TableHeadCellProps[] = [
@@ -85,7 +81,7 @@ export function ShopwOwnerListView() {
   const filters = useSetState<IShopOwnerTableFilters>({
     name: '',
     role: [],
-    status: 'all',
+    status: 'All',
     phoneNumber: '',
   });
   const { state: currentFilters, setState: updateFilters } = filters;
@@ -99,7 +95,7 @@ export function ShopwOwnerListView() {
   const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
 
   const canReset =
-    !!currentFilters.name || currentFilters.role.length > 0 || currentFilters.status !== 'all';
+    !!currentFilters.name || currentFilters.role.length > 0 || currentFilters.status !== 'All';
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
@@ -234,16 +230,16 @@ export function ShopwOwnerListView() {
                   <Label
                     variant={tab.value === currentFilters.status ? 'filled' : 'soft'}
                     color={
-                      tab.value === 'ACTIVE'
+                      tab.value === 'Active'
                         ? 'success'
-                        : tab.value === 'INACTIVE'
+                        : tab.value === 'Inactive'
                           ? 'error'
                           : 'default'
                     }
                   >
-                    {tab.value === 'all'
+                    {tab.value === 'All'
                       ? tableData.length
-                      : tableData.filter((user) => user.status === (tab.value === 'ACTIVE')).length}
+                      : tableData.filter((user) => user.status === (tab.value === 'Active')).length}
                   </Label>
                 }
               />
@@ -253,7 +249,7 @@ export function ShopwOwnerListView() {
           <ShopOwnerTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
-            options={{ status: _SHOPOWNER_STATUS }}
+            options={{ status: ['All', 'Active', 'Inactive'] }}
           />
 
           {canReset && (
@@ -377,8 +373,10 @@ function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
     );
   }
 
-  if (status !== 'all') {
-    inputData = inputData.filter((user) => (status === 'ACTIVE' ? user.status : !user.status));
+  if (status !== 'All') {
+    inputData = inputData.filter((user) =>
+      status === 'Active' ? user.status === true : user.status === false
+    );
   }
 
   if (role.length) {

@@ -6,12 +6,12 @@ import { getErrorMessage } from 'src/utils/error.message';
 import { SubscriptionRenewalResDT } from '../types/subscription-renewal';
 
 export const UseSubscriptionRenewals = () => {
-  const { data, error, isLoading } = useGetSubscriptionRenewalsQuery();
+  const { data, error, isLoading, refetch } = useGetSubscriptionRenewalsQuery();
 
   const subscriptionRenewals = isSuccessResponse<SubscriptionRenewalResDT[]>(data)
     ? data.payload.data
     : [];
   const errorMessage = error ? getErrorMessage(error) : null;
 
-  return { subscriptionRenewals, errorMessage, isLoading };
+  return { subscriptionRenewals, refetch, errorMessage, isLoading };
 };

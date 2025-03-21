@@ -53,6 +53,7 @@ import {
   SubscriptionRenewalResDT,
   SubscriptionRenewalTableFilters,
 } from '../types/subscription-renewal';
+import { useSubscriptions } from 'src/sections/admin/subscription/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -449,7 +450,7 @@ function applyFilter({ inputData, comparator, filters, dateError }: ApplyFilterP
 
   if (name) {
     inputData = inputData.filter(({ id, subscription }) =>
-      [id, subscription?.shopOwner.fullName, subscription?.shopOwner.phoneNumber].some(
+      [id, subscription?.user?.fullName, subscription?.user?.phoneNumber].some(
         (field) => typeof field === 'string' && field.toLowerCase().includes(name.toLowerCase())
       )
     );

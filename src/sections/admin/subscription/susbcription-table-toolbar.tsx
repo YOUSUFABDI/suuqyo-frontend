@@ -131,13 +131,13 @@ export function SubscriptionTableToolbar({ filters, options, onResetPage }: Prop
             }}
           />
 
-          <IconButton onClick={menuActions.onOpen}>
+          {/* <IconButton onClick={menuActions.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          </IconButton> */}
         </Box>
       </Box>
 
-      {renderMenuActions()}
+      {/* {renderMenuActions()} */}
     </>
   );
 }

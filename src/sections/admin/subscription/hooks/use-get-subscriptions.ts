@@ -6,10 +6,10 @@ import { SubscriptionResDT } from 'src/sections/admin/subscription/types/subscri
 import { getErrorMessage } from 'src/utils/error.message';
 
 export const useSubscriptions = () => {
-  const { data, error, isLoading } = useGetSubscriptionsQuery();
+  const { data, error, isLoading, refetch } = useGetSubscriptionsQuery();
 
   const subscriptions = isSuccessResponse<SubscriptionResDT[]>(data) ? data.payload.data : [];
   const errorMessage = error ? getErrorMessage(error) : null;
 
-  return { subscriptions, errorMessage, isLoading };
+  return { subscriptions, refetch, errorMessage, isLoading };
 };

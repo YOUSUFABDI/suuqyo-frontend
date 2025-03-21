@@ -21,7 +21,6 @@ type Props = {
 };
 
 export function SubscriptionRenewalTableRow({ row, selected, onSelectRow }: Props) {
-  console.log('row', row);
   return (
     <>
       <TableRow hover selected={selected}>

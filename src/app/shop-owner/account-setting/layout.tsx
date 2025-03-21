@@ -1,4 +1,4 @@
-import { MyShopLayout } from 'src/sections/shop-owner/shop/my-shop-layout';
+import { AccountLayout } from 'src/sections/shop-owner/account/account-layout';
 
 // ----------------------------------------------------------------------
 
@@ -7,5 +7,5 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  return <MyShopLayout> {children}</MyShopLayout>;
+  return <AccountLayout> {children}</AccountLayout>;
 }

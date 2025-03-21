@@ -48,7 +48,6 @@ import { UseDeleteDeliveryUsers } from '../hooks/use-delete-delivery-users';
 
 // ----------------------------------------------------------------------
 
-// export const _DELIVERY_USER_STATUS = [`ACTIVE`, `INACTIVE`];
 export const _DELIVERY_USER_STATUS = ['All', 'Active', 'Inactive'];
 
 const STATUS_OPTIONS = [
@@ -257,7 +256,6 @@ export function DeliveryUserListView() {
           <DeliveryUserTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
-            // options={{ status: _DELIVERY_USER_STATUS }}
             options={{ status: ['All', 'Active', 'Inactive'] }}
           />
 

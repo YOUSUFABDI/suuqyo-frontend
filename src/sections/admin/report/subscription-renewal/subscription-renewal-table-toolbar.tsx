@@ -199,13 +199,13 @@ export function SubscriptionRenewalTableToolbar({
             }}
           />
 
-          <IconButton onClick={menuActions.onOpen}>
+          {/* <IconButton onClick={menuActions.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          </IconButton> */}
         </Box>
       </Box>
 
-      {renderMenuActions()}
+      {/* {renderMenuActions()} */}
     </>
   );
 }

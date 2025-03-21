@@ -82,12 +82,17 @@ export const shopOwnerData: NavSectionProps['data'] = [
         icon: ICONS.order,
         children: [{ title: 'List', path: paths.shopOwner.order.root }],
       },
-      // {
-      //   title: 'Shop',
-      //   path: paths.shopOwner.myShop.root,
-      //   icon: ICONS.ecommerce,
-      //   children: [{ title: 'My shop', path: paths.shopOwner.myShop.root }],
-      // },
+    ],
+  },
+
+  {
+    subheader: 'Account setting',
+    items: [
+      {
+        title: 'Account',
+        path: paths.shopOwner.account.root,
+        icon: ICONS.user,
+      },
     ],
   },
 ];
