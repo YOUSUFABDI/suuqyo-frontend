@@ -25,7 +25,7 @@ export function DeliveryUserTableFiltersResult({ filters, onResetPage, totalResu
 
   const handleRemoveStatus = useCallback(() => {
     onResetPage();
-    updateFilters({ status: 'all' });
+    updateFilters({ status: 'All' });
   }, [onResetPage, updateFilters]);
 
   const handleRemoveRole = useCallback(
@@ -45,7 +45,7 @@ export function DeliveryUserTableFiltersResult({ filters, onResetPage, totalResu
 
   return (
     <FiltersResult totalResults={totalResults} onReset={handleReset} sx={sx}>
-      <FiltersBlock label="Status:" isShow={currentFilters.status !== 'all'}>
+      <FiltersBlock label="Status:" isShow={currentFilters.status !== 'All'}>
         <Chip
           {...chipProps}
           label={currentFilters.status}
