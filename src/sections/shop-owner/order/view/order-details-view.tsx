@@ -86,8 +86,8 @@ export function OrderDetailsView({ order }: Props) {
           <Card>
             <OrderDetailsCustomer customer={order?.customer} />
 
-            <Divider sx={{ borderStyle: 'dashed' }} />
-            <OrderDetailsDelivery delivery={order?.delivery} />
+            {/* <Divider sx={{ borderStyle: 'dashed' }} /> */}
+            {/* <OrderDetailsDelivery delivery={order?.delivery} /> */}
 
             <Divider sx={{ borderStyle: 'dashed' }} />
             <OrderDetailsShipping shippingAddress={order?.customer} />
