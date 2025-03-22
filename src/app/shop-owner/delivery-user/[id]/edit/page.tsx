@@ -15,7 +15,7 @@ export default function Page({ params }: Props) {
   const { deliveryUsers } = UseDeliveryUsers();
   const { id } = params;
 
-  const currentUser = deliveryUsers.find((user) => Number(user.id) === Number(id));
+  const currentUser = deliveryUsers.find((user) => Number(user.userId) === Number(id));
 
   return <DeliveryUserEditView user={currentUser} />;
 }

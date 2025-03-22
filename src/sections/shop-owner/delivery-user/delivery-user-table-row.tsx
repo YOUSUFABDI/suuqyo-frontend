@@ -102,7 +102,7 @@ export function DeliveryUserTableRow({
 
         <TableCell>
           <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-            <Avatar alt={row.fullName} src={row.profileImage} />
+            <Avatar alt={row.user.fullName} src={row.user.profileImage} />
 
             <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
               <Link
@@ -111,26 +111,26 @@ export function DeliveryUserTableRow({
                 color="inherit"
                 sx={{ cursor: 'pointer' }}
               >
-                {row.fullName}
+                {row.user.fullName}
               </Link>
               <Box component="span" sx={{ color: 'text.disabled' }}>
-                {row.email}
+                {row.user.email}
               </Box>
             </Stack>
           </Box>
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.phoneNumber}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.user.phoneNumber}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.Address?.country}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.user.Address?.country}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.Address?.address}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.user.Address?.address}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.DeliveryUser?.vehicleDetail}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.vehicleDetail}</TableCell>
 
         <TableCell>
-          <Label variant="soft" color={row?.status ? 'success' : 'error'}>
-            {row?.status ? 'Active' : 'Inactive'}
+          <Label variant="soft" color={row?.user.status ? 'success' : 'error'}>
+            {row?.user.status ? 'Active' : 'Inactive'}
           </Label>
         </TableCell>
 

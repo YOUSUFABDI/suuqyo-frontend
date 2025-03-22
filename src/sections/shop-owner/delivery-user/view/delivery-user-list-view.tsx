@@ -101,6 +101,7 @@ export function DeliveryUserListView() {
 
   const handleDeleteRow = useCallback(
     async (id: string) => {
+      console.log(id);
       try {
         await deleteDeliveryUser(parseInt(id)).unwrap();
         toast.success('Deleted successfully!');
@@ -131,7 +132,7 @@ export function DeliveryUserListView() {
       await deleteDeliveryUsers(selectedIds).unwrap();
       toast.success('Deleted successfully!');
 
-      const deleteRows = tableData.filter((row) => !selectedIds.includes(Number(row.id)));
+      const deleteRows = tableData.filter((row) => !selectedIds.includes(Number(row.userId)));
       setTableData(deleteRows);
 
       table.onUpdatePageDeleteRows(dataInPage.length, dataFiltered.length);
@@ -191,6 +192,7 @@ export function DeliveryUserListView() {
     if (JSON.stringify(deliveryUsers) !== JSON.stringify(tableData)) {
       setTableData(deliveryUsers);
     }
+    console.log('tableData', tableData);
   }, [deliveryUsers, tableData]);
 
   return (
@@ -246,7 +248,8 @@ export function DeliveryUserListView() {
                   >
                     {tab.value === 'All'
                       ? tableData.length
-                      : tableData.filter((user) => user.status === (tab.value === 'Active')).length}
+                      : tableData.filter((user) => user.user.status === (tab.value === 'Active'))
+                          .length}
                   </Label>
                 }
               />
@@ -276,7 +279,7 @@ export function DeliveryUserListView() {
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  dataFiltered.map((row) => row.id)
+                  dataFiltered.map((row) => row.userId)
                 )
               }
               action={
@@ -300,7 +303,7 @@ export function DeliveryUserListView() {
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      dataFiltered.map((row) => row.id)
+                      dataFiltered.map((row) => row.userId)
                     )
                   }
                 />
@@ -317,8 +320,8 @@ export function DeliveryUserListView() {
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        editHref={paths.shopOwner.deliveryUser.edit(row.id)}
+                        onDeleteRow={() => handleDeleteRow(row.userId)}
+                        editHref={paths.shopOwner.deliveryUser.edit(row.userId)}
                         isDeleting={isDeleting}
                       />
                     ))}
@@ -375,19 +378,19 @@ function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
   if (name) {
     inputData = inputData.filter(
       (user) =>
-        user.fullName.toLowerCase().includes(name.toLowerCase()) ||
-        user.phoneNumber.toLowerCase().includes(phoneNumber.toLowerCase())
+        user.user.fullName.toLowerCase().includes(name.toLowerCase()) ||
+        user.user.phoneNumber.toLowerCase().includes(phoneNumber.toLowerCase())
     );
   }
 
   if (status !== 'All') {
     inputData = inputData.filter((user) =>
-      status === 'Active' ? user.status === true : user.status === false
+      status === 'Active' ? user.user.status === true : user.user.status === false
     );
   }
 
   if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
+    inputData = inputData.filter((user) => role.includes(user.user.role));
   }
 
   return inputData;

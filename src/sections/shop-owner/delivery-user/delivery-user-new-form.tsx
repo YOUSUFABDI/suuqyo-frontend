@@ -135,10 +135,10 @@ export function DeliveryUserNewForm() {
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={{ xs: 3, md: 5 }}>
-        {/* shop owner detail */}
+        {/* Delivery user detail */}
         <Card sx={{ width: '100%' }}>
           <CardHeader
-            title="Shop owner detail"
+            title="Delivery user detail"
             subheader="Full name, Phone number, image..."
             sx={{ mb: 3 }}
           />
@@ -246,7 +246,7 @@ export function DeliveryUserNewForm() {
             </Grid>
           </Grid>
         </Card>
-        {/* shop owner detail */}
+        {/* Delivery user detail */}
       </Stack>
     </Form>
   );

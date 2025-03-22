@@ -47,7 +47,11 @@ export const NewUserSchema = zod.object({
     .string()
     .min(1, { message: 'Email is required!' })
     .email({ message: 'Email must be a valid email address!' }),
-  phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
+  // phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
+  phoneNumber: zod
+    .string()
+    .min(1, 'Phone number is required')
+    .refine((value) => isValidPhoneNumber(value || ''), 'Invalid phone number'),
   country: schemaHelper.nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
     message: 'Country is required!',
   }),
@@ -76,21 +80,22 @@ export function DeliveryUserEditForm({ currentUser }: Props) {
   const { deleteDeliveryUser, isDeleting } = UseDeleteDeliveryUser();
 
   const defaultValues: NewUserSchemaType = {
-    profileImage: null,
-    fullName: '',
-    username: '',
-    email: '',
-    phoneNumber: '',
+    profileImage: currentUser?.user.profileImage || null,
+    fullName: currentUser?.user.fullName || '',
+    username: currentUser?.user.username || '',
+    email: currentUser?.user.email || '',
+    // phoneNumber: '',
+    phoneNumber: currentUser?.user.phoneNumber || '',
     password: '',
     role: '',
     status: false,
-    vehicleDetail: currentUser?.DeliveryUser?.vehicleDetail || '',
+    vehicleDetail: currentUser?.vehicleDetail || '',
 
     // address
-    country: currentUser?.Address?.country || '',
-    state: currentUser?.Address?.state || '',
-    city: currentUser?.Address?.city || '',
-    address: currentUser?.Address?.address || '',
+    country: currentUser?.user.Address?.country || '',
+    state: currentUser?.user.Address?.state || '',
+    city: currentUser?.user.Address?.city || '',
+    address: currentUser?.user.Address?.address || '',
   };
 
   const methods = useForm<NewUserSchemaType>({
@@ -100,11 +105,16 @@ export function DeliveryUserEditForm({ currentUser }: Props) {
     defaultValues: currentUser
       ? {
           ...currentUser,
-          vehicleDetail: currentUser.DeliveryUser?.vehicleDetail || '',
-          country: currentUser.Address?.country || '',
-          state: currentUser.Address?.state || '',
-          city: currentUser.Address?.city || '',
-          address: currentUser.Address?.address || '',
+          profileImage: currentUser?.user.profileImage || null,
+          fullName: currentUser?.user.fullName || '',
+          username: currentUser?.user.username || '',
+          email: currentUser?.user.email || '',
+          phoneNumber: currentUser?.user.phoneNumber || '',
+          vehicleDetail: currentUser?.vehicleDetail || '',
+          country: currentUser.user.Address?.country || '',
+          state: currentUser.user.Address?.state || '',
+          city: currentUser.user.Address?.city || '',
+          address: currentUser.user.Address?.address || '',
           password: '',
         }
       : defaultValues,
@@ -147,7 +157,7 @@ export function DeliveryUserEditForm({ currentUser }: Props) {
       }
 
       await updateDeliveryUser({
-        id: Number(currentUser?.id) || 0,
+        id: Number(currentUser?.userId) || 0,
         formData,
       }).unwrap();
 
@@ -172,7 +182,7 @@ export function DeliveryUserEditForm({ currentUser }: Props) {
     }
 
     try {
-      await deleteDeliveryUser(Number(currentUser.id)).unwrap();
+      await deleteDeliveryUser(Number(currentUser.userId)).unwrap();
       toast.success('Deleted successfully');
       confirmDialog.onFalse();
       router.push(paths.shopOwner.deliveryUser.root);
@@ -205,17 +215,37 @@ export function DeliveryUserEditForm({ currentUser }: Props) {
     />
   );
 
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     reset({
+  //       ...currentUser,
+  //       fullName: currentUser?.user.fullName || '',
+  //       username: currentUser?.user.username || '',
+  //       email: currentUser?.user.email || '',
+  //       password: '',
+  //       phoneNumber: currentUser?.user.phoneNumber || '',
+  //       vehicleDetail: currentUser?.vehicleDetail || '',
+  //       country: currentUser.user.Address?.country || '',
+  //       state: currentUser.user.Address?.state || '',
+  //       city: currentUser.user.Address?.city || '',
+  //       address: currentUser.user.Address?.address || '',
+  //       profileImage: currentUser.user.profileImage || null,
+  //     });
+  //   }
+  // }, [currentUser, reset]);
   useEffect(() => {
     if (currentUser) {
       reset({
-        ...currentUser,
-        password: '',
-        vehicleDetail: currentUser.DeliveryUser?.vehicleDetail || '',
-        country: currentUser.Address?.country || '',
-        state: currentUser.Address?.state || '',
-        city: currentUser.Address?.city || '',
-        address: currentUser.Address?.address || '',
-        profileImage: currentUser.profileImage || null,
+        // Spread user fields directly
+        ...currentUser.user,
+        vehicleDetail: currentUser.vehicleDetail,
+        profileImage: currentUser.user.profileImage || null,
+        password: '', // Clear password field
+        // Address fields
+        country: currentUser.user.Address?.country || '',
+        state: currentUser.user.Address?.state || '',
+        city: currentUser.user.Address?.city || '',
+        address: currentUser.user.Address?.address || '',
       });
     }
   }, [currentUser, reset]);
@@ -227,7 +257,7 @@ export function DeliveryUserEditForm({ currentUser }: Props) {
           {/* shop owner detail */}
           <Card sx={{ width: '100%' }}>
             <CardHeader
-              title="Shop owner detail"
+              title="Delivery user detail"
               subheader="Full name, Phone number, image..."
               sx={{ mb: 3 }}
             />

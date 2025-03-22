@@ -5,11 +5,13 @@ export type IDeliveryUserTableFilters = {
   phoneNumber: string;
 };
 
-interface DeliveryUser {
+export interface DeliveryUserResDT {
   id: string;
   userId: string;
+  shopOwnerId: string;
   availability: boolean;
   vehicleDetail: string;
+  user: UserDT;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,7 +25,7 @@ interface Address {
   state: string;
 }
 
-export interface DeliveryUserResDT {
+export interface UserDT {
   id: string;
   fullName: string;
   username: string;
@@ -34,8 +36,7 @@ export interface DeliveryUserResDT {
   profileImage: string;
   role: string;
   status: boolean;
+  Address?: Address;
   createdAt: Date;
   updatedAt: Date;
-  DeliveryUser?: DeliveryUser;
-  Address?: Address;
 }

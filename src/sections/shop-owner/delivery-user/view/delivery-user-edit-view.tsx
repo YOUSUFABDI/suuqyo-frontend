@@ -24,7 +24,7 @@ export function DeliveryUserEditView({ user: currentUser }: Props) {
         links={[
           { name: 'Shop owner', href: paths.shopOwner.root },
           { name: 'Delivery user', href: paths.shopOwner.deliveryUser.root },
-          { name: currentUser?.fullName },
+          { name: currentUser?.user.fullName },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
