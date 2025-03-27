@@ -13,7 +13,8 @@ import { DeliveryUserResDT } from '../delivery-user/types/types';
 // ----------------------------------------------------------------------
 
 type Props = {
-  delivery?: IOrderDelivery;
+  // delivery?: IOrderDelivery;
+  delivery: any;
 };
 
 export function OrderDetailsDelivery({ delivery }: Props) {
