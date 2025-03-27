@@ -2,12 +2,12 @@ import Box from '@mui/material/Box';
 import CardHeader from '@mui/material/CardHeader';
 import Stack from '@mui/material/Stack';
 
-import { CustomerDT } from './types/types';
+import { CustomerDT, ShippingAddressDT } from './types/types';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  shippingAddress?: CustomerDT;
+  shippingAddress?: ShippingAddressDT;
 };
 
 export function OrderDetailsShipping({ shippingAddress }: Props) {
@@ -20,7 +20,14 @@ export function OrderDetailsShipping({ shippingAddress }: Props) {
             Address
           </Box>
 
-          {shippingAddress?.Address?.address}
+          {shippingAddress?.address}
+        </Box>
+        <Box sx={{ display: 'flex' }}>
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+            Full name
+          </Box>
+
+          {shippingAddress?.fullName}
         </Box>
 
         <Box sx={{ display: 'flex' }}>

@@ -12,6 +12,15 @@ export interface ShopOwnerDT {
   updatedAt: string;
 }
 
+export interface ShippingAddressDT {
+  id: number;
+  address: string;
+  phoneNumber: string;
+  fullName: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AddressDT {
   id: number;
   userId: number;
@@ -35,6 +44,7 @@ export interface CustomerDT {
   status: string;
   updatedAt: string;
   Address: AddressDT;
+  ShippingAddress: ShippingAddressDT;
 }
 
 export interface ProductDT {
