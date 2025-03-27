@@ -27,7 +27,7 @@ export const shopOwnerApi = createApi({
     registerShopOwner: builder.mutation<RegisterShopOwnerResDT, FormData>({
       query: (formData) => {
         return {
-          url: '/admin/register-shop-owner',
+          url: '/admin-shop-owner/register-shop-owner',
           method: 'POST',
           body: formData,
         };
@@ -36,14 +36,14 @@ export const shopOwnerApi = createApi({
     }),
     getAllShopOwners: builder.query<GetAllShopOwnersResponseDT, void>({
       query: () => ({
-        url: '/admin/shop-owners',
+        url: '/admin-shop-owner/shop-owners',
         method: 'GET',
       }),
       providesTags: ['shopOwnerApi'],
     }),
     getOneShopOwner: builder.query<ApiResponseDT<ShopOwnerDT>, { id: number }>({
       query: ({ id }) => ({
-        url: `/admin/shop-owner/${id}`,
+        url: `/admin-shop-owner/shop-owner/${id}`,
         method: 'GET',
       }),
       providesTags: ['shopOwnerApi'],
@@ -54,7 +54,7 @@ export const shopOwnerApi = createApi({
       { id: number; formData: FormData }
     >({
       query: ({ id, formData }) => ({
-        url: `/admin/update-shop-owner/${id}`,
+        url: `/admin-shop-owner/update-shop-owner/${id}`,
         method: 'PATCH',
         body: formData,
       }),
@@ -63,7 +63,7 @@ export const shopOwnerApi = createApi({
 
     deleteShopOwner: builder.mutation<void, number>({
       query: (userId) => ({
-        url: `/admin/delete-shop-owner/${userId}`,
+        url: `/admin-shop-owner/delete-shop-owner/${userId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['shopOwnerApi'],
@@ -71,7 +71,7 @@ export const shopOwnerApi = createApi({
 
     deleteShopOwners: builder.mutation<void, number[]>({
       query: (userIds) => ({
-        url: '/admin/delete-shop-owners',
+        url: '/admin-shop-owner/delete-shop-owners',
         method: 'DELETE',
         body: { userIds },
       }),

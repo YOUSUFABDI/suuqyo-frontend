@@ -21,7 +21,7 @@ export const analyticApi = createApi({
   endpoints: (builder) => ({
     getAdminAnalytic: builder.query<ApiResponseDT<AdminAnalyticsResDT>, void>({
       query: () => ({
-        url: '/admin-analytics',
+        url: '/admin-analytic/admin-analytics',
         method: 'GET',
       }),
       providesTags: ['analyticApi'],

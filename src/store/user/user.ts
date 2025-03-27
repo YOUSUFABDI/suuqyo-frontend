@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API } from '../api';
 
-export const adminApi = createApi({
-  reducerPath: 'adminApi',
+export const userApi = createApi({
+  reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${API}`,
     prepareHeaders: (headers) => {
@@ -15,9 +15,9 @@ export const adminApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['adminApi'],
+  tagTypes: ['userApi'],
   endpoints: (builder) => ({
-    updateAdmin: builder.mutation<any, { id: number; formData: FormData }>({
+    updateUser: builder.mutation<any, { id: number; formData: FormData }>({
       query: ({ id, formData }) => {
         return {
           url: `/user/update-user/${id}`,
@@ -25,9 +25,9 @@ export const adminApi = createApi({
           body: formData,
         };
       },
-      invalidatesTags: ['adminApi'],
+      invalidatesTags: ['userApi'],
     }),
   }),
 });
 
-export const { useUpdateAdminMutation } = adminApi;
+export const { useUpdateUserMutation } = userApi;

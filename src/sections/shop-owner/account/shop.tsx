@@ -13,7 +13,7 @@ import { fData } from 'src/utils/format-number';
 
 import { Field, Form, schemaHelper } from 'src/components/hook-form';
 import { toast } from 'src/components/snackbar';
-import { useUpdateShopDetailMutation } from 'src/store/shop-owner/shopApi';
+import { useUpdateShopDetailMutation } from 'src/store/shop-owner/shop';
 import { UseShopDetail } from './hooks';
 
 // ----------------------------------------------------------------------

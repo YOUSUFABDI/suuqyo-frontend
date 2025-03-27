@@ -72,6 +72,7 @@ export const paths = {
     account: {
       root: `${ROOTS.SHOP_OWNER}/account-setting`,
       shop: `${ROOTS.SHOP_OWNER}/account-setting/my-shop`,
+      changePassword: `${ROOTS.SHOP_OWNER}/account-setting/change-password`,
     },
   },
 

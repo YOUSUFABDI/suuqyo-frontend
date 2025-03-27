@@ -16,7 +16,7 @@ import { Field, Form, schemaHelper } from 'src/components/hook-form';
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { useUser } from 'src/sections/auth/hooks';
-import { useUpdateAdminMutation } from 'src/store/admin/admin';
+import { useUpdateUserMutation } from 'src/store/user/user';
 import { getErrorMessage } from 'src/utils/error.message';
 
 // ----------------------------------------------------------------------
@@ -57,7 +57,7 @@ export const UpdateUserSchema = zod.object({
 
 export function AccountGeneral() {
   const { user, refetch } = useUser();
-  const [updateAdmin, { isLoading }] = useUpdateAdminMutation();
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
 
   const currentUser: UpdateUserSchemaType = {
     fullName: user?.fullName || '',
@@ -115,7 +115,7 @@ export function AccountGeneral() {
         formData.append('profileImage', profileImage);
       }
 
-      await updateAdmin({
+      await updateUser({
         id: Number(user?.id) || 0,
         formData,
       }).unwrap();

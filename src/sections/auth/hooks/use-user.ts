@@ -1,4 +1,4 @@
-import { useGetUserQuery } from 'src/store/auth/authApi';
+import { useGetUserQuery } from 'src/store/auth/auth';
 import { UserResDT } from '../types/types';
 import { isSuccessResponse } from 'src/utils/is-success-res';
 

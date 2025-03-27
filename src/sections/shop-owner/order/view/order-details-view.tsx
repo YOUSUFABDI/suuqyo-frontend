@@ -20,7 +20,7 @@ import { OrderDetailsPayment } from '../order-details-payment';
 import { OrderDetailsShipping } from '../order-details-shipping';
 import { OrderDetailsToolbar } from '../order-details-toolbar';
 import { OrderResDT } from '../types/types';
-import { useUpdateOrderStatusMutation } from 'src/store/shop-owner/orderApi';
+import { useUpdateOrderStatusMutation } from 'src/store/shop-owner/order';
 import { toast } from 'src/components/snackbar';
 import { getErrorMessage } from 'src/utils/error.message';
 // ----------------------------------------------------------------------

@@ -25,7 +25,7 @@ import { FormHead } from '../../components/form-head';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'src/store';
-import { useLoginMutation } from 'src/store/auth/authApi';
+import { useLoginMutation } from 'src/store/auth/auth';
 import { setCredentials } from 'src/store/auth/authSlice';
 import { getErrorMessage } from 'src/utils/error.message';
 

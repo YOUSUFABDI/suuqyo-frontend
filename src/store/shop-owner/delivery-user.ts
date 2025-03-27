@@ -22,7 +22,7 @@ export const deliveryUserApi = createApi({
     createDeliveryUser: builder.mutation<any, FormData>({
       query: (formData) => {
         return {
-          url: '/shop-owner/register-delivery-user',
+          url: '/delivery-user/register-delivery-user',
           method: 'POST',
           body: formData,
         };
@@ -30,14 +30,14 @@ export const deliveryUserApi = createApi({
     }),
     getDeliveryUsers: builder.query<ApiResponseDT<DeliveryUserResDT[]>, void>({
       query: () => ({
-        url: '/shop-owner/get-delivery-users',
+        url: '/delivery-user/get-delivery-users',
         method: 'GET',
       }),
       providesTags: ['deliveryUserApi'],
     }),
     updateDeliveryUser: builder.mutation<any, { id: number; formData: FormData }>({
       query: ({ id, formData }) => ({
-        url: `/shop-owner/update-delivery-user/${id}`,
+        url: `/delivery-user/update-delivery-user/${id}`,
         method: 'PATCH',
         body: formData,
       }),
@@ -45,14 +45,14 @@ export const deliveryUserApi = createApi({
     }),
     deleteDeliveryUser: builder.mutation<void, number>({
       query: (userId) => ({
-        url: `/shop-owner/delete-delivery-user/${userId}`,
+        url: `/delivery-user/delete-delivery-user/${userId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['deliveryUserApi'],
     }),
     deleteDeliveryUsers: builder.mutation<void, number[]>({
       query: (userIds) => ({
-        url: '/shop-owner/delete-delivery-users',
+        url: '/delivery-user/delete-delivery-users',
         method: 'DELETE',
         body: { userIds },
       }),

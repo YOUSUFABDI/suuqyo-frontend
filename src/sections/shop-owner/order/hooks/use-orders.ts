@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetOrdersQuery } from 'src/store/shop-owner/orderApi';
+import { useGetOrdersQuery } from 'src/store/shop-owner/order';
 import { getErrorMessage } from 'src/utils/error.message';
 import { isSuccessResponse } from 'src/utils/is-success-res';
 import { OrderResDT } from '../types/types';

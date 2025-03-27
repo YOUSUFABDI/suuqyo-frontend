@@ -21,14 +21,14 @@ export const OrderApi = createApi({
   endpoints: (builder) => ({
     getOrders: builder.query<ApiResponseDT<OrderResDT[]>, void>({
       query: () => ({
-        url: '/shop-owner/get-orders',
+        url: '/order/get-orders',
         method: 'GET',
       }),
       providesTags: ['OrderApi'],
     }),
     updateOrderStatus: builder.mutation<any, { id: number; status: string }>({
       query: ({ id, status }) => ({
-        url: `/shop-owner/update-order-status/${id}`,
+        url: `/order/update-order-status/${id}`,
         method: 'PATCH',
         body: { status },
       }),

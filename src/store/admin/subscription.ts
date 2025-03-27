@@ -26,7 +26,7 @@ export const subscriptionApi = createApi({
   endpoints: (builder) => ({
     createSubscription: builder.mutation<ApiResponseDT<SubscriptionResDT>, SubscriptionReqDT>({
       query: (subscriptionResDT) => ({
-        url: '/admin/create-subscription',
+        url: '/admin-subscription/create-subscription',
         method: 'POST',
         body: subscriptionResDT,
       }),
@@ -34,21 +34,21 @@ export const subscriptionApi = createApi({
     }),
     getSubscriptions: builder.query<ApiResponseDT<SubscriptionResDT[]>, void>({
       query: () => ({
-        url: '/admin/get-all-subscriptions',
+        url: '/admin-subscription/get-all-subscriptions',
         method: 'GET',
       }),
       providesTags: ['subscriptionApi'],
     }),
     getOneSubscription: builder.query<ApiResponseDT<SubscriptionResDT>, { id: number }>({
       query: ({ id }) => ({
-        url: `/admin/get-one-subscription/${id}`,
+        url: `/admin-subscription/get-one-subscription/${id}`,
         method: 'GET',
       }),
       providesTags: ['subscriptionApi'],
     }),
     sendReminder: builder.mutation<ApiResponseDT<ReminderResponseDataDT>, { shopOwnerId: number }>({
       query: ({ shopOwnerId }) => ({
-        url: '/admin/send-subscription-reminder',
+        url: '/admin-subscription/send-subscription-reminder',
         method: 'POST',
         body: { shopOwnerId },
       }),
@@ -59,7 +59,7 @@ export const subscriptionApi = createApi({
       { shopOwnerId: number }
     >({
       query: ({ shopOwnerId }) => ({
-        url: '/admin/renew-subscription',
+        url: '/admin-subscription/renew-subscription',
         method: 'POST',
         body: { shopOwnerId },
       }),

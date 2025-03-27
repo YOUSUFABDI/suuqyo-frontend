@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetShopDetailQuery } from 'src/store/shop-owner/shopApi';
+import { useGetShopDetailQuery } from 'src/store/shop-owner/shop';
 import { isSuccessResponse } from 'src/utils/is-success-res';
 import { ShopDT } from '../types/types';
 

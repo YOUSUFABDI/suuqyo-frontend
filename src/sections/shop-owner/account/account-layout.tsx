@@ -29,6 +29,11 @@ const NAV_ITEMS = [
     icon: <Iconify width={24} icon="mdi:cart" />,
     href: `${paths.shopOwner.account.shop}`,
   },
+  {
+    label: 'Security',
+    icon: <Iconify width={24} icon="ic:round-vpn-key" />,
+    href: `${paths.shopOwner.account.changePassword}`,
+  },
 ];
 
 // ----------------------------------------------------------------------
