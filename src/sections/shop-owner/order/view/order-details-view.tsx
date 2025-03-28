@@ -23,6 +23,7 @@ import { OrderResDT } from '../types/types';
 import { useUpdateOrderStatusMutation } from 'src/store/shop-owner/order';
 import { toast } from 'src/components/snackbar';
 import { getErrorMessage } from 'src/utils/error.message';
+import { UseAnalytics } from '../../analytics/hooks';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -31,6 +32,7 @@ type Props = {
 
 export function OrderDetailsView({ order }: Props) {
   const [updateOrderStatus, { isLoading }] = useUpdateOrderStatusMutation();
+  const { refetchAnalytics } = UseAnalytics();
   const [status, setStatus] = useState(order?.status);
 
   const handleChangeStatus = useCallback(
@@ -44,13 +46,14 @@ export function OrderDetailsView({ order }: Props) {
       try {
         await updateOrderStatus({ id: Number(order.id), status: newValue }).unwrap();
         toast.success('Order status updated successfully');
+        await refetchAnalytics();
       } catch (error) {
         setStatus(previousStatus); // Revert on error
         const errorMessage = getErrorMessage(error);
         toast.error(errorMessage);
       }
     },
-    [order?.id, status, updateOrderStatus]
+    [order?.id, status, updateOrderStatus, refetchAnalytics]
   );
 
   return (

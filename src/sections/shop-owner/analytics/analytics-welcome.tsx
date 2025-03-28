@@ -16,15 +16,15 @@ type Props = BoxProps & {
   action?: React.ReactNode;
 };
 
-export function AppWelcome({ title, description, action, img, sx, ...other }: Props) {
+export function AnalyticsWelcome({ title, description, action, img, sx, ...other }: Props) {
   return (
     <Box
       sx={[
         (theme) => ({
           ...theme.mixins.bgGradient({
             images: [
-              `linear-gradient(to right, ${varAlpha(theme.vars.palette.grey['900Channel'], 0.88)} 0%, ${theme.vars.palette.grey[900]} 75%)`,
-              `url(${CONFIG.assetsDir}/assets/background/background-5.webp)`,
+              `linear-gradient(to right, ${theme.vars.palette.grey[900]} 25%, ${varAlpha(theme.vars.palette.primary.darkerChannel, 0.88)})`,
+              `url(${CONFIG.assetsDir}/assets/background/background-6.webp)`,
             ],
           }),
           pt: 5,

@@ -36,12 +36,12 @@ const MotivationIllustration = forwardRef<SVGSVGElement, SvgProps>((props, ref) 
     >
       {!hideBackground && <BackgroundShape />}
 
-      <image
+      {/* <image
         href={`${CONFIG.assetsDir}/assets/illustrations/characters/character-2.webp`}
         height="300"
         x="322"
         y="30"
-      />
+      /> */}
 
       <path
         fill="url(#paint0_linear_1_43)"

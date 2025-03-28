@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';
 
-import { OverviewAppView } from 'src/sections/overview/app/view';
+import { OverviewAnalyticsView } from 'src/sections/shop-owner/analytics/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata: Metadata = { title: `Shop owner - ${CONFIG.appName}` };
 
 export default function Page() {
-  return <OverviewAppView />;
+  return <OverviewAnalyticsView />;
 }
