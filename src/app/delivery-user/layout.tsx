@@ -1,5 +1,5 @@
 import { CONFIG } from 'src/global-config';
-import { DashboardLayout } from 'src/layouts/dashboard';
+import { DeliveryUserLayout } from 'src/layouts/delivery-user';
 
 import { AuthGuard, RoleBasedGuard } from 'src/sections/auth/guard';
 
@@ -11,13 +11,13 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   if (CONFIG.auth.skip) {
-    return <DashboardLayout>{children}</DashboardLayout>;
+    return <DeliveryUserLayout>{children}</DeliveryUserLayout>;
   }
 
   return (
     <AuthGuard>
       <RoleBasedGuard allowedRoles={['DELIVERY_USER']}>
-        <DashboardLayout>{children}</DashboardLayout>
+        <DeliveryUserLayout>{children}</DeliveryUserLayout>
       </RoleBasedGuard>
     </AuthGuard>
   );

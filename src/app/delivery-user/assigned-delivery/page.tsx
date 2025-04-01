@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';
 
-import { AccountChangePasswordView } from 'src/sections/user/account/view';
+import { AssignedDeliveryListView } from 'src/sections/delivery-user/assigned-deliveries/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: `Account change password settings | Dashboard - ${CONFIG.appName}`,
+  title: `Assigned delivery list | Delivery - ${CONFIG.appName}`,
 };
 
 export default function Page() {
-  return <AccountChangePasswordView />;
+  return <AssignedDeliveryListView />;
 }

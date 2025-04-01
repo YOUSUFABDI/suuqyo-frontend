@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';
 
-import { AccountChangePasswordView } from 'src/sections/user/account/view';
+import { ProductCreateView } from 'src/sections/shop-owner/product/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: `Account change password settings | Dashboard - ${CONFIG.appName}`,
+  title: `Create a new product | Shop owner - ${CONFIG.appName}`,
 };
 
 export default function Page() {
-  return <AccountChangePasswordView />;
+  return <ProductCreateView />;
 }

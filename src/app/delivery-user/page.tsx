@@ -6,7 +6,7 @@ import { CONFIG } from 'src/global-config';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = { title: `Dashboard - ${CONFIG.appName}` };
+export const metadata: Metadata = { title: `Delivery - ${CONFIG.appName}` };
 
 export default function Page() {
   // return <OverviewAppView />;

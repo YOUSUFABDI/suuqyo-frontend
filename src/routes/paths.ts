@@ -79,6 +79,14 @@ export const paths = {
   // DELIVERY USER DASHBOARD
   deliveryUser: {
     root: ROOTS.DELIVERY_USER,
+    assignedDeliveries: {
+      root: `${ROOTS.DELIVERY_USER}/assigned-delivery`,
+      edit: (id: string) => `${ROOTS.DELIVERY_USER}/assigned-delivery/${id}/edit`,
+    },
+    account: {
+      root: `${ROOTS.DELIVERY_USER}/account-setting`,
+      changePassword: `${ROOTS.DELIVERY_USER}/account-setting/change-password`,
+    },
   },
 
   // CUSTOMER

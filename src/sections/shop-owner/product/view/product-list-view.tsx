@@ -55,7 +55,8 @@ import {
 } from '../product-table-row';
 import { ProductTableToolbar } from '../product-table-toolbar';
 import { ProductResDT } from '../types/types';
-
+import { ProductAnalytic } from '../product-analytic';
+import { useTheme } from '@mui/material/styles';
 // ----------------------------------------------------------------------
 
 const HIDE_COLUMNS = { category: false };
@@ -66,6 +67,7 @@ const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
 export function ProductListView() {
   const confirmDialog = useBoolean();
+  const theme = useTheme();
 
   const { products, isLoading } = UseProducts();
   const { moveToTrash, isDeleting } = UseMoveToTrash();
@@ -74,6 +76,11 @@ export function ProductListView() {
   const [tableData, setTableData] = useState<ProductResDT[]>(products);
   const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>([]);
   const [filterButtonEl, setFilterButtonEl] = useState<HTMLButtonElement | null>(null);
+
+  const totalSellingPrice = tableData.reduce(
+    (sum, product) => sum + (product.sellingPrice || 0),
+    0
+  );
 
   const filters = useSetState<IProductTableFilters>({ stock: [] });
   const { state: currentFilters } = filters;
@@ -266,6 +273,15 @@ export function ProductListView() {
             flexDirection: { md: 'column' },
           }}
         >
+          <ProductAnalytic
+            title="Total"
+            total={tableData.length}
+            percent={100}
+            price={totalSellingPrice}
+            icon="solar:bill-list-bold-duotone"
+            color={theme.vars.palette.info.main}
+          />
+
           <DataGrid
             checkboxSelection
             disableRowSelectionOnClick
