@@ -7,7 +7,7 @@ import { AssignedDeliveryListView } from 'src/sections/delivery-user/assigned-de
 // ----------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: `Assigned delivery list | Delivery - ${CONFIG.appName}`,
+  title: `Assinged order list | Delivery user - ${CONFIG.appName}`,
 };
 
 export default function Page() {

@@ -29,26 +29,18 @@ export function OverviewAnalyticsView() {
   return (
     <DashboardContent maxWidth="xl">
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <AnalyticsWelcome
-            title={`Congratulations 🎉  \n ${user?.fullName}`}
-            description={
-              analyticsData?.summary.completedOrders.current === 0
-                ? 'Your shop is ready for its first sale!'
-                : `Great news! You've successfully sold  ${analyticsData?.summary.productsSold.current} product${analyticsData?.summary.productsSold.current !== 1 ? 's' : ''}.`
-            }
+            title={`Congratulations 🎉  \n ${user?.username}`}
+            description="Great news!"
             img={<MotivationIllustration hideBackground />}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <AnalyticsNewProducts list={analyticsData?.newProducts || []} />
-        </Grid>
-
         {/* Changed md:4 to md:3 to fit four in a row (12/4=3) */}
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <AnalyticsWidgetSummary
-            title="Total product"
+            title="Orders to delivery"
             total={analyticsData?.summary.totalProducts.current || 0}
             chart={{
               categories: analyticsData?.chartData.categories || [],
@@ -57,9 +49,9 @@ export function OverviewAnalyticsView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <AnalyticsWidgetSummary
-            title="Product sold"
+            title="Completed deliveries"
             total={analyticsData?.summary.productsSold.current || 0}
             chart={{
               categories: analyticsData?.chartData.categories || [],
@@ -68,32 +60,9 @@ export function OverviewAnalyticsView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <AnalyticsWidgetSummary
-            title="Sales profit"
-            total={analyticsData?.summary?.totalRevenue?.current || 0}
-            prefix="$"
-            chart={{
-              categories: analyticsData?.chartData.categories || [],
-              series: analyticsData?.chartData.revenue || [],
-            }}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 3 }}>
-          <AnalyticsWidgetSummary
-            title="Total Order"
-            total={analyticsData?.summary.totalOrders.current || 0}
-            chart={{
-              categories: analyticsData?.chartData.categories || [],
-              series: analyticsData?.chartData.orders || [],
-            }}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 3 }}>
-          <AnalyticsWidgetSummary
-            title="Completed Orders"
+            title="All"
             total={analyticsData?.summary.completedOrders.current || 0}
             chart={{
               categories: analyticsData?.chartData.categories || [],

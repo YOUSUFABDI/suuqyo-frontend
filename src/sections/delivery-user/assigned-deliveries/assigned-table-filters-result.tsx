@@ -1,4 +1,4 @@
-import type { IDeliveryUserTableFilters } from './types/types';
+import type { IOrderTableFilters } from 'src/types/order';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 import type { FiltersResultProps } from 'src/components/filters-result';
 
@@ -6,21 +6,18 @@ import { useCallback } from 'react';
 
 import Chip from '@mui/material/Chip';
 
+import { fDateRangeShortLabel } from 'src/utils/format-time';
+
 import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 
 // ----------------------------------------------------------------------
 
 type Props = FiltersResultProps & {
   onResetPage: () => void;
-  filters: UseSetStateReturn<IDeliveryUserTableFilters>;
+  filters: UseSetStateReturn<IOrderTableFilters>;
 };
 
-export function AssignedDeliveryTableFiltersResult({
-  filters,
-  onResetPage,
-  totalResults,
-  sx,
-}: Props) {
+export function AssignedTableFiltersResult({ filters, totalResults, onResetPage, sx }: Props) {
   const { state: currentFilters, setState: updateFilters, resetState: resetFilters } = filters;
 
   const handleRemoveKeyword = useCallback(() => {
@@ -30,18 +27,13 @@ export function AssignedDeliveryTableFiltersResult({
 
   const handleRemoveStatus = useCallback(() => {
     onResetPage();
-    updateFilters({ status: 'All' });
+    updateFilters({ status: 'all' });
   }, [onResetPage, updateFilters]);
 
-  const handleRemoveRole = useCallback(
-    (inputValue: string) => {
-      const newValue = currentFilters.role.filter((item) => item !== inputValue);
-
-      onResetPage();
-      updateFilters({ role: newValue });
-    },
-    [onResetPage, updateFilters, currentFilters.role]
-  );
+  const handleRemoveDate = useCallback(() => {
+    onResetPage();
+    updateFilters({ startDate: null, endDate: null });
+  }, [onResetPage, updateFilters]);
 
   const handleReset = useCallback(() => {
     onResetPage();
@@ -50,7 +42,7 @@ export function AssignedDeliveryTableFiltersResult({
 
   return (
     <FiltersResult totalResults={totalResults} onReset={handleReset} sx={sx}>
-      <FiltersBlock label="Status:" isShow={currentFilters.status !== 'All'}>
+      <FiltersBlock label="Status:" isShow={currentFilters.status !== 'all'}>
         <Chip
           {...chipProps}
           label={currentFilters.status}
@@ -59,10 +51,15 @@ export function AssignedDeliveryTableFiltersResult({
         />
       </FiltersBlock>
 
-      <FiltersBlock label="Role:" isShow={!!currentFilters.role.length}>
-        {currentFilters.role.map((item) => (
-          <Chip {...chipProps} key={item} label={item} onDelete={() => handleRemoveRole(item)} />
-        ))}
+      <FiltersBlock
+        label="Date:"
+        isShow={Boolean(currentFilters.startDate && currentFilters.endDate)}
+      >
+        <Chip
+          {...chipProps}
+          label={fDateRangeShortLabel(currentFilters.startDate, currentFilters.endDate)}
+          onDelete={handleRemoveDate}
+        />
       </FiltersBlock>
 
       <FiltersBlock label="Keyword:" isShow={!!currentFilters.name}>

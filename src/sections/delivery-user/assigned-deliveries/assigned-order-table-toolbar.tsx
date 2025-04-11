@@ -1,31 +1,31 @@
-import type { SelectChangeEvent } from '@mui/material/Select';
+import type { IOrderTableFilters } from 'src/types/order';
+import type { IDatePickerControl } from 'src/types/common';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
-import type { IDeliveryUserTableFilters } from './types/types';
 
-import { usePopover } from 'minimal-shared/hooks';
 import { useCallback } from 'react';
+import { usePopover } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
-import InputAdornment from '@mui/material/InputAdornment';
-import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { formHelperTextClasses } from '@mui/material/FormHelperText';
 
-import { Checkbox, FormControl, InputLabel, OutlinedInput, Select } from '@mui/material';
-import { CustomPopover } from 'src/components/custom-popover';
 import { Iconify } from 'src/components/iconify';
+import { CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
 type Props = {
+  dateError: boolean;
   onResetPage: () => void;
-  filters: UseSetStateReturn<IDeliveryUserTableFilters>;
-  options: {
-    status: string[];
-  };
+  filters: UseSetStateReturn<IOrderTableFilters>;
 };
 
-export function AssignedDeliveryTableToolbar({ filters, options, onResetPage }: Props) {
+export function AssignedOrderTableToolbar({ filters, onResetPage, dateError }: Props) {
   const menuActions = usePopover();
 
   const { state: currentFilters, setState: updateFilters } = filters;
@@ -33,15 +33,23 @@ export function AssignedDeliveryTableToolbar({ filters, options, onResetPage }: 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onResetPage();
-      updateFilters({ name: event.target.value, phoneNumber: event.target.value });
+      updateFilters({ name: event.target.value });
     },
     [onResetPage, updateFilters]
   );
 
-  const handleFilterStatus = useCallback(
-    (event: SelectChangeEvent) => {
+  const handleFilterStartDate = useCallback(
+    (newValue: IDatePickerControl) => {
       onResetPage();
-      updateFilters({ status: event.target.value as IDeliveryUserTableFilters['status'] });
+      updateFilters({ startDate: newValue });
+    },
+    [onResetPage, updateFilters]
+  );
+
+  const handleFilterEndDate = useCallback(
+    (newValue: IDatePickerControl) => {
+      onResetPage();
+      updateFilters({ endDate: newValue });
     },
     [onResetPage, updateFilters]
   );
@@ -84,39 +92,33 @@ export function AssignedDeliveryTableToolbar({ filters, options, onResetPage }: 
           alignItems: { xs: 'flex-end', md: 'center' },
         }}
       >
-        {/* <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
-          <InputLabel htmlFor="filter-role-select">Status</InputLabel>
-          <Select
-            multiple
-            value={currentFilters.role}
-            onChange={handleFilterRole}
-            input={<OutlinedInput label="Status" />}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            inputProps={{ id: 'filter-role-select' }}
-            MenuProps={{ PaperProps: { sx: { maxHeight: 240 } } }}
-          >
-            {options.status.map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox
-                  disableRipple
-                  size="small"
-                  checked={currentFilters.role.includes(option)}
-                />
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl> */}
-        <FormControl sx={{ width: { xs: 1, md: 200 } }}>
-          <InputLabel>Status</InputLabel>
-          <Select value={currentFilters.status} onChange={handleFilterStatus} label="Status">
-            {options.status.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <DatePicker
+          label="Start date"
+          value={currentFilters.startDate}
+          onChange={handleFilterStartDate}
+          slotProps={{ textField: { fullWidth: true } }}
+          sx={{ maxWidth: { md: 200 } }}
+        />
+
+        <DatePicker
+          label="End date"
+          value={currentFilters.endDate}
+          onChange={handleFilterEndDate}
+          slotProps={{
+            textField: {
+              fullWidth: true,
+              error: dateError,
+              helperText: dateError ? 'End date must be later than start date' : null,
+            },
+          }}
+          sx={{
+            maxWidth: { md: 200 },
+            [`& .${formHelperTextClasses.root}`]: {
+              position: { md: 'absolute' },
+              bottom: { md: -40 },
+            },
+          }}
+        />
 
         <Box
           sx={{
@@ -131,7 +133,7 @@ export function AssignedDeliveryTableToolbar({ filters, options, onResetPage }: 
             fullWidth
             value={currentFilters.name}
             onChange={handleFilterName}
-            placeholder="Search..."
+            placeholder="Search customer or order number..."
             slotProps={{
               input: {
                 startAdornment: (
@@ -142,8 +144,8 @@ export function AssignedDeliveryTableToolbar({ filters, options, onResetPage }: 
               },
             }}
           />
-          {/* 
-          <IconButton onClick={menuActions.onOpen}>
+
+          {/* <IconButton onClick={menuActions.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton> */}
         </Box>

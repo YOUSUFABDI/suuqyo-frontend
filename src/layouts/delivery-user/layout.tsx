@@ -41,6 +41,15 @@ import type { MainSectionProps } from '../core/main-section';
 import type { HeaderSectionProps } from '../core/header-section';
 import type { LayoutSectionProps } from '../core/layout-section';
 import { useUser } from 'src/sections/auth/hooks';
+import { FormControlLabel, Switch } from '@mui/material';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  useAvailabilityQuery,
+  useChangeAvailabilityMutation,
+} from 'src/store/delivery-user/delivery-user';
+import { toast } from 'src/components/snackbar';
+import { getErrorMessage } from 'src/utils/error.message';
+import { isSuccessResponse } from 'src/utils/is-success-res';
 
 // ----------------------------------------------------------------------
 
@@ -78,6 +87,44 @@ export function DeliveryUserLayout({
   const isNavMini = settings.state.navLayout === 'mini';
   const isNavHorizontal = settings.state.navLayout === 'horizontal';
   const isNavVertical = isNavMini || settings.state.navLayout === 'vertical';
+
+  const { data, isLoading: isAvailabilityLoading, refetch } = useAvailabilityQuery();
+  const availability = isSuccessResponse<{ availability: boolean }>(data)
+    ? data.payload.data.availability
+    : false;
+  const [isAvailable, setIsAvailable] = useState(availability);
+
+  // Update local state when API data changes
+  useEffect(() => {
+    if (availability !== null) {
+      setIsAvailable(availability);
+    }
+  }, [availability]);
+
+  const [changeAvailability, { isLoading: isChangingAvailability }] =
+    useChangeAvailabilityMutation();
+
+  const handleChangeAvailable = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = event.target.checked;
+
+      // Optimistic update
+      setIsAvailable(newValue);
+
+      try {
+        await changeAvailability({ availability: newValue }).unwrap();
+        // Refetch to confirm server state
+        await refetch();
+        toast.success('Availability updated!');
+      } catch (error) {
+        // Rollback on error
+        setIsAvailable(availability);
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+      }
+    },
+    [changeAvailability, availability, refetch]
+  );
 
   const renderHeader = () => {
     const headerSlotProps: HeaderSectionProps['slotProps'] = {
@@ -141,6 +188,20 @@ export function DeliveryUserLayout({
             data={_workspaces}
             sx={{ color: 'var(--layout-nav-text-primary-color)' }}
           /> */}
+
+          <FormControlLabel
+            control={
+              <Switch
+                id="toggle-availiable"
+                checked={isAvailable}
+                onChange={handleChangeAvailable}
+                disabled={isAvailabilityLoading || isChangingAvailability}
+              />
+            }
+            label={
+              isChangingAvailability ? 'Updating...' : isAvailable ? 'Available' : 'Unavailable'
+            }
+          />
         </>
       ),
       rightArea: (
@@ -149,7 +210,7 @@ export function DeliveryUserLayout({
           <Searchbar data={DeliveryUserData} />
 
           {/** @slot Language popover */}
-          <LanguagePopover data={allLangs} />
+          {/* <LanguagePopover data={allLangs} /> */}
 
           {/** @slot Notifications popover */}
           {/* <NotificationsDrawer data={_notifications} /> */}

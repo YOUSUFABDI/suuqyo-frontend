@@ -1,7 +1,11 @@
 'use client';
 
 import type { TableHeadCellProps } from 'src/components/table';
-import type { DeliveryUserResDT, IDeliveryUserTableFilters } from '../types/types';
+import type { IOrderTableFilters } from 'src/types/order';
+
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 import { varAlpha } from 'minimal-shared/utils';
@@ -17,8 +21,9 @@ import TableBody from '@mui/material/TableBody';
 import Tabs from '@mui/material/Tabs';
 import Tooltip from '@mui/material/Tooltip';
 
-import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
+
+import { fIsAfter } from 'src/utils/format-time';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -40,122 +45,93 @@ import {
   useTable,
 } from 'src/components/table';
 
-import { AssignedDeliveryTableFiltersResult } from '../assigned-delivery-table-filters-result';
-import { AssignedDeliveryTableRow } from '../assigned-delivery-table-row';
-import { AssignedDeliveryTableToolbar } from '../assigned-delivery-table-toolbar';
-import { UseDeleteDeliveryUser, UseDeliveryUsers } from '../hooks';
-import { UseDeleteDeliveryUsers } from '../hooks/use-delete-delivery-users';
+import { AssignedOrderTableRow } from '../assigned-order-table-row';
+import { AssignedOrderTableToolbar } from '../assigned-order-table-toolbar';
+import { AssignedTableFiltersResult } from '../assigned-table-filters-result';
+
+import { UseAssignedOrders } from '../hooks';
+import { AssignedOrderDTRes, ORDER_STATUS_OPTIONS } from '../types/types';
+
+// Extend dayjs with the plugins
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 // ----------------------------------------------------------------------
 
-export const _DELIVERY_USER_STATUS = ['All', 'Active', 'Inactive'];
-
-const STATUS_OPTIONS = [
-  { value: 'All', label: 'All' },
-  { value: 'Active', label: 'Active' },
-  { value: 'Inactive', label: 'Inactive' },
-] as const;
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...ORDER_STATUS_OPTIONS];
 
 const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'name', label: 'Name' },
-  { id: 'phoneNumber', label: 'Phone number', width: 180 },
-  { id: 'country', label: 'Country', width: 220 },
-  { id: 'address', label: 'Address', width: 220 },
-  { id: 'vehicleDetail', label: 'Vehicle detail', width: 180 },
-  { id: 'status', label: 'Status', width: 100 },
+  { id: 'orderNumber', label: 'Order', width: 88 },
+  { id: 'name', label: 'Customer' },
+  { id: 'createdAt', label: 'Date', width: 140 },
+  { id: 'totalQuantity', label: 'Items', width: 120, align: 'center' },
+  // { id: 'totalAmount', label: 'Price', width: 140 },
+  { id: 'status', label: 'Status', width: 110 },
   { id: '', width: 88 },
 ];
 
 // ----------------------------------------------------------------------
 
 export function AssignedDeliveryListView() {
-  const { deliveryUsers } = UseDeliveryUsers();
-  const { deleteDeliveryUser, isDeleting } = UseDeleteDeliveryUser();
-  const { deleteDeliveryUsers, areDeleting } = UseDeleteDeliveryUsers();
-  const table = useTable();
+  const table = useTable({ defaultOrderBy: 'orderNumber' });
+  const { assignedOrders } = UseAssignedOrders();
+  console.log('assignedOrders', assignedOrders);
 
   const confirmDialog = useBoolean();
 
-  const [tableData, setTableData] = useState<DeliveryUserResDT[]>(deliveryUsers);
+  const [tableData, setTableData] = useState<AssignedOrderDTRes[]>(assignedOrders);
 
-  const filters = useSetState<IDeliveryUserTableFilters>({
+  const filters = useSetState<IOrderTableFilters>({
     name: '',
-    role: [],
-    status: 'All',
-    phoneNumber: '',
+    status: 'all',
+    startDate: null,
+    endDate: null,
   });
   const { state: currentFilters, setState: updateFilters } = filters;
+
+  const dateError = fIsAfter(currentFilters.startDate, currentFilters.endDate);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters: currentFilters,
+    dateError,
   });
 
   const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
 
   const canReset =
-    !!currentFilters.name || currentFilters.role.length > 0 || currentFilters.status !== 'All';
+    !!currentFilters.name ||
+    currentFilters.status !== 'all' ||
+    (!!currentFilters.startDate && !!currentFilters.endDate);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
   const handleDeleteRow = useCallback(
-    async (id: string) => {
-      console.log(id);
-      try {
-        await deleteDeliveryUser(parseInt(id)).unwrap();
-        toast.success('Deleted successfully!');
+    (id: string) => {
+      const deleteRow = tableData.filter((row) => row.id !== id);
 
-        const deleteRow = tableData.filter((row) => row.id !== id);
-        setTableData(deleteRow);
+      toast.success('Delete success!');
 
-        table.onUpdatePageDeleteRow(dataInPage.length);
-      } catch (error: any) {
-        console.log(error);
-        let errorMessage = 'An unexpected error occurred';
-        if (error?.data?.error?.message) {
-          errorMessage = error.data.error.message;
-        } else if (error?.data?.message) {
-          errorMessage = error.data.message;
-        }
-        toast.error(errorMessage);
-      }
+      setTableData(deleteRow);
+
+      table.onUpdatePageDeleteRow(dataInPage.length);
     },
-    [dataInPage.length, deleteDeliveryUser, table, tableData]
+    [dataInPage.length, table, tableData]
   );
 
-  const handleDeleteRows = useCallback(async () => {
-    try {
-      const selectedIds = table.selected.map((id) => Number(id));
-      if (!selectedIds.length) return;
+  const handleDeleteRows = useCallback(() => {
+    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
 
-      await deleteDeliveryUsers(selectedIds).unwrap();
-      toast.success('Deleted successfully!');
+    toast.success('Delete success!');
 
-      const deleteRows = tableData.filter((row) => !selectedIds.includes(Number(row.userId)));
-      setTableData(deleteRows);
+    setTableData(deleteRows);
 
-      table.onUpdatePageDeleteRows(dataInPage.length, dataFiltered.length);
-    } catch (error: any) {
-      let errorMessage = 'An unexpected error occurred';
-      if (error?.data?.error?.message) {
-        errorMessage = error.data.error.message;
-      } else if (error?.data?.message) {
-        errorMessage = error.data.message;
-      }
-      toast.error(errorMessage);
-    }
-  }, [
-    deleteDeliveryUsers,
-    table.selected,
-    dataInPage.length,
-    dataFiltered.length,
-    table,
-    tableData,
-  ]);
+    table.onUpdatePageDeleteRows(dataInPage.length, dataFiltered.length);
+  }, [dataFiltered.length, dataInPage.length, table, tableData]);
 
   const handleFilterStatus = useCallback(
-    (event: React.SyntheticEvent, newValue: IDeliveryUserTableFilters['status']) => {
+    (event: React.SyntheticEvent, newValue: string) => {
       table.onResetPage();
       updateFilters({ status: newValue });
     },
@@ -169,31 +145,29 @@ export function AssignedDeliveryListView() {
       title="Delete"
       content={
         <>
-          Are you sure you want to delete <strong>{table.selected.length}</strong> items?
+          Are you sure want to delete <strong> {table.selected.length} </strong> items?
         </>
       }
       action={
         <Button
           variant="contained"
           color="error"
-          disabled={areDeleting}
-          onClick={async () => {
-            await handleDeleteRows();
+          onClick={() => {
+            handleDeleteRows();
             confirmDialog.onFalse();
           }}
         >
-          {areDeleting ? 'Deleting...' : 'Delete'}
+          Delete
         </Button>
       }
     />
   );
 
   useEffect(() => {
-    if (JSON.stringify(deliveryUsers) !== JSON.stringify(tableData)) {
-      setTableData(deliveryUsers);
+    if (JSON.stringify(assignedOrders) !== JSON.stringify(tableData)) {
+      setTableData(assignedOrders);
     }
-    console.log('tableData', tableData);
-  }, [deliveryUsers, tableData]);
+  }, [assignedOrders, tableData]);
 
   return (
     <>
@@ -201,20 +175,10 @@ export function AssignedDeliveryListView() {
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: 'Shop owner', href: paths.shopOwner.root },
-            { name: 'Delivery user', href: paths.shopOwner.deliveryUser.root },
+            { name: 'Delivery user', href: paths.shopOwner.root },
+            { name: 'Assigned orders', href: paths.shopOwner.order.root },
             { name: 'List' },
           ]}
-          action={
-            <Button
-              component={RouterLink}
-              href={paths.shopOwner.deliveryUser.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              New Delivery user
-            </Button>
-          }
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
@@ -229,41 +193,41 @@ export function AssignedDeliveryListView() {
               }),
             ]}
           >
-            {STATUS_OPTIONS.map((tab, index) => (
+            {STATUS_OPTIONS.map((tab) => (
               <Tab
-                key={index}
+                key={tab.value}
                 iconPosition="end"
                 value={tab.value}
                 label={tab.label}
                 icon={
                   <Label
-                    variant={tab.value === currentFilters.status ? 'filled' : 'soft'}
+                    variant={
+                      ((tab.value === 'all' || tab.value === currentFilters.status) && 'filled') ||
+                      'soft'
+                    }
                     color={
-                      tab.value === 'Active'
-                        ? 'success'
-                        : tab.value === 'Inactive'
-                          ? 'error'
-                          : 'default'
+                      (tab.value === 'DELIVERING' && 'secondary') ||
+                      (tab.value === 'COMPLETED' && 'success') ||
+                      'default'
                     }
                   >
-                    {tab.value === 'All'
-                      ? tableData.length
-                      : tableData.filter((user) => user.user.status === (tab.value === 'Active'))
-                          .length}
+                    {['DELIVERING', 'COMPLETED'].includes(tab.value)
+                      ? tableData.filter((order) => order.status === tab.value).length
+                      : tableData.length}
                   </Label>
                 }
               />
             ))}
           </Tabs>
 
-          <AssignedDeliveryTableToolbar
+          <AssignedOrderTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
-            options={{ status: ['All', 'Active', 'Inactive'] }}
+            dateError={dateError}
           />
 
           {canReset && (
-            <AssignedDeliveryTableFiltersResult
+            <AssignedTableFiltersResult
               filters={filters}
               totalResults={dataFiltered.length}
               onResetPage={table.onResetPage}
@@ -279,7 +243,7 @@ export function AssignedDeliveryListView() {
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  dataFiltered.map((row) => row.userId)
+                  dataFiltered.map((row) => row.id)
                 )
               }
               action={
@@ -291,7 +255,7 @@ export function AssignedDeliveryListView() {
               }
             />
 
-            <Scrollbar>
+            <Scrollbar sx={{ minHeight: 444 }}>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
@@ -303,7 +267,7 @@ export function AssignedDeliveryListView() {
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      dataFiltered.map((row) => row.userId)
+                      dataFiltered.map((row) => row.id)
                     )
                   }
                 />
@@ -315,14 +279,13 @@ export function AssignedDeliveryListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <AssignedDeliveryTableRow
+                      <AssignedOrderTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.userId)}
-                        editHref={paths.shopOwner.deliveryUser.edit(row.userId)}
-                        isDeleting={isDeleting}
+                        onDeleteRow={() => handleDeleteRow(row.id)}
+                        detailsHref={paths.deliveryUser.assignedDeliveries.details(row.id)}
                       />
                     ))}
 
@@ -357,40 +320,40 @@ export function AssignedDeliveryListView() {
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-  inputData: DeliveryUserResDT[];
-  filters: IDeliveryUserTableFilters;
+  dateError: boolean;
+  inputData: AssignedOrderDTRes[];
+  filters: IOrderTableFilters;
   comparator: (a: any, b: any) => number;
 };
 
-function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
-  const { name, status, role, phoneNumber } = filters;
+function applyFilter({ inputData, comparator, filters, dateError }: ApplyFilterProps) {
+  const { status, name, startDate, endDate } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
-
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter(
-      (user) =>
-        user.user.fullName.toLowerCase().includes(name.toLowerCase()) ||
-        user.user.phoneNumber.toLowerCase().includes(phoneNumber.toLowerCase())
+    inputData = inputData.filter(({ id, customer, total }) =>
+      [id?.toString(), total?.toString(), customer?.username, customer?.phoneNumber]
+        .filter((field) => typeof field === 'string') // Ensure only valid strings
+        .some((field) => field.toLowerCase().includes(name.toLowerCase()))
     );
   }
 
-  if (status !== 'All') {
-    inputData = inputData.filter((user) =>
-      status === 'Active' ? user.user.status === true : user.user.status === false
-    );
+  if (status !== 'all') {
+    inputData = inputData.filter((order) => order.status === status);
   }
 
-  if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.user.role));
+  if (!dateError && startDate && endDate) {
+    inputData = inputData.filter((order) => {
+      const orderDate = dayjs(order.createdAt);
+      return orderDate.isSameOrAfter(startDate, 'day') && orderDate.isSameOrBefore(endDate, 'day');
+    });
   }
 
   return inputData;

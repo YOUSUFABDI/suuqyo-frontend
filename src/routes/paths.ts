@@ -81,7 +81,7 @@ export const paths = {
     root: ROOTS.DELIVERY_USER,
     assignedDeliveries: {
       root: `${ROOTS.DELIVERY_USER}/assigned-delivery`,
-      edit: (id: string) => `${ROOTS.DELIVERY_USER}/assigned-delivery/${id}/edit`,
+      details: (id: string) => `${ROOTS.DELIVERY_USER}/assigned-delivery/${id}`,
     },
     account: {
       root: `${ROOTS.DELIVERY_USER}/account-setting`,

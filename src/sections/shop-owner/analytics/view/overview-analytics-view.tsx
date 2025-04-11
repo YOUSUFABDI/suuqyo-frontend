@@ -31,7 +31,7 @@ export function OverviewAnalyticsView() {
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 8 }}>
           <AnalyticsWelcome
-            title={`Congratulations 🎉  \n ${user?.fullName}`}
+            title={`Congratulations 🎉  \n ${user?.username}`}
             description={
               analyticsData?.summary.completedOrders.current === 0
                 ? 'Your shop is ready for its first sale!'
@@ -59,7 +59,7 @@ export function OverviewAnalyticsView() {
 
         <Grid size={{ xs: 12, md: 3 }}>
           <AnalyticsWidgetSummary
-            title="Product sold"
+            title="Quantity sold"
             total={analyticsData?.summary.productsSold.current || 0}
             chart={{
               categories: analyticsData?.chartData.categories || [],
@@ -70,7 +70,7 @@ export function OverviewAnalyticsView() {
 
         <Grid size={{ xs: 12, md: 3 }}>
           <AnalyticsWidgetSummary
-            title="Sales profit"
+            title="Total sale"
             total={analyticsData?.summary?.totalRevenue?.current || 0}
             prefix="$"
             chart={{
@@ -82,7 +82,7 @@ export function OverviewAnalyticsView() {
 
         <Grid size={{ xs: 12, md: 3 }}>
           <AnalyticsWidgetSummary
-            title="Total Order"
+            title="Pending Order"
             total={analyticsData?.summary.totalOrders.current || 0}
             chart={{
               categories: analyticsData?.chartData.categories || [],

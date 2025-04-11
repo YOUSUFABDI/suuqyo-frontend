@@ -1,42 +1,57 @@
-export type IDeliveryUserTableFilters = {
-  name: string;
-  role: string[];
-  status: 'All' | 'Active' | 'Inactive'; // Change to string union type
-  phoneNumber: string;
-};
+export const ORDER_STATUS_OPTIONS = [
+  { value: 'DELIVERING', label: 'Delivering' },
+  { value: 'COMPLETED', label: 'Completed' },
+];
 
-export interface DeliveryUserResDT {
-  id: string;
-  userId: string;
-  shopOwnerId: string;
-  availability: boolean;
-  vehicleDetail: string;
-  user: UserDT;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface Address {
-  id: string;
-  userId: string;
-  address: string;
-  city: string;
-  country: string;
-  state: string;
-}
-
-export interface UserDT {
+export interface UserBasicInfo {
   id: string;
   fullName: string;
-  username: string;
   phoneNumber: string;
+  username: string;
   email: string;
-  sex: string;
-  password: string;
   profileImage: string;
-  role: string;
-  status: boolean;
-  Address?: Address;
-  createdAt: Date;
-  updatedAt: Date;
+}
+
+export interface Address {
+  id: string;
+  userId: number;
+  address: string;
+  phoneNumber: string;
+  fullName: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProductImage {
+  id: string;
+  productId: number;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  sellingPrice: number;
+  images: ProductImage[];
+}
+
+export interface OrderItem {
+  id: string;
+  quantity: number;
+  price: number;
+  product: Product;
+  itemTotal: number;
+}
+
+export interface AssignedOrderDTRes {
+  id: string;
+  status: string;
+  total: number;
+  createdAt: string;
+  customer: UserBasicInfo;
+  shippingAddress: Address;
+  items: OrderItem[];
+  assignedDeliveryPerson: Pick<UserBasicInfo, 'fullName' | 'phoneNumber'>;
 }
