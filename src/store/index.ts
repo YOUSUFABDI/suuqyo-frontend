@@ -15,6 +15,7 @@ import { deliveryUserApi } from './shop-owner/delivery-user';
 import { shopOwnerAnalyticApi } from './shop-owner/shop-owner-analytics';
 
 import { deliveryUserApi as deliveryUserManagementApi } from './delivery-user/delivery-user';
+import { deliveryUserAnalyticApi } from './delivery-user/delivery-user-analytic';
 
 export const store = configureStore({
   reducer: {
@@ -39,6 +40,7 @@ export const store = configureStore({
 
     // delivery-user
     [deliveryUserManagementApi.reducerPath]: deliveryUserManagementApi.reducer,
+    [deliveryUserAnalyticApi.reducerPath]: deliveryUserAnalyticApi.reducer,
     // delivery-user
   },
   devTools: process.env.NODE_ENV !== 'production',
@@ -63,7 +65,8 @@ export const store = configureStore({
       // shop-owner
 
       // delivery-user
-      deliveryUserManagementApi.middleware
+      deliveryUserManagementApi.middleware,
+      deliveryUserAnalyticApi.middleware
       // delivery-user
     ),
 });

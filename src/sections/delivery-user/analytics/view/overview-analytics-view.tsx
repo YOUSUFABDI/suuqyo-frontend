@@ -8,7 +8,6 @@ import { MotivationIllustration } from 'src/assets/illustrations';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { useUser } from 'src/sections/auth/hooks';
-import { AnalyticsNewProducts } from '../analytics-new-products';
 import { AnalyticsWelcome } from '../analytics-welcome';
 import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
 import { UseAnalytics } from '../hooks';
@@ -32,7 +31,7 @@ export function OverviewAnalyticsView() {
         <Grid size={{ xs: 12, md: 12 }}>
           <AnalyticsWelcome
             title={`Congratulations 🎉  \n ${user?.username}`}
-            description="Great news!"
+            description={`Great news! you've completed ${analyticsData?.summary.completedDeliveries.current || 0} delivery.`}
             img={<MotivationIllustration hideBackground />}
           />
         </Grid>
@@ -41,10 +40,10 @@ export function OverviewAnalyticsView() {
         <Grid size={{ xs: 12, md: 4 }}>
           <AnalyticsWidgetSummary
             title="Orders to delivery"
-            total={analyticsData?.summary.totalProducts.current || 0}
+            total={analyticsData?.summary.ordersToDeliver.current || 0}
             chart={{
               categories: analyticsData?.chartData.categories || [],
-              series: analyticsData?.chartData.orders || [],
+              series: analyticsData?.chartData.ordersToDeliver || [],
             }}
           />
         </Grid>
@@ -52,10 +51,10 @@ export function OverviewAnalyticsView() {
         <Grid size={{ xs: 12, md: 4 }}>
           <AnalyticsWidgetSummary
             title="Completed deliveries"
-            total={analyticsData?.summary.productsSold.current || 0}
+            total={analyticsData?.summary.completedDeliveries.current || 0}
             chart={{
               categories: analyticsData?.chartData.categories || [],
-              series: analyticsData?.chartData.productsSold || [],
+              series: analyticsData?.chartData.completedDeliveries || [],
             }}
           />
         </Grid>
@@ -63,10 +62,10 @@ export function OverviewAnalyticsView() {
         <Grid size={{ xs: 12, md: 4 }}>
           <AnalyticsWidgetSummary
             title="All"
-            total={analyticsData?.summary.completedOrders.current || 0}
+            total={analyticsData?.summary.all.current || 0}
             chart={{
               categories: analyticsData?.chartData.categories || [],
-              series: analyticsData?.chartData.completedOrders || [],
+              series: analyticsData?.chartData.all || [],
             }}
           />
         </Grid>
