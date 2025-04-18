@@ -84,11 +84,8 @@ export function AssignedOrderDetailsToolbar({
               <Label
                 variant="soft"
                 color={
-                  (status === 'PENDING' && 'warning') ||
-                  (status === 'PREPARING' && 'info') ||
                   (status === 'DELIVERING' && 'secondary') ||
                   (status === 'COMPLETED' && 'success') ||
-                  (status === 'CANCELED' && 'error') ||
                   'default'
                 }
               >

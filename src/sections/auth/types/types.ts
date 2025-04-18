@@ -41,6 +41,7 @@ export interface LoginResDT {
 export type UserResDT = {
   id: number;
   username: string;
+  sex: string;
   email: string;
   createdAt: string;
   updatedAt: string;

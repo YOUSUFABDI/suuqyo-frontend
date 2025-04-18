@@ -16,7 +16,8 @@ import { formHelperTextClasses } from '@mui/material/FormHelperText';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
-
+import { Button } from '@mui/material';
+import dayjs from 'dayjs';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -53,6 +54,15 @@ export function OrderTableToolbar({ filters, onResetPage, dateError }: Props) {
     },
     [onResetPage, updateFilters]
   );
+
+  const handleTodayClick = useCallback(() => {
+    const today = dayjs();
+    updateFilters({
+      startDate: today,
+      endDate: today,
+    });
+    onResetPage();
+  }, [updateFilters, onResetPage]);
 
   const renderMenuActions = () => (
     <CustomPopover
@@ -119,6 +129,18 @@ export function OrderTableToolbar({ filters, onResetPage, dateError }: Props) {
             },
           }}
         />
+
+        <Button
+          variant="outlined"
+          onClick={handleTodayClick}
+          sx={{
+            maxWidth: { md: 200 },
+            height: 56,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Today
+        </Button>
 
         <Box
           sx={{

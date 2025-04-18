@@ -61,6 +61,17 @@ export function OverviewAnalyticsView() {
 
         <Grid size={{ xs: 12, md: 4 }}>
           <AnalyticsWidgetSummary
+            title="Return deliveries"
+            total={analyticsData?.summary.refundedDeliveries.current || 0}
+            chart={{
+              categories: analyticsData?.chartData.categories || [],
+              series: analyticsData?.chartData.refundedDeliveries || [],
+            }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 4 }}>
+          <AnalyticsWidgetSummary
             title="All"
             total={analyticsData?.summary.all.current || 0}
             chart={{

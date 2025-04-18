@@ -22,6 +22,7 @@ import { AssignedOrderDetailsShipping } from '../assigned-order-details-shipping
 import { AssignedOrderDetailsToolbar } from '../assigned-order-details-toolbar';
 import { UseAssignedOrders } from '../hooks';
 import { AssignedOrderDTRes } from '../types/types';
+import { useUpdateAssignedOrderStatusMutation } from 'src/store/delivery-user/delivery-user';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -29,7 +30,7 @@ type Props = {
 };
 
 export function AssignedDeliveryDetailsView({ order }: Props) {
-  const [updateOrderStatus, { isLoading }] = useUpdateOrderStatusMutation();
+  const [updateAssignedOrderStatus, { isLoading }] = useUpdateAssignedOrderStatusMutation();
   const { refetchAnalytics } = UseAnalytics();
   const { refetchAssignedOrders } = UseAssignedOrders();
   const [status, setStatus] = useState(order?.status);
@@ -43,7 +44,7 @@ export function AssignedDeliveryDetailsView({ order }: Props) {
       setStatus(newValue); // Optimistically update UI
 
       try {
-        await updateOrderStatus({ id: Number(order.id), status: newValue }).unwrap();
+        await updateAssignedOrderStatus({ id: Number(order.id), status: newValue }).unwrap();
         toast.success('Order status updated successfully');
         await refetchAnalytics();
         await refetchAssignedOrders();
@@ -53,7 +54,7 @@ export function AssignedDeliveryDetailsView({ order }: Props) {
         toast.error(errorMessage);
       }
     },
-    [order?.id, status, updateOrderStatus, refetchAnalytics]
+    [order?.id, status, updateAssignedOrderStatus, refetchAnalytics]
   );
 
   return (

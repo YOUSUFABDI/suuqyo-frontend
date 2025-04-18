@@ -1,6 +1,7 @@
 export const ORDER_STATUS_OPTIONS = [
   { value: 'DELIVERING', label: 'Delivering' },
   { value: 'COMPLETED', label: 'Completed' },
+  { value: 'REFUNDED', label: 'Refund' },
 ];
 
 export interface UserBasicInfo {

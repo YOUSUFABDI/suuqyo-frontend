@@ -39,8 +39,20 @@ export const deliveryUserApi = createApi({
         method: 'GET',
       }),
     }),
+    updateAssignedOrderStatus: builder.mutation<any, { id: number; status: string }>({
+      query: ({ id, status }) => ({
+        url: `/delivery/update-order-status/${id}`,
+        method: 'PATCH',
+        body: { status },
+      }),
+      invalidatesTags: ['AssignedOrders'],
+    }),
   }),
 });
 
-export const { useGetAssignedOrdersQuery, useChangeAvailabilityMutation, useAvailabilityQuery } =
-  deliveryUserApi;
+export const {
+  useGetAssignedOrdersQuery,
+  useChangeAvailabilityMutation,
+  useAvailabilityQuery,
+  useUpdateAssignedOrderStatusMutation,
+} = deliveryUserApi;

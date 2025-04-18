@@ -75,7 +75,7 @@ const TABLE_HEAD: TableHeadCellProps[] = [
 export function AssignedDeliveryListView() {
   const table = useTable({ defaultOrderBy: 'orderNumber' });
   const { assignedOrders } = UseAssignedOrders();
-  console.log('assignedOrders', assignedOrders);
+  // console.log('assignedOrders', assignedOrders);
 
   const confirmDialog = useBoolean();
 
@@ -211,7 +211,7 @@ export function AssignedDeliveryListView() {
                       'default'
                     }
                   >
-                    {['DELIVERING', 'COMPLETED'].includes(tab.value)
+                    {['DELIVERING', 'COMPLETED', 'REFUNDED'].includes(tab.value)
                       ? tableData.filter((order) => order.status === tab.value).length
                       : tableData.length}
                   </Label>

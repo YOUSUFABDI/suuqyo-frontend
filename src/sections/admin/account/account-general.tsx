@@ -24,26 +24,9 @@ import { getErrorMessage } from 'src/utils/error.message';
 export type UpdateUserSchemaType = zod.infer<typeof UpdateUserSchema>;
 
 export const UpdateUserSchema = zod.object({
-  // fullName: zod.string().min(1, { message: 'Name is required!' }).optional(),
-  // username: zod.string().min(1, { message: 'Username is required!' }).optional(),
-  // email: zod
-  //   .string()
-  //   .min(1, { message: 'Email is required!' })
-  //   .email({ message: 'Email must be a valid email address!' })
-  //   .optional(),
-  // profileImage: schemaHelper.file({ message: 'Avatar is required!' }).optional(),
-  // phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }).optional(),
-  // country: schemaHelper
-  //   .nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
-  //     // message for null value
-  //     message: 'Country is required!',
-  //   })
-  //   .optional(),
-  // address: zod.string().min(1, { message: 'Address is required!' }).optional(),
-  // state: zod.string().min(1, { message: 'State is required!' }).optional(),
-  // city: zod.string().min(1, { message: 'City is required!' }).optional(),
   fullName: zod.string().optional(),
   username: zod.string().optional(),
+  sex: zod.string().optional(),
   email: zod.string().email().optional(),
   profileImage: schemaHelper.file().optional(),
   phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }).optional(),
@@ -62,6 +45,7 @@ export function AccountGeneral() {
   const currentUser: UpdateUserSchemaType = {
     fullName: user?.fullName || '',
     username: user?.username || '',
+    sex: user?.sex || '',
     email: user?.email || '',
     profileImage: user?.profileImage || null,
     phoneNumber: user?.phoneNumber || '',
@@ -74,6 +58,7 @@ export function AccountGeneral() {
   const defaultValues: UpdateUserSchemaType = {
     fullName: '',
     username: '',
+    sex: '',
     email: '',
     profileImage: null,
     phoneNumber: '',
@@ -100,6 +85,7 @@ export function AccountGeneral() {
       const updateUserDto = {
         fullName: data.fullName,
         username: data.username,
+        sex: data.sex,
         email: data.email,
         phoneNumber: data.phoneNumber,
         country: data.country,
@@ -186,6 +172,7 @@ export function AccountGeneral() {
               <Field.Text name="username" label="Username" />
               <Field.Text name="email" label="Email address" />
               <Field.Phone name="phoneNumber" label="Phone number" />
+              <Field.Text name="sex" label="Gender" />
               <Field.Text name="address" label="Address" />
 
               <Field.CountrySelect name="country" label="Country" placeholder="Choose a country" />

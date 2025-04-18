@@ -16,7 +16,7 @@ import { Label } from 'src/components/label';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { useCreateSubscriptionMutation } from 'src/store/admin/subscription';
-import { ShopOwnerDT } from '../shop-owner/types/types';
+import { GetAllShopOwnersResponseDT, ShopOwnerDT } from '../shop-owner/types/types';
 import { UseShopOwners } from '../shop-owner/hooks';
 
 import { toast } from 'src/components/snackbar';
@@ -338,6 +338,7 @@ export function SubscriptionSummary({
   const router = useRouter();
 
   const [createSubscription, { isLoading, isError, error }] = useCreateSubscriptionMutation();
+  const { refetchShopowners } = UseShopOwners(); // Fetch shop owners
 
   const finalPrice = isFree ? 0 : Math.max(0, price - discount);
 
@@ -358,6 +359,7 @@ export function SubscriptionSummary({
       await createSubscription(subscriptionData).unwrap();
       toast.success('Create success!');
       router.push(paths.dashboard.subscription.root);
+      await refetchShopowners();
     } catch (error: any) {
       console.error(error);
       const errorMessage = getErrorMessage(error);

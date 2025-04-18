@@ -6,6 +6,7 @@ type Metric = {
 type AnalyticsSummary = {
   ordersToDeliver: Metric;
   completedDeliveries: Metric;
+  refundedDeliveries: Metric;
   all: Metric;
 };
 
@@ -14,6 +15,7 @@ type AnalyticsChartData = {
   categories: string[]; // Month abbreviations
   ordersToDeliver: number[];
   completedDeliveries: number[];
+  refundedDeliveries: number[];
   all: number[];
 };
 
