@@ -11,6 +11,16 @@ type NewProduct = {
   }>;
 };
 
+export type getTopDeliveryUsersDT = {
+  name: string;
+  profileImage: string;
+  phone: string;
+  country: string;
+  countryCode: string;
+  totalDeliveries: number;
+  rank: number;
+};
+
 // Summary data type
 type AnalyticsSummary = {
   totalProducts: Metric;
@@ -34,6 +44,7 @@ export type ShopOwnerAnalyticsResDT = {
   summary: AnalyticsSummary;
   chartData: AnalyticsChartData;
   newProducts: NewProduct[];
+  getTopDeliveryUsers: getTopDeliveryUsersDT[];
   welcomeStats: {
     salesIncreasePercent: number;
   };

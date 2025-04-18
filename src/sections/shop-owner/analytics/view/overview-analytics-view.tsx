@@ -13,6 +13,9 @@ import { AnalyticsWelcome } from '../analytics-welcome';
 import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
 import { UseAnalytics } from '../hooks';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { AnalyticsBestDeliveryUser } from '../analytics-best-delivery-user';
+
+import { _ecommerceBestSalesman } from 'src/_mock';
 
 // ----------------------------------------------------------------------
 
@@ -45,8 +48,8 @@ export function OverviewAnalyticsView() {
           <AnalyticsNewProducts list={analyticsData?.newProducts || []} />
         </Grid>
 
-        {/* Changed md:4 to md:3 to fit four in a row (12/4=3) */}
-        <Grid size={{ xs: 12, md: 3 }}>
+        {/* Changed md:4 to md:2.4 to fit four in a row (12/5=2.4) */}
+        <Grid size={{ xs: 12, md: 2.4 }}>
           <AnalyticsWidgetSummary
             title="Total product"
             total={analyticsData?.summary.totalProducts.current || 0}
@@ -57,7 +60,7 @@ export function OverviewAnalyticsView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2.4 }}>
           <AnalyticsWidgetSummary
             title="Quantity sold"
             total={analyticsData?.summary.productsSold.current || 0}
@@ -68,7 +71,7 @@ export function OverviewAnalyticsView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2.4 }}>
           <AnalyticsWidgetSummary
             title="Total sale"
             total={analyticsData?.summary?.totalRevenue?.current || 0}
@@ -80,7 +83,7 @@ export function OverviewAnalyticsView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2.4 }}>
           <AnalyticsWidgetSummary
             title="Pending Order"
             total={analyticsData?.summary.totalOrders.current || 0}
@@ -91,7 +94,7 @@ export function OverviewAnalyticsView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2.4 }}>
           <AnalyticsWidgetSummary
             title="Completed Orders"
             total={analyticsData?.summary.completedOrders.current || 0}
@@ -99,6 +102,20 @@ export function OverviewAnalyticsView() {
               categories: analyticsData?.chartData.categories || [],
               series: analyticsData?.chartData.completedOrders || [],
             }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6, lg: 8 }}>
+          <AnalyticsBestDeliveryUser
+            title="Best delivery users"
+            tableData={analyticsData?.getTopDeliveryUsers || []}
+            headCells={[
+              { id: 'name', label: 'Name' },
+              { id: 'phone', label: 'Phone' },
+              { id: 'country', label: 'Country' },
+              { id: 'totalDeliveries', label: 'Total' },
+              { id: 'rank', label: 'Rank' },
+            ]}
           />
         </Grid>
       </Grid>
