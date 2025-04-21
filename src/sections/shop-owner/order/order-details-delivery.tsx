@@ -1,20 +1,18 @@
-import type { IOrderDelivery } from 'src/types/order';
-
 import Box from '@mui/material/Box';
 import CardHeader from '@mui/material/CardHeader';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 
 import { Autocomplete, TextField } from '@mui/material';
-import { UseDeliveryUsers } from '../delivery-user/hooks';
 import { useState } from 'react';
+import { UseDeliveryUsers } from '../delivery-user/hooks';
 import { DeliveryUserResDT } from '../delivery-user/types/types';
+import { DeliveryUserDT } from './types/types';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  // delivery?: IOrderDelivery;
-  delivery: any;
+  delivery?: DeliveryUserDT;
 };
 
 export function OrderDetailsDelivery({ delivery }: Props) {
@@ -56,7 +54,7 @@ export function OrderDetailsDelivery({ delivery }: Props) {
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
             Name
           </Box>
-          {selectedDeliveryUser?.user.fullName}
+          {selectedDeliveryUser?.user.fullName || delivery?.user.fullName}
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -64,7 +62,7 @@ export function OrderDetailsDelivery({ delivery }: Props) {
             Phone no
           </Box>
           <Link underline="always" color="inherit">
-            {selectedDeliveryUser?.user.phoneNumber}
+            {selectedDeliveryUser?.user.phoneNumber || delivery?.user.phoneNumber}
           </Link>
         </Box>
       </Stack>

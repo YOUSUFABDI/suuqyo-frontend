@@ -68,6 +68,20 @@ export interface ProductDT {
   shopOwner: ShopOwnerDT;
 }
 
+export type DeliveryUserDT = {
+  id: string;
+  userId: string;
+  shopOwnerId: string;
+  availability: boolean;
+  vehicleDetail: string;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    fullName: string;
+    phoneNumber: string;
+  };
+};
+
 export interface OrderItemDT {
   id: number;
   orderId: number;
@@ -88,6 +102,7 @@ export type OrderResDT = {
   status: string;
   createdAt: string;
   updatedAt: string;
+  deliveryUser: DeliveryUserDT;
   customer: CustomerDT;
   items: OrderItemDT[];
 };

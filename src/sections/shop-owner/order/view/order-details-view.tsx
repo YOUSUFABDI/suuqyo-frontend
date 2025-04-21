@@ -90,7 +90,7 @@ export function OrderDetailsView({ order }: Props) {
             <OrderDetailsCustomer customer={order?.customer} />
 
             <Divider sx={{ borderStyle: 'dashed' }} />
-            <OrderDetailsDelivery delivery={order?.customer} />
+            <OrderDetailsDelivery delivery={order?.deliveryUser} />
 
             <Divider sx={{ borderStyle: 'dashed' }} />
             <OrderDetailsShipping shippingAddress={order?.customer.ShippingAddress} />
