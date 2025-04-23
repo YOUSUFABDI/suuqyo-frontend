@@ -24,6 +24,7 @@ import { useUpdateOrderStatusMutation } from 'src/store/shop-owner/order';
 import { toast } from 'src/components/snackbar';
 import { getErrorMessage } from 'src/utils/error.message';
 import { UseAnalytics } from '../../analytics/hooks';
+import { UseOrders } from '../hooks';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -34,6 +35,7 @@ export function OrderDetailsView({ order }: Props) {
   const [updateOrderStatus, { isLoading }] = useUpdateOrderStatusMutation();
   const { refetchAnalytics } = UseAnalytics();
   const [status, setStatus] = useState(order?.status);
+  const { orders, refetchOrders } = UseOrders();
 
   const handleChangeStatus = useCallback(
     async (newValue: string) => {
@@ -90,7 +92,11 @@ export function OrderDetailsView({ order }: Props) {
             <OrderDetailsCustomer customer={order?.customer} />
 
             <Divider sx={{ borderStyle: 'dashed' }} />
-            <OrderDetailsDelivery delivery={order?.deliveryUser} />
+            <OrderDetailsDelivery
+              orderId={Number(order?.id)}
+              delivery={order?.deliveryUser}
+              onAssignmentSuccess={refetchOrders}
+            />
 
             <Divider sx={{ borderStyle: 'dashed' }} />
             <OrderDetailsShipping shippingAddress={order?.customer.ShippingAddress} />

@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API } from '../api';
 import { ApiResponseDT } from 'src/types/api-response';
 import { OrderResDT } from 'src/sections/shop-owner/order/types/types';
+import { DeliveryUserResDT } from 'src/sections/shop-owner/delivery-user/types/types';
 
 export const OrderApi = createApi({
   reducerPath: 'OrderApi',
@@ -34,7 +35,27 @@ export const OrderApi = createApi({
       }),
       invalidatesTags: ['OrderApi'],
     }),
+    getActiveDeliveryUsers: builder.query<ApiResponseDT<DeliveryUserResDT[]>, void>({
+      query: () => ({
+        url: '/order/get-active-delivery-users',
+        method: 'GET',
+      }),
+      providesTags: ['OrderApi'],
+    }),
+    assignDeliveryUser: builder.mutation<any, { id: number; deliveryUserId: number }>({
+      query: ({ id, deliveryUserId }) => ({
+        url: `/order/assign-delivery/${id}`,
+        method: 'PATCH',
+        body: { deliveryUserId },
+      }),
+      invalidatesTags: ['OrderApi'],
+    }),
   }),
 });
 
-export const { useGetOrdersQuery, useUpdateOrderStatusMutation } = OrderApi;
+export const {
+  useGetOrdersQuery,
+  useUpdateOrderStatusMutation,
+  useGetActiveDeliveryUsersQuery,
+  useAssignDeliveryUserMutation,
+} = OrderApi;
