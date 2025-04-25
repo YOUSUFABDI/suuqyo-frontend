@@ -8,7 +8,7 @@ import { paths } from 'src/routes/paths';
 export const _account: AccountDrawerProps['data'] = [
   {
     label: 'Account settings',
-    href: paths.dashboard.account.root,
+    href: paths.customer.account.root,
     icon: <Iconify icon="solar:settings-bold-duotone" />,
   },
 ];

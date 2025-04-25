@@ -30,6 +30,7 @@ import type { NavMainProps } from './nav/types';
 import { _account } from '../nav-config-account-main';
 import { AccountDrawer } from '../components/account-drawer';
 import { useAuth } from 'src/sections/auth/hooks';
+import { useEffect, useState } from 'react';
 // ----------------------------------------------------------------------
 
 type LayoutBaseProps = Pick<LayoutSectionProps, 'sx' | 'children' | 'cssVars'>;
@@ -54,13 +55,18 @@ export function MainLayout({
   layoutQuery = 'md',
 }: MainLayoutProps) {
   const pathname = usePathname();
-  const { authenticated } = useAuth();
+  const { authenticated, role } = useAuth();
+  const [mounted, setMounted] = useState(false);
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
   const isHomePage = pathname === '/';
 
   const navData = slotProps?.nav?.data ?? mainNavData;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const renderHeader = () => {
     const headerSlots: HeaderSectionProps['slots'] = {
@@ -101,12 +107,14 @@ export function MainLayout({
             {/** @slot Settings button */}
             <SettingsButton />
 
-            {authenticated ? (
-              // {/** @slot Account drawer */}
-              <AccountDrawer data={_account} />
-            ) : (
-              // {/** @slot Sign in button */}
-              <SignInButton />
+            {mounted && ( // Only render after hydration
+              <>
+                {authenticated && role === 'CUSTOMER' ? (
+                  <AccountDrawer data={_account} />
+                ) : (
+                  <SignInButton />
+                )}
+              </>
             )}
           </Box>
         </>

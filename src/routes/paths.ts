@@ -5,7 +5,6 @@ const ROOTS = {
   DASHBOARD: '/dashboard',
   SHOP_OWNER: '/shop-owner',
   DELIVERY_USER: '/delivery-user',
-  CUSTOMER: '/',
 };
 
 // ----------------------------------------------------------------------
@@ -91,6 +90,10 @@ export const paths = {
 
   // CUSTOMER
   customer: {
-    root: ROOTS.CUSTOMER,
+    root: '/',
+    account: {
+      root: `/account-setting`,
+      changePassword: `/account-setting/change-password`,
+    },
   },
 };
