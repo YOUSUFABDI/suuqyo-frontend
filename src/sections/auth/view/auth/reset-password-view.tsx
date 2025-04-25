@@ -1,18 +1,22 @@
 'use client';
 
-import { z as zod } from 'zod';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z as zod } from 'zod';
 
-import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Box from '@mui/material/Box';
 
 import { paths } from 'src/routes/paths';
 
 import { PasswordIcon } from 'src/assets/icons';
 
-import { Form, Field } from 'src/components/hook-form';
+import { Field, Form } from 'src/components/hook-form';
 
+import { useRouter } from 'next/navigation';
+import { toast } from 'src/components/snackbar';
+import { useForgotPasswordMutation } from 'src/store/auth/auth';
+import { getErrorMessage } from 'src/utils/error.message';
 import { FormHead } from '../../components/form-head';
 import { FormReturnLink } from '../../components/form-return-link';
 
@@ -30,6 +34,9 @@ export const ResetPasswordSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export function ResetPasswordView() {
+  const router = useRouter();
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+
   const defaultValues: ResetPasswordSchemaType = {
     email: '',
   };
@@ -46,10 +53,14 @@ export function ResetPasswordView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.info('DATA', data);
+      const response = await forgotPassword(data).unwrap();
+      if (response.error === null) {
+        toast.success(`OTP for password reset sent successfully to ${data.email}.`);
+        router.push(`${paths.auth.jwt.updatePassword}?email=${data.email}`);
+      }
     } catch (error) {
-      console.error(error);
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
     }
   });
 
@@ -68,7 +79,7 @@ export function ResetPasswordView() {
         size="large"
         type="submit"
         variant="contained"
-        loading={isSubmitting}
+        loading={isSubmitting || isLoading}
         loadingIndicator="Send request..."
       >
         Send request

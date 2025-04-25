@@ -1,26 +1,29 @@
 'use client';
 
-import { z as zod } from 'zod';
-import { useForm } from 'react-hook-form';
-import { useBoolean } from 'minimal-shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useBoolean } from 'minimal-shared/hooks';
+import { useForm } from 'react-hook-form';
+import { z as zod } from 'zod';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 
 import { SentIcon } from 'src/assets/icons';
 
+import { Field, Form } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
-import { Form, Field } from 'src/components/hook-form';
 
+import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'src/components/snackbar';
+import { useResetPasswordMutation } from 'src/store/auth/auth';
+import { getErrorMessage } from 'src/utils/error.message';
 import { FormHead } from '../../components/form-head';
 import { FormResendCode } from '../../components/form-resend-code';
 import { FormReturnLink } from '../../components/form-return-link';
-
 // ----------------------------------------------------------------------
 
 export type UpdatePasswordSchemaType = zod.infer<typeof UpdatePasswordSchema>;
@@ -49,11 +52,17 @@ export const UpdatePasswordSchema = zod
 // ----------------------------------------------------------------------
 
 export function UpdatePasswordView() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const showPassword = useBoolean();
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
+
+  const emailParam = searchParams.get('email');
+  const defaultEmail = emailParam ? emailParam : '';
 
   const defaultValues: UpdatePasswordSchemaType = {
     code: '',
-    email: '',
+    email: defaultEmail,
     password: '',
     confirmPassword: '',
   };
@@ -69,10 +78,19 @@ export function UpdatePasswordView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.info('DATA', data);
+      const reqData = {
+        email: data.email,
+        otp: Number(data.code),
+        newPassword: data.password,
+      };
+      const response = await resetPassword(reqData).unwrap();
+      if (response.error === null) {
+        toast.success('Password reset successfully.');
+        router.push(paths.auth.jwt.signIn);
+      }
     } catch (error) {
-      console.error(error);
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
     }
   });
 
@@ -129,7 +147,7 @@ export function UpdatePasswordView() {
         size="large"
         type="submit"
         variant="contained"
-        loading={isSubmitting}
+        loading={isSubmitting || isLoading}
         loadingIndicator="Update password..."
       >
         Update password

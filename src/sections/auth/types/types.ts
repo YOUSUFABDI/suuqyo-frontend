@@ -21,6 +21,15 @@ export interface ChangePasswordReqDT {
   newPassword: string;
 }
 
+export interface ForgotPasswordPasswordReqDT {
+  email: string;
+}
+export interface ResetPasswordPasswordReqDT {
+  email: string;
+  otp: number;
+  newPassword: string;
+}
+
 export interface LoginDT {
   email: string;
   access_token: string;

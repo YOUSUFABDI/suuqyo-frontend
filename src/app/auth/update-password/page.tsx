@@ -7,7 +7,7 @@ import { UpdatePasswordView } from 'src/sections/auth/view/auth';
 // ----------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: `Update password | Layout centered - ${CONFIG.appName}`,
+  title: `Update password | ${CONFIG.appName}`,
 };
 
 export default function Page() {

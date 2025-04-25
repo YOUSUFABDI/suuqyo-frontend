@@ -1,8 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import {
   ChangePasswordReqDT,
+  ForgotPasswordPasswordReqDT,
   LoginReqDT,
   LoginResDT,
+  ResetPasswordPasswordReqDT,
   SignUpReqDT,
   UserResDT,
   VerifyOTPReqDT,
@@ -56,6 +58,22 @@ export const authApi = createApi({
       }),
       invalidatesTags: ['auth'],
     }),
+
+    forgotPassword: builder.mutation<any, ForgotPasswordPasswordReqDT>({
+      query: (data) => ({
+        url: '/auth/forgot-password',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['auth'],
+    }),
+    resetPassword: builder.mutation<any, ResetPasswordPasswordReqDT>({
+      query: (data) => ({
+        url: '/auth/reset-password',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -65,4 +83,6 @@ export const {
   useLoginMutation,
   useGetUserQuery,
   useChangePasswordMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = authApi;
