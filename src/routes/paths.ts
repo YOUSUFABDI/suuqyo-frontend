@@ -5,7 +5,7 @@ const ROOTS = {
   DASHBOARD: '/dashboard',
   SHOP_OWNER: '/shop-owner',
   DELIVERY_USER: '/delivery-user',
-  CUSTOMER: '/customer',
+  CUSTOMER: '/',
 };
 
 // ----------------------------------------------------------------------

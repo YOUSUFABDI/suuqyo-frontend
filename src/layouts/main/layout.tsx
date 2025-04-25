@@ -27,7 +27,9 @@ import type { LayoutSectionProps } from '../core/layout-section';
 import type { MainSectionProps } from '../core/main-section';
 import type { FooterProps } from './footer';
 import type { NavMainProps } from './nav/types';
-
+import { _account } from '../nav-config-account-main';
+import { AccountDrawer } from '../components/account-drawer';
+import { useAuth } from 'src/sections/auth/hooks';
 // ----------------------------------------------------------------------
 
 type LayoutBaseProps = Pick<LayoutSectionProps, 'sx' | 'children' | 'cssVars'>;
@@ -52,6 +54,7 @@ export function MainLayout({
   layoutQuery = 'md',
 }: MainLayoutProps) {
   const pathname = usePathname();
+  const { authenticated } = useAuth();
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
@@ -98,8 +101,13 @@ export function MainLayout({
             {/** @slot Settings button */}
             <SettingsButton />
 
-            {/** @slot Sign in button */}
-            <SignInButton />
+            {authenticated ? (
+              // {/** @slot Account drawer */}
+              <AccountDrawer data={_account} />
+            ) : (
+              // {/** @slot Sign in button */}
+              <SignInButton />
+            )}
           </Box>
         </>
       ),
