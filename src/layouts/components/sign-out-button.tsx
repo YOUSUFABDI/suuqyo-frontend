@@ -11,6 +11,7 @@ import { toast } from 'src/components/snackbar';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'src/store';
 import { logout } from 'src/store/auth/authSlice';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -28,8 +29,8 @@ export function SignOutButton({ onClose, sx, ...other }: Props) {
       dispatch(logout());
 
       onClose?.();
-      // router.replace('/');
-      router.refresh();
+
+      window.location.href = paths.auth.jwt.signIn;
     } catch (error) {
       console.error(error);
       toast.error('Unable to logout!');

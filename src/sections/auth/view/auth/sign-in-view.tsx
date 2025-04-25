@@ -22,7 +22,7 @@ import { Iconify } from 'src/components/iconify';
 
 import { FormHead } from '../../components/form-head';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'src/store';
 import { useLoginMutation } from 'src/store/auth/auth';
@@ -46,9 +46,32 @@ export const SignInSchema = zod.object({
 
 export function SignInView() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const showPassword = useBoolean();
   const dispatch: AppDispatch = useDispatch();
   const [login, { isLoading, data }] = useLoginMutation();
+
+  const returnTo = searchParams.get('returnTo');
+
+  const handleRoleBasedRedirect = (role: string) => {
+    const redirectPath: any = returnTo; // Use returnTo if exists, else default
+
+    // Only override if no returnTo specified
+    if (!returnTo) {
+      switch (role) {
+        case 'ADMIN':
+          return '/dashboard';
+        case 'SHOP_OWNER':
+          return '/shop-owner';
+        case 'DELIVERY_USER':
+          return '/delivery-user';
+        default:
+          return '/';
+      }
+    }
+
+    return redirectPath;
+  };
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -84,19 +107,14 @@ export function SignInView() {
         );
       }
 
-      const role = localStorage.getItem('role');
-      if (role === 'ADMIN') {
-        router.push('/dashboard');
-      } else if (role === 'SHOP_OWNER') {
-        router.push('/shop-owner');
-      } else if (role === 'DELIVERY_USER') {
-        router.push('/delivery-user');
-      } else {
-        router.push('/customer');
+      if (response.error === null) {
+        // Get the role from the response, not localStorage
+        const role = response?.payload?.data.role || '';
+        const redirectPath = handleRoleBasedRedirect(role);
+        router.push(redirectPath);
       }
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);
-
       setErrorMessage(errorMessage);
     }
   });
