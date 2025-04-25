@@ -3,7 +3,9 @@ import {
   ChangePasswordReqDT,
   LoginReqDT,
   LoginResDT,
+  SignUpReqDT,
   UserResDT,
+  VerifyOTPReqDT,
 } from 'src/sections/auth/types/types';
 import { ApiResponseDT } from 'src/types/api-response';
 import { baseQueryWithReauth } from 'src/utils/base-query-with-re-auth';
@@ -13,6 +15,22 @@ export const authApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['auth'],
   endpoints: (builder) => ({
+    signup: builder.mutation<any, SignUpReqDT>({
+      query: (body) => ({
+        url: '/auth/signup',
+        method: 'POST',
+        body: body,
+      }),
+      invalidatesTags: ['auth'],
+    }),
+    verifyOTP: builder.mutation<any, VerifyOTPReqDT>({
+      query: (body) => ({
+        url: '/auth/verify-otp',
+        method: 'POST',
+        body: body,
+      }),
+      invalidatesTags: ['auth'],
+    }),
     login: builder.mutation<ApiResponseDT<LoginResDT>, LoginReqDT>({
       query: (credentials) => ({
         url: '/auth/login',
@@ -41,4 +59,10 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginMutation, useGetUserQuery, useChangePasswordMutation } = authApi;
+export const {
+  useVerifyOTPMutation,
+  useSignupMutation,
+  useLoginMutation,
+  useGetUserQuery,
+  useChangePasswordMutation,
+} = authApi;

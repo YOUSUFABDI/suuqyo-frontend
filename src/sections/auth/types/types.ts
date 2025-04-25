@@ -3,6 +3,19 @@ export interface LoginReqDT {
   password: string;
 }
 
+export interface SignUpReqDT {
+  fullName: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+}
+
+export interface VerifyOTPReqDT {
+  email: string;
+  code: number;
+}
+
 export interface ChangePasswordReqDT {
   currentPassword: string;
   newPassword: string;

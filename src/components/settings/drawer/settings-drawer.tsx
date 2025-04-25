@@ -256,13 +256,13 @@ export function SettingsDrawer({ sx, defaultSettings }: SettingsDrawerProps) {
           <Box sx={{ gap: 2, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
             {isColorSchemeVisible && renderMode()}
             {isContrastVisible && renderContrast()}
-            {isDirectionVisible && renderRtl()}
-            {isCompactLayoutVisible && renderCompact()}
+            {/* {isDirectionVisible && renderRtl()} */}
+            {/* {isCompactLayoutVisible && renderCompact()} */}
           </Box>
 
-          {(isNavColorVisible || isNavLayoutVisible) && renderNav()}
-          {isPrimaryColorVisible && renderPresets()}
-          {(isFontFamilyVisible || isFontSizeVisible) && renderFont()}
+          {/* {(isNavColorVisible || isNavLayoutVisible) && renderNav()} */}
+          {/* {isPrimaryColorVisible && renderPresets()} */}
+          {/* {(isFontFamilyVisible || isFontSizeVisible) && renderFont()} */}
         </Box>
       </Scrollbar>
     </Drawer>

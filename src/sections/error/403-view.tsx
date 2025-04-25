@@ -8,17 +8,13 @@ import Typography from '@mui/material/Typography';
 
 import { RouterLink } from 'src/routes/components';
 
-import { SimpleLayout } from 'src/layouts/simple';
 import { ForbiddenIllustration } from 'src/assets/illustrations';
+import { SimpleLayout } from 'src/layouts/simple';
 
-import { varBounce, MotionContainer } from 'src/components/animate';
-import { useLogout } from '../auth/hooks';
-
+import { MotionContainer, varBounce } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
 export function View403() {
-  const { handleLogout } = useLogout();
-
   return (
     <SimpleLayout
       slotProps={{
@@ -43,13 +39,7 @@ export function View403() {
           <ForbiddenIllustration sx={{ my: { xs: 5, sm: 10 } }} />
         </m.div>
 
-        <Button
-          onClick={handleLogout}
-          component={RouterLink}
-          href="/"
-          size="large"
-          variant="contained"
-        >
+        <Button component={RouterLink} href="/" size="large" variant="contained">
           Go to home
         </Button>
       </Container>

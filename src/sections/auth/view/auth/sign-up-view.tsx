@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useBoolean } from 'minimal-shared/hooks';
 import { useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
+import { toast } from 'src/components/snackbar';
+import { isValidPhoneNumber } from 'react-phone-number-input/input';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
@@ -15,23 +17,26 @@ import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
 
 import { AnimateLogoRotate } from 'src/components/animate';
-import { Field, Form } from 'src/components/hook-form';
+import { Field, Form, schemaHelper } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
 
 import { FormHead } from '../../components/form-head';
-import { SignUpTerms } from '../../components/sign-up-terms';
+import { useSignupMutation } from 'src/store/auth/auth';
+import { getErrorMessage } from 'src/utils/error.message';
+import { useRouter } from 'next/navigation';
 
 // ----------------------------------------------------------------------
 
 export type SignUpSchemaType = zod.infer<typeof SignUpSchema>;
 
 export const SignUpSchema = zod.object({
-  firstName: zod.string().min(1, { message: 'First name is required!' }),
-  lastName: zod.string().min(1, { message: 'Last name is required!' }),
+  fullName: zod.string().min(1, { message: 'Full name is required!' }),
+  username: zod.string().min(1, { message: 'Username is required!' }),
   email: zod
     .string()
     .min(1, { message: 'Email is required!' })
     .email({ message: 'Email must be a valid email address!' }),
+  phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
   password: zod
     .string()
     .min(1, { message: 'Password is required!' })
@@ -42,11 +47,14 @@ export const SignUpSchema = zod.object({
 
 export function SignUpView() {
   const showPassword = useBoolean();
+  const router = useRouter();
+  const [signup, { isLoading }] = useSignupMutation();
 
   const defaultValues: SignUpSchemaType = {
-    firstName: '',
-    lastName: '',
+    fullName: '',
+    username: '',
     email: '',
+    phoneNumber: '',
     password: '',
   };
 
@@ -62,10 +70,14 @@ export function SignUpView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.info('DATA', data);
+      const response = await signup(data).unwrap();
+      if (response.error === null) {
+        toast.success(`Verification code sent to your email!`);
+        router.push(`${paths.auth.jwt.verify}?email=${data.email}`);
+      }
     } catch (error) {
-      console.error(error);
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
     }
   });
 
@@ -77,27 +89,10 @@ export function SignUpView() {
         flexDirection: 'column',
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          gap: { xs: 3, sm: 2 },
-          flexDirection: { xs: 'column', sm: 'row' },
-        }}
-      >
-        <Field.Text
-          name="firstName"
-          label="First name"
-          slotProps={{ inputLabel: { shrink: true } }}
-        />
-        <Field.Text
-          name="lastName"
-          label="Last name"
-          slotProps={{ inputLabel: { shrink: true } }}
-        />
-      </Box>
-
+      <Field.Text name="fullName" label="Full name" slotProps={{ inputLabel: { shrink: true } }} />
+      <Field.Text name="username" label="Username" slotProps={{ inputLabel: { shrink: true } }} />
       <Field.Text name="email" label="Email address" slotProps={{ inputLabel: { shrink: true } }} />
-
+      <Field.Phone name="phoneNumber" label="Phone number" placeholder="61XXXXXXX" />
       <Field.Text
         name="password"
         label="Password"
@@ -123,7 +118,7 @@ export function SignUpView() {
         size="large"
         type="submit"
         variant="contained"
-        loading={isSubmitting}
+        loading={isSubmitting || isLoading}
         loadingIndicator="Create account..."
       >
         Create account
@@ -136,12 +131,12 @@ export function SignUpView() {
       <AnimateLogoRotate sx={{ mb: 3, mx: 'auto' }} />
 
       <FormHead
-        title="Get started absolutely free"
+        title="Get start now"
         description={
           <>
             {`Already have an account? `}
             <Link component={RouterLink} href={paths.auth.jwt.signIn} variant="subtitle2">
-              Get started
+              Sign in
             </Link>
           </>
         }
@@ -151,7 +146,7 @@ export function SignUpView() {
         {renderForm()}
       </Form>
 
-      <SignUpTerms />
+      {/* <SignUpTerms /> */}
     </>
   );
 }
