@@ -18,8 +18,9 @@ import { defaultSettings, SettingsDrawer, SettingsProvider } from 'src/component
 import { detectSettings } from 'src/components/settings/server';
 import { Snackbar } from 'src/components/snackbar';
 
-import StoreProvider from 'src/store/store-provider';
 import { RootConnectionWrapper } from 'src/layouts/root-connection-wrapper';
+import { CheckoutProvider } from 'src/sections/checkout/context';
+import StoreProvider from 'src/store/store-provider';
 
 // ----------------------------------------------------------------------
 
@@ -77,30 +78,32 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         />
 
         <StoreProvider>
-          <I18nProvider lang={appConfig.i18nLang}>
-            <SettingsProvider
-              cookieSettings={appConfig.cookieSettings}
-              defaultSettings={defaultSettings}
-            >
-              <LocalizationProvider>
-                <AppRouterCacheProvider options={{ key: 'css' }}>
-                  <ThemeProvider
-                    defaultMode={themeConfig.defaultMode}
-                    modeStorageKey={themeConfig.modeStorageKey}
-                  >
-                    <RootConnectionWrapper>
-                      <MotionLazy>
-                        <Snackbar />
-                        <ProgressBar />
-                        <SettingsDrawer defaultSettings={defaultSettings} />
-                        {children}
-                      </MotionLazy>
-                    </RootConnectionWrapper>
-                  </ThemeProvider>
-                </AppRouterCacheProvider>
-              </LocalizationProvider>
-            </SettingsProvider>
-          </I18nProvider>
+          <CheckoutProvider>
+            <I18nProvider lang={appConfig.i18nLang}>
+              <SettingsProvider
+                cookieSettings={appConfig.cookieSettings}
+                defaultSettings={defaultSettings}
+              >
+                <LocalizationProvider>
+                  <AppRouterCacheProvider options={{ key: 'css' }}>
+                    <ThemeProvider
+                      defaultMode={themeConfig.defaultMode}
+                      modeStorageKey={themeConfig.modeStorageKey}
+                    >
+                      <RootConnectionWrapper>
+                        <MotionLazy>
+                          <Snackbar />
+                          <ProgressBar />
+                          <SettingsDrawer defaultSettings={defaultSettings} />
+                          {children}
+                        </MotionLazy>
+                      </RootConnectionWrapper>
+                    </ThemeProvider>
+                  </AppRouterCacheProvider>
+                </LocalizationProvider>
+              </SettingsProvider>
+            </I18nProvider>
+          </CheckoutProvider>
         </StoreProvider>
       </body>
     </html>
