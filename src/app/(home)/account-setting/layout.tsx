@@ -1,17 +1,17 @@
-import type { Metadata } from 'next';
-
-import { CONFIG } from 'src/global-config';
 import { AuthGuard, RoleBasedGuard } from 'src/sections/auth/guard';
+import { AccountLayout } from 'src/sections/home/account/account-layout';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = { title: `Profile - ${CONFIG.appName}` };
+type Props = {
+  children: React.ReactNode;
+};
 
-export default function Page() {
+export default function Layout({ children }: Props) {
   return (
     <AuthGuard>
       <RoleBasedGuard allowedRoles={['CUSTOMER']}>
-        <h1>Profile</h1>
+        <AccountLayout> {children}</AccountLayout>;
       </RoleBasedGuard>
     </AuthGuard>
   );

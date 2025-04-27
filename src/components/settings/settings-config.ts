@@ -12,6 +12,7 @@ export const defaultSettings: SettingsState = {
   contrast: 'default',
   navLayout: 'vertical',
   primaryColor: 'default',
+  // primaryColor: 'preset3',
   navColor: 'integrate',
   compactLayout: false,
   fontSize: 16,

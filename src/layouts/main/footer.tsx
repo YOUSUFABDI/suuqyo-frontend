@@ -1,18 +1,15 @@
 import type { Breakpoint } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid2';
-import Divider from '@mui/material/Divider';
-import { styled } from '@mui/material/styles';
 import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid2';
+import Link from '@mui/material/Link';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-
-import { TwitterIcon, FacebookIcon, LinkedinIcon, InstagramIcon } from 'src/assets/icons';
+import { paths } from 'src/routes/paths';
 
 import { Logo } from 'src/components/logo';
 

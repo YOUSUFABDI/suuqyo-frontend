@@ -132,12 +132,14 @@ export function MainLayout({
     );
   };
 
-  const renderFooter = () =>
-    isHomePage ? (
-      <HomeFooter sx={slotProps?.footer?.sx} />
-    ) : (
-      <Footer sx={slotProps?.footer?.sx} layoutQuery={layoutQuery} />
-    );
+  const renderFooter = () => (
+    // isHomePage ? (
+    //   <HomeFooter sx={slotProps?.footer?.sx} />
+    // ) : (
+    //   <Footer sx={slotProps?.footer?.sx} layoutQuery={layoutQuery} />
+    // );
+    <HomeFooter sx={slotProps?.footer?.sx} />
+  );
 
   const renderMain = () => <MainSection {...slotProps?.main}>{children}</MainSection>;
 
