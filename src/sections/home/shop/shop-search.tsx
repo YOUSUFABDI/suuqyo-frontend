@@ -1,25 +1,25 @@
-import type { IProductItem } from 'src/types/product';
-import type { Theme, SxProps } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 
-import { useState, useCallback } from 'react';
-import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
+import parse from 'autosuggest-highlight/parse';
 import { useDebounce } from 'minimal-shared/hooks';
+import { useCallback, useState } from 'react';
 
+import Autocomplete, { autocompleteClasses, createFilterOptions } from '@mui/material/Autocomplete';
 import Avatar from '@mui/material/Avatar';
+import InputAdornment from '@mui/material/InputAdornment';
+import Link, { linkClasses } from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Link, { linkClasses } from '@mui/material/Link';
-import InputAdornment from '@mui/material/InputAdornment';
-import Autocomplete, { autocompleteClasses, createFilterOptions } from '@mui/material/Autocomplete';
 
-import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
-
-import { useSearchProducts } from 'src/actions/product';
+import { useRouter } from 'src/routes/hooks';
 
 import { Iconify } from 'src/components/iconify';
 import { SearchNotFound } from 'src/components/search-not-found';
+import { useSearchShops } from './hooks';
+import { ShopDT } from './types/types';
+import { slugify } from 'src/utils/slugify';
 
 // ----------------------------------------------------------------------
 
@@ -32,16 +32,17 @@ export function ShopSearch({ redirectPath, sx }: Props) {
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedItem, setSelectedItem] = useState<IProductItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ShopDT | null>(null);
 
   const debouncedQuery = useDebounce(searchQuery);
-  const { searchResults: options, searchLoading: loading } = useSearchProducts(debouncedQuery);
+  const { searchResults: options, searchLoading: loading } = useSearchShops(debouncedQuery);
 
   const handleChange = useCallback(
-    (item: IProductItem | null) => {
+    (item: ShopDT | null) => {
       setSelectedItem(item);
       if (item) {
-        router.push(redirectPath(item.id));
+        // router.push(redirectPath(item.id.toString()));
+        router.push(redirectPath(slugify(item.shopName)));
       }
     },
     [redirectPath, router]
@@ -49,7 +50,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
 
   const filterOptions = createFilterOptions({
     matchFrom: 'any',
-    stringify: (option: IProductItem) => `${option.name} ${option.sku}`,
+    stringify: (option: ShopDT) => `${option.shopName} ${option.shopAddress}`,
   });
 
   const paperStyles: SxProps<Theme> = {
@@ -78,7 +79,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
       filterOptions={filterOptions}
       onChange={(event, newValue) => handleChange(newValue)}
       onInputChange={(event, newValue) => setSearchQuery(newValue)}
-      getOptionLabel={(option) => option.name}
+      getOptionLabel={(option) => option.shopName}
       noOptionsText={<SearchNotFound query={debouncedQuery} />}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       slotProps={{ paper: { sx: paperStyles } }}
@@ -105,22 +106,22 @@ export function ShopSearch({ redirectPath, sx }: Props) {
           }}
         />
       )}
-      renderOption={(props, product, { inputValue }) => {
-        const matches = match(product.name, inputValue);
-        const parts = parse(product.name, matches);
+      renderOption={(props, shop, { inputValue }) => {
+        const matches = match(shop.shopName, inputValue);
+        const parts = parse(shop.shopName, matches);
 
         return (
-          <li {...props} key={product.id}>
+          <li {...props} key={shop.id}>
             <Link
               component={RouterLink}
-              href={redirectPath(product.id)}
+              href={redirectPath(slugify(shop.shopName))}
               color="inherit"
               underline="none"
             >
               <Avatar
-                key={product.id}
-                alt={product.name}
-                src={product.coverUrl}
+                key={shop.id}
+                alt={shop.shopName}
+                src={shop.shopLogo}
                 variant="rounded"
                 sx={{
                   width: 48,

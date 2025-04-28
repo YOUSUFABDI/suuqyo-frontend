@@ -1,5 +1,4 @@
 import type { BoxProps } from '@mui/material/Box';
-import type { IProductItem } from 'src/types/product';
 
 import Box from '@mui/material/Box';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
@@ -8,24 +7,31 @@ import { paths } from 'src/routes/paths';
 
 import { ShopItem } from './shop-item';
 import { ShopItemSkeleton } from './shop-skeleton';
+import { ShopDT } from './types/types';
+import { slugify } from 'src/utils/slugify';
 
 // ----------------------------------------------------------------------
 
 type Props = BoxProps & {
   loading?: boolean;
-  products: IProductItem[];
+  shops: ShopDT[];
 };
 
-export function ShopList({ products, loading, sx, ...other }: Props) {
+export function ShopList({ shops, loading, sx, ...other }: Props) {
   const renderLoading = () => <ShopItemSkeleton />;
 
+  const handleShopClick = (slug: string, shopId: string) => {
+    console.log('shshs', shopId);
+    // Store shopId in sessionStorage (it persists within the session)
+    sessionStorage.setItem('shopId', shopId);
+
+    // Redirect to the shop page with slug only
+    return `/shop/${slugify(slug)}`;
+  };
+
   const renderList = () =>
-    products.map((product) => (
-      <ShopItem
-        key={product.id}
-        product={product}
-        detailsHref={paths.customer.shop.details(product.id)}
-      />
+    shops.map((shop) => (
+      <ShopItem key={shop.id} shop={shop} detailsHref={handleShopClick(shop.shopName, shop.id)} />
     ));
 
   return (
@@ -49,7 +55,7 @@ export function ShopList({ products, loading, sx, ...other }: Props) {
         {loading ? renderLoading() : renderList()}
       </Box>
 
-      {products.length > 8 && (
+      {shops.length > 8 && (
         <Pagination
           count={8}
           sx={{

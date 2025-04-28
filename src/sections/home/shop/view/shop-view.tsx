@@ -1,8 +1,7 @@
 'use client';
 
-import type { IProductFilters, IProductItem } from 'src/types/product';
+import type { IProductFilters } from 'src/types/product';
 
-import { orderBy } from 'es-toolkit';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 import { useState } from 'react';
 
@@ -15,20 +14,19 @@ import { paths } from 'src/routes/paths';
 
 import { EmptyContent } from 'src/components/empty-content';
 
-import { useCheckoutContext } from 'src/sections/checkout/context';
+import { useSearchShops, UseShops } from '../hooks';
 import { ShopFiltersResult } from '../shop-filters-result';
 import { ShopList } from '../shop-list';
 import { ShopSearch } from '../shop-search';
+import { ShopDT } from '../types/types';
+import { slugify } from 'src/utils/slugify';
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  products: IProductItem[];
-};
-
-export function ShopView({ products }: Props) {
-  const { state: checkoutState } = useCheckoutContext();
-  console.log(checkoutState);
+export function ShopView() {
+  const { shops } = UseShops();
+  const [searchQuery, setSearchQuery] = useState('');
+  const { searchResults } = useSearchShops(searchQuery);
 
   const openFilters = useBoolean();
 
@@ -44,7 +42,8 @@ export function ShopView({ products }: Props) {
   const { state: currentFilters } = filters;
 
   const dataFiltered = applyFilter({
-    inputData: products,
+    // inputData: shops,
+    inputData: searchQuery ? searchResults : shops,
     filters: currentFilters,
     sortBy,
   });
@@ -58,7 +57,7 @@ export function ShopView({ products }: Props) {
     currentFilters.priceRange[1] !== 200;
 
   const notFound = !dataFiltered.length && canReset;
-  const productsEmpty = !products.length;
+  const productsEmpty = !shops.length;
 
   const renderFilters = () => (
     <Box
@@ -70,7 +69,9 @@ export function ShopView({ products }: Props) {
         alignItems: { xs: 'flex-end', sm: 'center' },
       }}
     >
-      <ShopSearch redirectPath={(id: string) => paths.customer.shop.details(id)} />
+      <ShopSearch
+        redirectPath={(shopName: string) => paths.customer.shop.details(slugify(shopName))}
+      />
     </Box>
   );
 
@@ -93,7 +94,7 @@ export function ShopView({ products }: Props) {
 
       {(notFound || productsEmpty) && renderNotFound()}
 
-      <ShopList products={dataFiltered} />
+      <ShopList shops={dataFiltered} />
     </Container>
   );
 }
@@ -103,62 +104,9 @@ export function ShopView({ products }: Props) {
 type ApplyFilterProps = {
   sortBy: string;
   filters: IProductFilters;
-  inputData: IProductItem[];
+  inputData: ShopDT[];
 };
 
-function applyFilter({ inputData, filters, sortBy }: ApplyFilterProps) {
-  const { gender, category, colors, priceRange, rating } = filters;
-
-  const min = priceRange[0];
-  const max = priceRange[1];
-
-  // Sort by
-  if (sortBy === 'featured') {
-    inputData = orderBy(inputData, ['totalSold'], ['desc']);
-  }
-
-  if (sortBy === 'newest') {
-    inputData = orderBy(inputData, ['createdAt'], ['desc']);
-  }
-
-  if (sortBy === 'priceDesc') {
-    inputData = orderBy(inputData, ['price'], ['desc']);
-  }
-
-  if (sortBy === 'priceAsc') {
-    inputData = orderBy(inputData, ['price'], ['asc']);
-  }
-
-  // filters
-  if (gender.length) {
-    inputData = inputData.filter((product) => product.gender.some((i) => gender.includes(i)));
-  }
-
-  if (category !== 'all') {
-    inputData = inputData.filter((product) => product.category === category);
-  }
-
-  if (colors.length) {
-    inputData = inputData.filter((product) =>
-      product.colors.some((color) => colors.includes(color))
-    );
-  }
-
-  if (min !== 0 || max !== 200) {
-    inputData = inputData.filter((product) => product.price >= min && product.price <= max);
-  }
-
-  if (rating) {
-    inputData = inputData.filter((product) => {
-      const convertRating = (value: string) => {
-        if (value === 'up4Star') return 4;
-        if (value === 'up3Star') return 3;
-        if (value === 'up2Star') return 2;
-        return 1;
-      };
-      return product.totalRatings > convertRating(rating);
-    });
-  }
-
+function applyFilter({ inputData }: ApplyFilterProps) {
   return inputData;
 }
