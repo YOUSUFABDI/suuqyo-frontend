@@ -26,7 +26,7 @@ export function OverviewAnalyticsView() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <AnalyticsWidgetSummary
             title="Total profit"
-            percent={adminAnalytic?.percentages.profit || 0}
+            // percent={adminAnalytic?.percentages.profit || 0}
             total={adminAnalytic?.totalProfit}
             icon={
               <img
@@ -44,7 +44,7 @@ export function OverviewAnalyticsView() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <AnalyticsWidgetSummary
             title="Total users"
-            percent={adminAnalytic?.percentages.users || 0}
+            // percent={adminAnalytic?.percentages.users || 0}
             total={adminAnalytic?.totalUsers}
             color="secondary"
             icon={
@@ -63,7 +63,7 @@ export function OverviewAnalyticsView() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <AnalyticsWidgetSummary
             title="Total shop owners"
-            percent={adminAnalytic?.percentages.shopOwners || 0}
+            // percent={adminAnalytic?.percentages.shopOwners || 0}
             total={adminAnalytic?.totalShopOwners}
             color="warning"
             icon={
@@ -82,7 +82,7 @@ export function OverviewAnalyticsView() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <AnalyticsWidgetSummary
             title="Total buyers"
-            percent={adminAnalytic?.percentages.buyers || 0}
+            // percent={adminAnalytic?.percentages.buyers || 0}
             total={adminAnalytic?.totalBuyers}
             color="error"
             icon={

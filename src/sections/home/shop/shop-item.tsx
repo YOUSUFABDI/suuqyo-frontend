@@ -19,8 +19,7 @@ export function ShopItem({ shop, detailsHref }: Props) {
       href={detailsHref}
       sx={{
         p: 2,
-        boxShadow: 0,
-        border: (theme) => `1px solid ${theme.palette.divider}`,
+        boxShadow: 2,
         borderRadius: 0.6,
         cursor: 'pointer',
         display: 'flex',

@@ -41,7 +41,6 @@ export function ShopSearch({ redirectPath, sx }: Props) {
     (item: ShopDT | null) => {
       setSelectedItem(item);
       if (item) {
-        // router.push(redirectPath(item.id.toString()));
         router.push(redirectPath(slugify(item.shopName)));
       }
     },

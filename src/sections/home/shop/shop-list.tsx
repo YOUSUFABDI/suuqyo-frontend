@@ -20,18 +20,9 @@ type Props = BoxProps & {
 export function ShopList({ shops, loading, sx, ...other }: Props) {
   const renderLoading = () => <ShopItemSkeleton />;
 
-  const handleShopClick = (slug: string, shopId: string) => {
-    console.log('shshs', shopId);
-    // Store shopId in sessionStorage (it persists within the session)
-    sessionStorage.setItem('shopId', shopId);
-
-    // Redirect to the shop page with slug only
-    return `/shop/${slugify(slug)}`;
-  };
-
   const renderList = () =>
     shops.map((shop) => (
-      <ShopItem key={shop.id} shop={shop} detailsHref={handleShopClick(shop.shopName, shop.id)} />
+      <ShopItem key={shop.id} shop={shop} detailsHref={`/shop/${slugify(shop.shopName)}`} />
     ));
 
   return (
