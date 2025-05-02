@@ -11,7 +11,7 @@ import { I18nProvider } from 'src/locales/i18n-provider';
 import { detectLanguage } from 'src/locales/server';
 import { themeConfig, ThemeProvider } from 'src/theme';
 import { primary } from 'src/theme/core/palette';
-
+import { CheckoutProvider } from 'src/sections/home/checkout/context';
 import { MotionLazy } from 'src/components/animate/motion-lazy';
 import { ProgressBar } from 'src/components/progress-bar';
 import { defaultSettings, SettingsDrawer, SettingsProvider } from 'src/components/settings';
@@ -90,10 +90,12 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                   >
                     <RootConnectionWrapper>
                       <MotionLazy>
-                        <Snackbar />
-                        <ProgressBar />
-                        <SettingsDrawer defaultSettings={defaultSettings} />
-                        {children}
+                        <CheckoutProvider>
+                          <Snackbar />
+                          <ProgressBar />
+                          <SettingsDrawer defaultSettings={defaultSettings} />
+                          {children}
+                        </CheckoutProvider>
                       </MotionLazy>
                     </RootConnectionWrapper>
                   </ThemeProvider>

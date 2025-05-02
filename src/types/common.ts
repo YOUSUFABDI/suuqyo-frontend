@@ -22,3 +22,10 @@ export type IAddressItem = {
   phoneNumber?: string;
   addressType?: string;
 };
+
+export type IPaymentCard = {
+  id: string;
+  cardType: string;
+  primary?: boolean;
+  cardNumber: string;
+};

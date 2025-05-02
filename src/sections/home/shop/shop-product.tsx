@@ -1,5 +1,6 @@
 import { Box, Card } from '@mui/material';
 import { ShopInfoDT } from './types/types';
+import { ProductList } from '../components/product-list';
 
 type Props = {
   shop: ShopInfoDT | null;
@@ -21,6 +22,7 @@ export const ShopProduct = ({ shop }: Props) => {
         }}
       />
       {/* Products */}
+      <ProductList products={shop?.user.Product} />
     </Card>
   );
 };

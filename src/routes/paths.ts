@@ -99,5 +99,10 @@ export const paths = {
       root: '/shop',
       details: (name: string) => `/shop/${name}`,
     },
+    product: {
+      root: `/product`,
+      checkout: `/product/checkout`,
+      details: (id: string) => `/product/${id}`,
+    },
   },
 };
