@@ -24,22 +24,23 @@ import { CheckoutPaymentMethods } from './checkout-payment-methods';
 // ----------------------------------------------------------------------
 
 const DELIVERY_OPTIONS: ICheckoutDeliveryOption[] = [
-  { value: 0, label: 'Free', description: '5-7 days delivery' },
-  { value: 10, label: 'Standard', description: '3-5 days delivery' },
-  { value: 20, label: 'Express', description: '2-3 days delivery' },
+  // { value: 0, label: 'Free', description: '5-7 days delivery' },
+  { value: 0, label: 'Free', description: 'Pick up by your self' },
+  { value: 1.5, label: 'Standard', description: '3-5 days delivery' },
+  // { value: 20, label: 'Express', description: '2-3 days delivery' },
 ];
 
 const PAYMENT_OPTIONS: ICheckoutPaymentOption[] = [
-  {
-    value: 'paypal',
-    label: 'Pay with Paypal',
-    description: 'You will be redirected to PayPal website to complete your purchase securely.',
-  },
-  {
-    value: 'creditcard',
-    label: 'Credit / Debit card',
-    description: 'We support Mastercard, Visa, Discover and Stripe.',
-  },
+  // {
+  //   value: 'paypal',
+  //   label: 'Pay with Paypal',
+  //   description: 'You will be redirected to PayPal website to complete your purchase securely.',
+  // },
+  // {
+  //   value: 'creditcard',
+  //   label: 'Credit / Debit card',
+  //   description: 'We support Mastercard, Visa, Discover and Stripe.',
+  // },
   { value: 'cash', label: 'Cash', description: 'Pay with cash when your order is delivered.' },
 ];
 
@@ -87,9 +88,23 @@ export function CheckoutPayment() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      const shippingAddressId = checkoutState.billing?.id;
+      const items = checkoutState.items.map((item: any) => ({
+        productId: item.id,
+        quantity: item.quantity,
+      }));
+
+      const reqData = {
+        shippingAddressId,
+        items,
+      };
+
+      console.info('Submitting API payload:', reqData);
+
       // onResetCart();
       // onChangeStep('next');
-      console.info('DATA', data);
+      // console.info('DATA', data);
+      // console.info('checkoutState', checkoutState);
     } catch (error) {
       console.error(error);
     }

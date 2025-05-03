@@ -89,8 +89,16 @@ export function SignUpView() {
         flexDirection: 'column',
       }}
     >
-      <Field.Text name="fullName" label="Full name" slotProps={{ inputLabel: { shrink: true } }} />
-      <Field.Text name="username" label="Username" slotProps={{ inputLabel: { shrink: true } }} />
+      <Box
+        sx={{ display: 'flex', gap: { xs: 3, sm: 2 }, flexDirection: { xs: 'column', sm: 'row' } }}
+      >
+        <Field.Text
+          name="fullName"
+          label="Full name"
+          slotProps={{ inputLabel: { shrink: true } }}
+        />
+        <Field.Text name="username" label="Username" slotProps={{ inputLabel: { shrink: true } }} />
+      </Box>
       <Field.Text name="email" label="Email address" slotProps={{ inputLabel: { shrink: true } }} />
       <Field.Phone name="phoneNumber" label="Phone number" placeholder="61XXXXXXX" />
       <Field.Text

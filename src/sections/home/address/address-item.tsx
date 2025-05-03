@@ -1,18 +1,18 @@
-import type { IAddressItem } from 'src/types/common';
 import type { PaperProps } from '@mui/material/Paper';
 
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { Label } from 'src/components/label';
+import { AddressDT } from './types/types';
 
 // ----------------------------------------------------------------------
 
 type Props = PaperProps & {
   action?: React.ReactNode;
-  address: IAddressItem;
+  address: AddressDT | null;
 };
 
 export function AddressItem({ address, action, sx, ...other }: Props) {
@@ -32,26 +32,19 @@ export function AddressItem({ address, action, sx, ...other }: Props) {
     >
       <Stack flexGrow={1} spacing={1}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="subtitle2">
-            {address.name}
-            <Box component="span" sx={{ ml: 0.5, typography: 'body2', color: 'text.secondary' }}>
-              ({address.addressType})
-            </Box>
-          </Typography>
+          <Typography variant="subtitle2">{address?.fullName}</Typography>
 
-          {address.primary && (
-            <Label color="info" sx={{ ml: 1 }}>
-              Default
-            </Label>
-          )}
+          <Label color="info" sx={{ ml: 1 }}>
+            Default
+          </Label>
         </Box>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {address.fullAddress}
+          {address?.country}-{address?.city}-{address?.state}-{address?.address}
         </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {address.phoneNumber}
+          {address?.phoneNumber}
         </Typography>
       </Stack>
 

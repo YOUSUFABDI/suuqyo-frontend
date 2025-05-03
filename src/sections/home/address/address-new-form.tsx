@@ -1,20 +1,24 @@
-import type { IAddressItem } from 'src/types/common';
-
-import { z as zod } from 'zod';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { isValidPhoneNumber } from 'react-phone-number-input/input';
-
+import { z as zod } from 'zod';
+import { toast } from 'src/components/snackbar';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import LoadingButton from '@mui/lab/LoadingButton';
-import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Stack from '@mui/material/Stack';
 
-import { Form, Field, schemaHelper } from 'src/components/hook-form';
+import { Field, Form, schemaHelper } from 'src/components/hook-form';
+import { AddressDT } from './types/types';
+import {
+  useGetCurrentShippingAddressQuery,
+  useUpdateShippingAddressMutation,
+} from 'src/store/customer/order';
+import { getErrorMessage } from 'src/utils/error.message';
 
 // ----------------------------------------------------------------------
 
@@ -25,15 +29,11 @@ export const NewAddressSchema = zod.object({
   state: zod.string().min(1, { message: 'State is required!' }),
   name: zod.string().min(1, { message: 'Name is required!' }),
   address: zod.string().min(1, { message: 'Address is required!' }),
-  zipCode: zod.string().min(1, { message: 'Zip code is required!' }),
   phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
   country: schemaHelper.nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
     // message for null value
     message: 'Country is required!',
   }),
-  // Not required
-  primary: zod.boolean(),
-  addressType: zod.string(),
 });
 
 // ----------------------------------------------------------------------
@@ -41,7 +41,7 @@ export const NewAddressSchema = zod.object({
 type Props = {
   open: boolean;
   onClose: () => void;
-  onCreate: (address: IAddressItem) => void;
+  onCreate: (address: AddressDT) => void;
 };
 
 export function AddressNewForm({ open, onClose, onCreate }: Props) {
@@ -50,11 +50,8 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
     city: '',
     state: '',
     address: '',
-    zipCode: '',
     country: '',
-    primary: true,
     phoneNumber: '',
-    addressType: 'Home',
   };
 
   const methods = useForm<NewAddressSchemaType>({
@@ -68,18 +65,32 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
     formState: { isSubmitting },
   } = methods;
 
+  const [updateShippingAddress, { isLoading }] = useUpdateShippingAddressMutation();
+
   const onSubmit = handleSubmit(async (data) => {
     try {
+      await updateShippingAddress({
+        fullName: data.name,
+        country: data.country ?? '',
+        city: data.city,
+        state: data.state,
+        address: data.address,
+        phoneNumber: String(data.phoneNumber),
+      }).unwrap();
+
       onCreate({
-        name: data.name,
+        fullName: data.name,
+        country: data.country ?? '',
+        city: data.city,
+        state: data.state,
+        address: data.address,
         phoneNumber: data.phoneNumber,
-        fullAddress: `${data.address}, ${data.city}, ${data.state}, ${data.country}, ${data.zipCode}`,
-        addressType: data.addressType,
-        primary: data.primary,
       });
       onClose();
+      toast.success('Saved!');
     } catch (error) {
-      console.error(error);
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
     }
   });
 
@@ -90,17 +101,9 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
 
         <DialogContent dividers>
           <Stack spacing={3}>
-            <Field.RadioGroup
-              row
-              name="addressType"
-              options={[
-                { label: 'Home', value: 'Home' },
-                { label: 'Office', value: 'Office' },
-              ]}
-            />
-
             <Box
               sx={{
+                mt: 1,
                 rowGap: 3,
                 columnGap: 2,
                 display: 'grid',
@@ -112,26 +115,21 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
               <Field.Phone name="phoneNumber" label="Phone number" country="US" />
             </Box>
 
-            <Field.Text name="address" label="Address" />
+            <Field.CountrySelect name="country" label="Country" placeholder="Choose a country" />
 
             <Box
               sx={{
                 rowGap: 3,
                 columnGap: 2,
                 display: 'grid',
-                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
+                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
               <Field.Text name="city" label="Town/city" />
 
               <Field.Text name="state" label="State" />
-
-              <Field.Text name="zipCode" label="Zip/code" />
             </Box>
-
-            <Field.CountrySelect name="country" label="Country" placeholder="Choose a country" />
-
-            <Field.Checkbox name="primary" label="Use this address as default." />
+            <Field.Text name="address" label="Address" />
           </Stack>
         </DialogContent>
 
@@ -140,7 +138,7 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting || isLoading}>
             Deliver to this address
           </LoadingButton>
         </DialogActions>

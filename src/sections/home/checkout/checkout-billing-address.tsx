@@ -13,6 +13,8 @@ import { Iconify } from 'src/components/iconify';
 import { useCheckoutContext } from './context';
 import { CheckoutSummary } from './checkout-summary';
 import { AddressItem, AddressNewForm } from '../address';
+import { useCurrentShippingAddress } from '../address/hooks';
+import { AddressDT } from '../address/types/types';
 
 // ----------------------------------------------------------------------
 
@@ -20,44 +22,42 @@ export function CheckoutBillingAddress() {
   const { onChangeStep, onCreateBillingAddress, state: checkoutState } = useCheckoutContext();
 
   const addressForm = useBoolean();
+  const { currentShippingAddress } = useCurrentShippingAddress();
 
   return (
     <>
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 8 }}>
-          {_addressBooks.slice(0, 4).map((address) => (
-            <AddressItem
-              key={address.id}
-              address={address}
-              action={
-                <Box sx={{ flexShrink: 0, display: 'flex', flexWrap: 'wrap' }}>
-                  {!address.primary && (
-                    <Button size="small" color="error" sx={{ mr: 1 }}>
-                      Delete
-                    </Button>
-                  )}
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={() => {
+          <AddressItem
+            address={currentShippingAddress}
+            action={
+              <Box sx={{ flexShrink: 0, display: 'flex', flexWrap: 'wrap' }}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => {
+                    // onChangeStep('next');
+                    // onCreateBillingAddress(currentShippingAddress);
+                    if (currentShippingAddress) {
+                      // <- FIX
                       onChangeStep('next');
-                      onCreateBillingAddress(address);
-                    }}
-                  >
-                    Deliver to this address
-                  </Button>
-                </Box>
-              }
-              sx={[
-                (theme) => ({
-                  p: 3,
-                  mb: 3,
-                  borderRadius: 2,
-                  boxShadow: theme.vars.customShadows.card,
-                }),
-              ]}
-            />
-          ))}
+                      onCreateBillingAddress(currentShippingAddress);
+                    }
+                  }}
+                >
+                  Deliver to this address
+                </Button>
+              </Box>
+            }
+            sx={[
+              (theme) => ({
+                p: 3,
+                mb: 3,
+                borderRadius: 2,
+                boxShadow: theme.vars.customShadows.card,
+              }),
+            ]}
+          />
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button
@@ -88,7 +88,7 @@ export function CheckoutBillingAddress() {
       <AddressNewForm
         open={addressForm.value}
         onClose={addressForm.onFalse}
-        onCreate={(address: IAddressItem) => {
+        onCreate={(address: AddressDT) => {
           onChangeStep('next');
           onCreateBillingAddress(address);
         }}

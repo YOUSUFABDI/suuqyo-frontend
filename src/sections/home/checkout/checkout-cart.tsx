@@ -22,8 +22,6 @@ import { useRouter } from 'next/navigation';
 // ----------------------------------------------------------------------
 
 export function CheckoutCart() {
-  const router = useRouter();
-
   const {
     loading,
     onChangeStep,
@@ -34,6 +32,7 @@ export function CheckoutCart() {
   } = useCheckoutContext();
 
   const isCartEmpty = !checkoutState.items.length;
+  console.log('checkoutState::', checkoutState);
 
   const renderLoading = () => (
     <Box
@@ -91,7 +90,8 @@ export function CheckoutCart() {
         </Card>
 
         <Button
-          onClick={() => router.back()}
+          component={RouterLink}
+          href={paths.customer.product.root}
           color="inherit"
           startIcon={<Iconify icon="eva:arrow-ios-back-fill" />}
         >

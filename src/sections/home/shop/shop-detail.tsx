@@ -28,7 +28,7 @@ export const ShopDetail = ({ shop }: Props) => {
             </Typography>
 
             {/* Verified Badge */}
-            {shop.user.status && (
+            {/* {shop.user.status && (
               <Chip
                 label="Verified"
                 color="success"
@@ -36,7 +36,7 @@ export const ShopDetail = ({ shop }: Props) => {
                 icon={<Iconify icon="mdi:check-decagram" width={14} />}
                 sx={{ fontWeight: 'medium', pl: 0.5 }}
               />
-            )}
+            )} */}
           </Stack>
 
           <Typography variant="body2" color="text.secondary">

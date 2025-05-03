@@ -1,3 +1,4 @@
+import { AddressDT } from 'src/sections/home/address/types/types';
 import type { IAddressItem } from './common';
 
 // ----------------------------------------------------------------------
@@ -59,5 +60,6 @@ export type CheckoutContextValue = {
   onDeleteCartItem: (itemId: string) => void;
   onApplyDiscount: (discount: number) => void;
   onApplyShipping: (discount: number) => void;
-  onCreateBillingAddress: (address: IAddressItem) => void;
+  // onCreateBillingAddress: (address: IAddressItem) => void;
+  onCreateBillingAddress: (address: AddressDT) => void;
 };
