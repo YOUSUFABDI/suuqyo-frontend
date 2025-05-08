@@ -34,6 +34,7 @@ import { useUpdateShopOwnerMutation } from 'src/store/admin/shop-owner';
 import { getErrorMessage } from 'src/utils/error.message';
 import { UseDeleteShopOwner } from './hooks';
 import { ShopOwnerDT } from './types/types';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -67,6 +68,15 @@ export const NewUserSchema = zod.object({
   shopName: zod.string().min(1, { message: 'Shop name is required!' }),
   shopDescription: zod.string().min(1, { message: 'Shop description is required!' }),
   shopAddress: zod.string().min(1, { message: 'Shop address is required!' }),
+  // Payment methods
+  paymentMethods: zod
+    .array(
+      zod.object({
+        paymentName: zod.string().min(1, { message: 'Payment method is required!' }),
+        paymentPhone: zod.string().min(1, { message: 'Payment phone is required!' }),
+      })
+    )
+    .min(1, { message: 'At least one payment method is required!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -76,6 +86,7 @@ type Props = {
 };
 
 export function ShopOwnerEditForm({ currentUser }: Props) {
+  console.log('currentUser', currentUser);
   const router = useRouter();
   const showPassword = useBoolean();
   const confirmDialog = useBoolean();
@@ -103,6 +114,10 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
     shopName: '',
     shopDescription: '',
     shopAddress: '',
+    // paymentMethods: [{ paymentName: 'EVC_PLUS', paymentPhone: '' }],
+    paymentMethods: currentUser?.paymentMethods?.length
+      ? currentUser.paymentMethods
+      : [{ paymentName: 'EVC_PLUS', paymentPhone: '' }],
   };
 
   const methods = useForm<NewUserSchemaType>({
@@ -123,6 +138,18 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
   const values = watch();
   const businessProof = watch('businessProof');
 
+  // In your component, add these helper functions
+  const handleAddPaymentMethod = () => {
+    const currentMethods = methods.getValues('paymentMethods') || [];
+    methods.setValue('paymentMethods', [...currentMethods, { paymentName: '', paymentPhone: '' }]);
+  };
+
+  const handleRemovePaymentMethod = (index: number) => {
+    const currentMethods = methods.getValues('paymentMethods') || [];
+    const newMethods = currentMethods.filter((_, i) => i !== index);
+    methods.setValue('paymentMethods', newMethods);
+  };
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       const updateShopOwnerDto = {
@@ -140,6 +167,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
         shopName: data.shopName,
         shopDescription: data.shopDescription,
         shopAddress: data.shopAddress,
+        paymentMethods: data.paymentMethods,
       };
       const profileImage = data.profileImage;
       const shopLogo = data.shopLogo;
@@ -219,6 +247,17 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
       }
     />
   );
+
+  useEffect(() => {
+    if (currentUser) {
+      const mapped = {
+        ...defaultValues,
+        ...currentUser,
+        paymentMethods: currentUser.paymentMethods || defaultValues.paymentMethods,
+      };
+      reset(mapped);
+    }
+  }, [currentUser, reset]);
 
   return (
     <>
@@ -343,6 +382,81 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
             </Grid>
           </Card>
           {/* shop owner detail */}
+
+          {/*  payment method */}
+          {/* Payment method */}
+          <Card sx={{ width: '100%' }}>
+            <CardHeader
+              title="Shop payment methods"
+              subheader="Payment name, Payment number..."
+              sx={{ mb: 3 }}
+            />
+            <Divider />
+
+            <Grid container spacing={3} sx={{ p: 3 }}>
+              <Grid size={{ xs: 12, md: 12 }}>
+                <Card sx={{ p: 3 }}>
+                  <Stack spacing={3}>
+                    {methods.watch('paymentMethods')?.map((method, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          rowGap: 3,
+                          columnGap: 2,
+                          display: 'grid',
+                          gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr auto' },
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Field.Select
+                          name={`paymentMethods.${index}.paymentName`}
+                          label="Payment method"
+                          value={method.paymentName} // Set current value
+                          slotProps={{
+                            select: { native: true },
+                            inputLabel: { shrink: true },
+                          }}
+                        >
+                          <option value="" disabled>
+                            Select payment method
+                          </option>
+                          <option value="EVC_PLUS">EVC Plus</option>
+                          <option value="EDAHAB">eDahab</option>
+                          <option value="PREMIER_WALLET">Premier wallet</option>
+                        </Field.Select>
+
+                        <Field.Text
+                          name={`paymentMethods.${index}.paymentPhone`}
+                          label="Payment phone"
+                          value={method.paymentPhone} // Set current value
+                        />
+
+                        <Button
+                          onClick={() => handleRemovePaymentMethod(index)}
+                          sx={{ color: 'error.main' }}
+                          disabled={methods.watch('paymentMethods')?.length <= 1}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" />
+                        </Button>
+                      </Box>
+                    ))}
+
+                    <Box>
+                      <Button
+                        variant="outlined"
+                        startIcon={<Iconify icon="mingcute:add-line" />}
+                        onClick={handleAddPaymentMethod}
+                      >
+                        Add Payment Method
+                      </Button>
+                    </Box>
+                  </Stack>
+                </Card>
+              </Grid>
+            </Grid>
+          </Card>
+          {/* Payment method */}
+          {/*  payment method */}
 
           {/* shop detail */}
           <Card sx={{ width: '100%' }}>

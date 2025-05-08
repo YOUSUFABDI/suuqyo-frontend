@@ -7,6 +7,15 @@ export type IShopOwnerTableFilters = {
   phoneNumber: string;
 };
 
+export type PaymentMethod = {
+  id: number;
+  userId: number;
+  paymentName: string;
+  paymentPhone: string;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+};
+
 export interface ShopOwnerDetail {
   id: number;
   userId: number;
@@ -51,6 +60,7 @@ export interface ShopOwnerDT {
   shopDescription: string;
   shopAddress: string;
   businessProof: string;
+  paymentMethods: PaymentMethod[];
 }
 
 export interface ShopOwnersDataDT {

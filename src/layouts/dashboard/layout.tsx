@@ -138,7 +138,6 @@ export function DashboardLayout({
           <Searchbar data={navData} />
 
           {/** @slot Language popover */}
-          <LanguagePopover data={allLangs} />
 
           {/** @slot Notifications popover */}
           {/* <NotificationsDrawer data={_notifications} /> */}

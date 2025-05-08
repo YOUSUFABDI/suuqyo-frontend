@@ -21,7 +21,7 @@ import { toast } from 'src/components/snackbar';
 import { paths } from 'src/routes/paths';
 import { useRegisterShopOwnerMutation } from 'src/store/admin/shop-owner';
 
-import { CardHeader, Divider, IconButton, InputAdornment } from '@mui/material';
+import { Button, CardHeader, Divider, IconButton, InputAdornment } from '@mui/material';
 import { Iconify } from 'src/components/iconify';
 import { MultiFilePreview } from 'src/components/upload';
 import { getErrorMessage } from 'src/utils/error.message';
@@ -56,6 +56,15 @@ export const NewUserSchema = zod.object({
   shopName: zod.string().min(1, { message: 'Shop name is required!' }),
   shopDescription: zod.string().min(1, { message: 'Shop description is required!' }),
   shopAddress: zod.string().min(1, { message: 'Shop address is required!' }),
+  // Payment methods
+  paymentMethods: zod
+    .array(
+      zod.object({
+        paymentName: zod.string().min(1, { message: 'Payment method is required!' }),
+        paymentPhone: zod.string().min(1, { message: 'Payment phone is required!' }),
+      })
+    )
+    .min(1, { message: 'At least one payment method is required!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -84,6 +93,7 @@ export function ShopOwnerNewForm() {
     shopName: '',
     shopDescription: '',
     shopAddress: '',
+    paymentMethods: [{ paymentName: 'EVC_PLUS', paymentPhone: '' }],
   };
 
   const methods = useForm<NewUserSchemaType>({
@@ -104,6 +114,17 @@ export function ShopOwnerNewForm() {
   const values = watch();
   const businessProof = watch('businessProof');
 
+  const handleAddPaymentMethod = () => {
+    const currentMethods = methods.getValues('paymentMethods') || [];
+    methods.setValue('paymentMethods', [...currentMethods, { paymentName: '', paymentPhone: '' }]);
+  };
+
+  const handleRemovePaymentMethod = (index: number) => {
+    const currentMethods = methods.getValues('paymentMethods') || [];
+    const newMethods = currentMethods.filter((_, i) => i !== index);
+    methods.setValue('paymentMethods', newMethods);
+  };
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       const createShopOwnerDto = {
@@ -121,7 +142,10 @@ export function ShopOwnerNewForm() {
         shopName: data.shopName,
         shopDescription: data.shopDescription,
         shopAddress: data.shopAddress,
+
+        paymentMethods: data.paymentMethods,
       };
+      console.log('---------', createShopOwnerDto);
       const profileImage = data.profileImage;
       const shopLogo = data.shopLogo;
       const businessProof = data.businessProof;
@@ -252,6 +276,74 @@ export function ShopOwnerNewForm() {
           </Grid>
         </Card>
         {/* shop owner detail */}
+
+        {/*  payment method */}
+        <Card sx={{ width: '100%' }}>
+          <CardHeader
+            title="Shop payment methods"
+            subheader="Payment name, Payment number..."
+            sx={{ mb: 3 }}
+          />
+          <Divider />
+
+          <Grid container spacing={3} sx={{ p: 3 }}>
+            <Grid size={{ xs: 12, md: 12 }}>
+              <Card sx={{ p: 3 }}>
+                <Stack spacing={3}>
+                  {methods.watch('paymentMethods')?.map((method, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        rowGap: 3,
+                        columnGap: 2,
+                        display: 'grid',
+                        gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr auto' },
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Field.Select
+                        name={`paymentMethods.${index}.paymentName`}
+                        label="Payment method"
+                        slotProps={{
+                          select: { native: true },
+                          inputLabel: { shrink: true },
+                        }}
+                      >
+                        <option value="EVC_PLUS">EVC Plus</option>
+                        <option value="EDAHAB">eDahab</option>
+                        <option value="PREMIER_WALLET">Premier wallet</option>
+                      </Field.Select>
+
+                      <Field.Text
+                        name={`paymentMethods.${index}.paymentPhone`}
+                        label="Payment phone"
+                      />
+
+                      <Button
+                        onClick={() => handleRemovePaymentMethod(index)}
+                        sx={{ color: 'error.main' }}
+                        disabled={methods.watch('paymentMethods')?.length <= 1}
+                      >
+                        <Iconify icon="solar:trash-bin-trash-bold" />
+                      </Button>
+                    </Box>
+                  ))}
+
+                  <Box>
+                    <Button
+                      variant="outlined"
+                      startIcon={<Iconify icon="mingcute:add-line" />}
+                      onClick={handleAddPaymentMethod}
+                    >
+                      Add Payment Method
+                    </Button>
+                  </Box>
+                </Stack>
+              </Card>
+            </Grid>
+          </Grid>
+        </Card>
+        {/*  payment method */}
 
         {/* shop detail */}
         <Card sx={{ width: '100%' }}>
