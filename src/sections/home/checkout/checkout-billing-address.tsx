@@ -1,7 +1,5 @@
-import type { IAddressItem } from 'src/types/common';
-
 import { useBoolean } from 'minimal-shared/hooks';
-
+import { toast } from 'src/components/snackbar';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
@@ -35,13 +33,21 @@ export function CheckoutBillingAddress() {
                 <Button
                   variant="outlined"
                   size="small"
+                  // onClick={() => {
+                  //   // onChangeStep('next');
+                  //   // onCreateBillingAddress(currentShippingAddress);
+                  //   if (currentShippingAddress) {
+                  //     // <- FIX
+                  //     onChangeStep('next');
+                  //     onCreateBillingAddress(currentShippingAddress);
+                  //   }
+                  // }}
                   onClick={() => {
-                    // onChangeStep('next');
-                    // onCreateBillingAddress(currentShippingAddress);
                     if (currentShippingAddress) {
-                      // <- FIX
                       onChangeStep('next');
                       onCreateBillingAddress(currentShippingAddress);
+                    } else {
+                      toast.error('Please select or create a valid address.');
                     }
                   }}
                 >

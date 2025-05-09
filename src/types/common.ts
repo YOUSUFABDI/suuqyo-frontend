@@ -13,16 +13,6 @@ export type ISocialLink = {
   instagram: string;
 };
 
-export type IAddressItem = {
-  id?: string;
-  name: string;
-  company?: string;
-  primary?: boolean;
-  fullAddress: string;
-  phoneNumber?: string;
-  addressType?: string;
-};
-
 export type IPaymentCard = {
   id: string;
   cardType: string;

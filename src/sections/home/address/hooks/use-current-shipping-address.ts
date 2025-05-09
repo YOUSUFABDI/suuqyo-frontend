@@ -5,9 +5,9 @@ import { AddressDT } from '../types/types';
 import { useGetCurrentShippingAddressQuery } from 'src/store/customer/order';
 
 export const useCurrentShippingAddress = () => {
-  const { data, error, isLoading } = useGetCurrentShippingAddressQuery();
+  const { data, error, isLoading, refetch } = useGetCurrentShippingAddressQuery();
 
   const currentShippingAddress = isSuccessResponse<AddressDT>(data) ? data.payload.data : null;
 
-  return { currentShippingAddress, isLoading, error };
+  return { currentShippingAddress, isLoading, error, refetch };
 };

@@ -68,26 +68,30 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
   const [updateShippingAddress, { isLoading }] = useUpdateShippingAddressMutation();
 
   const onSubmit = handleSubmit(async (data) => {
+    const reqData = {
+      fullName: data.name,
+      country: data.country ?? '',
+      city: data.city,
+      state: data.state,
+      address: data.address,
+      phoneNumber: String(data.phoneNumber),
+    };
     try {
-      await updateShippingAddress({
-        fullName: data.name,
-        country: data.country ?? '',
-        city: data.city,
-        state: data.state,
-        address: data.address,
-        phoneNumber: String(data.phoneNumber),
-      }).unwrap();
-
-      onCreate({
-        fullName: data.name,
-        country: data.country ?? '',
-        city: data.city,
-        state: data.state,
-        address: data.address,
-        phoneNumber: data.phoneNumber,
-      });
-      onClose();
-      toast.success('Saved!');
+      const response = await updateShippingAddress(reqData).unwrap();
+      if (response.error === null) {
+        const newAddress: AddressDT = {
+          id: response.payload.data.id, // Ensure this is a number
+          fullName: data.name,
+          country: data.country ?? '',
+          city: data.city,
+          state: data.state,
+          address: data.address,
+          phoneNumber: data.phoneNumber,
+        };
+        onCreate(newAddress); // Pass the new address to parent
+        onClose();
+        toast.success('Saved!');
+      }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);

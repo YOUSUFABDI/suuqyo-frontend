@@ -1,5 +1,5 @@
 import { AddressDT } from 'src/sections/home/address/types/types';
-import type { IAddressItem } from './common';
+import { PaymentMethodOfShopDT } from 'src/sections/home/shop/types/types';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +37,8 @@ export type ICheckoutState = {
   shipping: number;
   totalItems: number;
   items: ICheckoutItem[];
-  billing: IAddressItem | null;
+  paymentMethods: PaymentMethodOfShopDT[];
+  billing: AddressDT | null;
 };
 
 export type CheckoutContextValue = {
@@ -60,6 +61,6 @@ export type CheckoutContextValue = {
   onDeleteCartItem: (itemId: string) => void;
   onApplyDiscount: (discount: number) => void;
   onApplyShipping: (discount: number) => void;
-  // onCreateBillingAddress: (address: IAddressItem) => void;
   onCreateBillingAddress: (address: AddressDT) => void;
+  onSetPaymentMethods: (methods: PaymentMethodOfShopDT[]) => void;
 };

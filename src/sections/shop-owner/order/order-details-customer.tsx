@@ -27,6 +27,13 @@ export function OrderDetailsCustomer({ customer }: Props) {
           <Typography variant="subtitle2">{customer?.username}</Typography>
 
           <Box sx={{ color: 'text.secondary' }}>{customer?.email}</Box>
+          {/* <Box sx={{ color: 'text.secondary' }}>{customer?.phoneNumber}</Box> */}
+          <Box>
+            Phone number:
+            <Box component="span" sx={{ color: 'text.secondary', ml: 0.25 }}>
+              {customer?.phoneNumber}
+            </Box>
+          </Box>
         </Stack>
       </Box>
     </>

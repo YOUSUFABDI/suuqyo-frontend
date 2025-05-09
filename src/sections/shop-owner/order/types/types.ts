@@ -105,6 +105,8 @@ export type OrderResDT = {
   deliveryUser: DeliveryUserDT;
   customer: CustomerDT;
   items: OrderItemDT[];
+  paymentMethod: string;
+  senderPhone: string;
 };
 
 export const ORDER_STATUS_OPTIONS = [

@@ -34,7 +34,27 @@ export const orderApi = createApi({
       }),
       invalidatesTags: ['order'],
     }),
+    createOrder: builder.mutation<
+      ApiResponseDT<any>,
+      {
+        items: Array<{ productId: number; quantity: number }>;
+        shippingAddressId: number;
+        paymentMethod: string;
+        senderPhone?: string;
+      }
+    >({
+      query: (body) => ({
+        url: '/customer-order/make-order',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['order'],
+    }),
   }),
 });
 
-export const { useGetCurrentShippingAddressQuery, useUpdateShippingAddressMutation } = orderApi;
+export const {
+  useCreateOrderMutation,
+  useGetCurrentShippingAddressQuery,
+  useUpdateShippingAddressMutation,
+} = orderApi;

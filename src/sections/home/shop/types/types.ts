@@ -33,6 +33,12 @@ export type Product = {
   images: ProductImage[];
 };
 
+export type PaymentMethodOfShopDT = {
+  id: string;
+  paymentName: string;
+  paymentPhone: string;
+};
+
 export type ShopInfoDT = {
   id: number;
   shopName: string;
@@ -50,5 +56,6 @@ export type ShopInfoDT = {
     status: boolean;
     profileImage: string;
     Product: Product[];
+    PaymentMethodOfShop: PaymentMethodOfShopDT[];
   };
 };

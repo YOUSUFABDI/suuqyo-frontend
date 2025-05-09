@@ -1,5 +1,7 @@
+'use client';
+
 import { Box, Container } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ShopInfoDT } from '../types/types';
 import { ShopDetail } from '../shop-detail';
 import { ShopProduct } from '../shop-product';
@@ -11,7 +13,16 @@ type Props = {
 };
 
 export const ShopDetailsView = ({ shop }: Props) => {
-  const { state: checkoutState, onAddToCart } = useCheckoutContext();
+  // console.log('shop', shop);
+  console.log('PaymentMethodOfShop:--', shop?.user.PaymentMethodOfShop);
+  const { state: checkoutState, onSetPaymentMethods } = useCheckoutContext();
+
+  useEffect(() => {
+    if (shop?.user.PaymentMethodOfShop) {
+      onSetPaymentMethods(shop.user.PaymentMethodOfShop); // save into checkout context
+    }
+  }, [shop, onSetPaymentMethods]);
+
   return (
     <Container sx={{ mb: 15 }}>
       <CartIcon totalItems={checkoutState.totalItems} />

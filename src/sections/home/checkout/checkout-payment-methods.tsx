@@ -20,6 +20,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { Iconify } from 'src/components/iconify';
 
 import { PaymentNewCardForm } from '../payment/payment-new-card-form';
+import { Field } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +33,8 @@ type Props = CardProps & {
 };
 
 export function CheckoutPaymentMethods({ name, options, sx, ...other }: Props) {
-  const { control } = useFormContext();
+  const { control, watch } = useFormContext();
+  const selectedPayment = watch(name);
 
   const openForm = useBoolean();
 
@@ -77,6 +79,18 @@ export function CheckoutPaymentMethods({ name, options, sx, ...other }: Props) {
             </Box>
           )}
         />
+
+        {/* the number you are sending money from input  */}
+        {selectedPayment && selectedPayment !== 'cash' && (
+          <Box sx={{ p: 3 }}>
+            <Field.Text
+              name="phoneNumber"
+              label="Your mobile number"
+              helperText="Number to receive payment confirmation"
+            />
+          </Box>
+        )}
+        {/* the number you are sending money from input  */}
       </Card>
       <Dialog fullWidth maxWidth="xs" open={openForm.value} onClose={openForm.onFalse}>
         <DialogTitle> Add new card </DialogTitle>

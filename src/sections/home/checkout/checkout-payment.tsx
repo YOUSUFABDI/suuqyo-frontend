@@ -7,12 +7,12 @@ import type {
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { toast } from 'src/components/snackbar';
 import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { Form } from 'src/components/hook-form';
+import { Field, Form } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
 
 import { useCheckoutContext } from './context';
@@ -20,6 +20,9 @@ import { CheckoutSummary } from './checkout-summary';
 import { CheckoutDelivery } from './checkout-delivery';
 import { CheckoutBillingInfo } from './checkout-billing-info';
 import { CheckoutPaymentMethods } from './checkout-payment-methods';
+import { useCreateOrderMutation } from 'src/store/customer/order';
+import { getErrorMessage } from 'src/utils/error.message';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -54,11 +57,30 @@ const CARD_OPTIONS: ICheckoutCardOption[] = [
 
 export type PaymentSchemaType = zod.infer<typeof PaymentSchema>;
 
-export const PaymentSchema = zod.object({
-  payment: zod.string().min(1, { message: 'Payment is required!' }),
-  // Not required
-  delivery: zod.number(),
-});
+// export const PaymentSchema = zod.object({
+//   payment: zod.string().min(1, { message: 'Payment is required!' }),
+//   // Not required
+//   delivery: zod.number(),
+//   phoneNumber: zod.string().optional(),
+// });
+export const PaymentSchema = zod
+  .object({
+    payment: zod.string().min(1, { message: 'Payment is required!' }),
+    delivery: zod.number(),
+    phoneNumber: zod.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.payment !== 'cash' && !data.phoneNumber) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Phone number is required for mobile payments',
+      path: ['phoneNumber'],
+    }
+  );
 
 // ----------------------------------------------------------------------
 
@@ -71,9 +93,12 @@ export function CheckoutPayment() {
     state: checkoutState,
   } = useCheckoutContext();
 
+  const [createOrder, { isLoading }] = useCreateOrderMutation();
+
   const defaultValues: PaymentSchemaType = {
     delivery: checkoutState.shipping,
     payment: '',
+    phoneNumber: '',
   };
 
   const methods = useForm<PaymentSchemaType>({
@@ -88,25 +113,46 @@ export function CheckoutPayment() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const shippingAddressId = checkoutState.billing?.id;
       const items = checkoutState.items.map((item: any) => ({
         productId: item.id,
         quantity: item.quantity,
       }));
 
+      const shippingAddressId = checkoutState.billing?.id;
+      if (!shippingAddressId) {
+        toast.error('Shipping address is required!');
+        return;
+      }
+
+      const selectedPaymentMethod = checkoutState.paymentMethods.find(
+        (method) => method.paymentName === data.payment
+      );
+      if (!selectedPaymentMethod?.paymentName) {
+        toast.error('Payment method is required!');
+        return;
+      }
+
+      if (!data.phoneNumber) {
+        toast.error('Phone number is required!');
+        return;
+      }
+
       const reqData = {
-        shippingAddressId,
         items,
+        shippingAddressId,
+        paymentMethod: selectedPaymentMethod?.paymentName,
+        ...(data.payment !== 'cash' && { senderPhone: data.phoneNumber }),
       };
 
-      console.info('Submitting API payload:', reqData);
+      await createOrder(reqData).unwrap();
+      toast.success('Order created successfully!');
 
-      // onResetCart();
-      // onChangeStep('next');
-      // console.info('DATA', data);
-      // console.info('checkoutState', checkoutState);
+      onResetCart();
+      onChangeStep('next');
     } catch (error) {
       console.error(error);
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
     }
   });
 
@@ -122,7 +168,15 @@ export function CheckoutPayment() {
 
           <CheckoutPaymentMethods
             name="payment"
-            options={{ cards: CARD_OPTIONS, payments: PAYMENT_OPTIONS }}
+            // options={{ cards: CARD_OPTIONS, payments: PAYMENT_OPTIONS }}
+            options={{
+              cards: [], // No card options needed for mobile payments
+              payments: checkoutState.paymentMethods.map((method) => ({
+                value: method.paymentName,
+                label: method.paymentName,
+                description: `Phone: ${method.paymentPhone}`,
+              })),
+            }}
             sx={{ my: 3 }}
           />
 
@@ -150,7 +204,7 @@ export function CheckoutPayment() {
             size="large"
             type="submit"
             variant="contained"
-            loading={isSubmitting}
+            loading={isSubmitting || isLoading}
           >
             Complete order
           </LoadingButton>

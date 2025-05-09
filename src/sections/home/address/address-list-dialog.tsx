@@ -1,5 +1,3 @@
-import type { IAddressItem } from 'src/types/common';
-
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -14,6 +12,7 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { SearchNotFound } from 'src/components/search-not-found';
+import { AddressDT } from './types/types';
 
 // ----------------------------------------------------------------------
 
@@ -21,10 +20,10 @@ type Props = {
   open: boolean;
   title?: string;
   onClose: () => void;
-  list: IAddressItem[];
+  list: AddressDT[];
   action?: React.ReactNode;
   selected: (selectedId: string) => boolean;
-  onSelect: (address: IAddressItem | null) => void;
+  onSelect: (address: AddressDT | null) => void;
 };
 
 export function AddressListDialog({
@@ -47,7 +46,7 @@ export function AddressListDialog({
   }, []);
 
   const handleSelectAddress = useCallback(
-    (address: IAddressItem | null) => {
+    (address: AddressDT | null) => {
       onSelect(address);
       setSearchAddress('');
       onClose();
@@ -144,7 +143,7 @@ export function AddressListDialog({
 
 type ApplyFilterProps = {
   query: string;
-  inputData: IAddressItem[];
+  inputData: AddressDT[];
 };
 
 function applyFilter({ inputData, query }: ApplyFilterProps) {

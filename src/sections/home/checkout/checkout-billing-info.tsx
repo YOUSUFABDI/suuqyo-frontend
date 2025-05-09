@@ -48,14 +48,14 @@ export function CheckoutBillingInfo({ checkoutState, onChangeStep, loading, sx, 
         ) : (
           <>
             <Box sx={{ typography: 'subtitle2' }}>
-              {`${billing?.name} `}
+              {`${billing?.fullName} `}
               {/* {`mm `} */}
               {/* <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
                 ({billing?.addressType})
               </Box> */}
             </Box>
 
-            <Box sx={{ color: 'text.secondary', typography: 'body2' }}>{billing?.fullAddress}</Box>
+            <Box sx={{ color: 'text.secondary', typography: 'body2' }}>{billing?.address}</Box>
             <Box sx={{ color: 'text.secondary', typography: 'body2' }}>{billing?.phoneNumber}</Box>
           </>
         )}

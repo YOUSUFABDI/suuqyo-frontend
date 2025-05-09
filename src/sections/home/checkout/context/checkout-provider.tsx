@@ -1,7 +1,6 @@
 'use client';
 
 import type { ICheckoutItem, ICheckoutState } from 'src/types/checkout';
-import type { IAddressItem } from 'src/types/common';
 
 import { isEqual } from 'es-toolkit';
 import { useLocalStorage } from 'minimal-shared/hooks';
@@ -13,6 +12,8 @@ import { paths } from 'src/routes/paths';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
+import { AddressDT } from '../../address/types/types';
+import { PaymentMethodOfShopDT } from '../../shop/types/types';
 import { CheckoutContext } from './checkout-context';
 
 // ----------------------------------------------------------------------
@@ -28,6 +29,7 @@ const initialState: ICheckoutState = {
   shipping: 0,
   billing: null,
   totalItems: 0,
+  paymentMethods: [],
 };
 
 // ----------------------------------------------------------------------
@@ -132,6 +134,13 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
     [setField, state.items]
   );
 
+  const onSetPaymentMethods = useCallback(
+    (methods: PaymentMethodOfShopDT[]) => {
+      setField('paymentMethods', methods);
+    },
+    [setField]
+  );
+
   const onDeleteCartItem = useCallback(
     (itemId: string) => {
       const updatedItems = state.items.filter((item) => item.id !== itemId);
@@ -156,7 +165,7 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
   );
 
   const onCreateBillingAddress = useCallback(
-    (address: IAddressItem) => {
+    (address: AddressDT) => {
       setField('billing', address);
     },
     [setField]
@@ -203,6 +212,7 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
       onDeleteCartItem,
       onChangeItemQuantity,
       onCreateBillingAddress,
+      onSetPaymentMethods,
     }),
     [
       state,
@@ -220,6 +230,7 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
       onDeleteCartItem,
       onChangeItemQuantity,
       onCreateBillingAddress,
+      onSetPaymentMethods,
     ]
   );
 

@@ -25,6 +25,7 @@ import { toast } from 'src/components/snackbar';
 import { getErrorMessage } from 'src/utils/error.message';
 import { UseAnalytics } from '../../analytics/hooks';
 import { UseOrders } from '../hooks';
+import { OrderDetailsConfirmPayment } from '../order-details-confirm-payment';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -92,14 +93,20 @@ export function OrderDetailsView({ order }: Props) {
             <OrderDetailsCustomer customer={order?.customer} />
 
             <Divider sx={{ borderStyle: 'dashed' }} />
+            <OrderDetailsConfirmPayment
+              paymentMethod={order?.paymentMethod}
+              senderPhone={order?.senderPhone}
+            />
+
+            <Divider sx={{ borderStyle: 'dashed' }} />
+            <OrderDetailsShipping shippingAddress={order?.customer.ShippingAddress} />
+
+            <Divider sx={{ borderStyle: 'dashed' }} />
             <OrderDetailsDelivery
               orderId={Number(order?.id)}
               delivery={order?.deliveryUser}
               onAssignmentSuccess={refetchOrders}
             />
-
-            <Divider sx={{ borderStyle: 'dashed' }} />
-            <OrderDetailsShipping shippingAddress={order?.customer.ShippingAddress} />
 
             {/* <Divider sx={{ borderStyle: 'dashed' }} /> */}
             {/* <OrderDetailsPayment payment={order?.payment} /> */}
