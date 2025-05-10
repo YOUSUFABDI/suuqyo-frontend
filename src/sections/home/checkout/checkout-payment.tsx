@@ -77,7 +77,7 @@ export const PaymentSchema = zod
       return true;
     },
     {
-      message: 'Phone number is required for mobile payments',
+      message: 'The phone number you are sending money from is required!',
       path: ['phoneNumber'],
     }
   );
@@ -145,7 +145,7 @@ export function CheckoutPayment() {
       };
 
       await createOrder(reqData).unwrap();
-      toast.success('Order created successfully!');
+      toast.success('Order placed successfully!');
 
       onResetCart();
       onChangeStep('next');

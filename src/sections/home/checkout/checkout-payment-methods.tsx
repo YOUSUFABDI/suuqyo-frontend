@@ -2,25 +2,25 @@ import type { BoxProps } from '@mui/material/Box';
 import type { CardProps } from '@mui/material/Card';
 import type { ICheckoutCardOption, ICheckoutPaymentOption } from 'src/types/checkout';
 
-import { varAlpha } from 'minimal-shared/utils';
 import { useBoolean } from 'minimal-shared/hooks';
+import { varAlpha } from 'minimal-shared/utils';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import TextField from '@mui/material/TextField';
+import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
+import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import FormHelperText from '@mui/material/FormHelperText';
+import TextField from '@mui/material/TextField';
 
 import { Iconify } from 'src/components/iconify';
 
-import { PaymentNewCardForm } from '../payment/payment-new-card-form';
 import { Field } from 'src/components/hook-form';
+import { PaymentNewCardForm } from '../payment/payment-new-card-form';
 
 // ----------------------------------------------------------------------
 
@@ -59,15 +59,29 @@ export function CheckoutPaymentMethods({ name, options, sx, ...other }: Props) {
                 const isSelected = value === option.value;
 
                 return (
-                  <OptionItem
-                    key={option.label}
-                    option={option}
-                    selected={isSelected}
-                    onOpen={openForm.onTrue}
-                    cardOptions={options.cards}
-                    isCredit={isSelected && option.value === 'creditcard'}
-                    onClick={() => onChange(option.value)}
-                  />
+                  <>
+                    <OptionItem
+                      key={option.label}
+                      option={option}
+                      selected={isSelected}
+                      onOpen={openForm.onTrue}
+                      cardOptions={options.cards}
+                      isCredit={isSelected && option.value === 'creditcard'}
+                      onClick={() => onChange(option.value)}
+                    />
+
+                    {/* instruction */}
+                    {isSelected && (
+                      <Box component="span" sx={{ typography: 'subtitle1' }}>
+                        {['EVC_PLUS', 'EDAHAB'].includes(selectedPayment)
+                          ? `*712*${option.description.replace(/\D/g, '')}*$#`
+                          : selectedPayment === 'PREMIER_WALLET'
+                            ? `${option.value}`
+                            : null}
+                      </Box>
+                    )}
+                    {/* instruction */}
+                  </>
                 );
               })}
 
@@ -85,8 +99,8 @@ export function CheckoutPaymentMethods({ name, options, sx, ...other }: Props) {
           <Box sx={{ p: 3 }}>
             <Field.Text
               name="phoneNumber"
-              label="Your mobile number"
-              helperText="Number to receive payment confirmation"
+              label="Number lacagta aa kaso direesid"
+              helperText="Number lacagta aa kaso direesid"
             />
           </Box>
         )}

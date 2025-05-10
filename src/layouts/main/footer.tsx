@@ -173,7 +173,7 @@ export function HomeFooter({ sx, ...other }: FooterProps) {
         <Logo />
         <Box sx={{ mt: 1, typography: 'caption' }}>
           © All rights reserved.
-          <br /> made with ❤️ in Hamar
+          <br /> Made With ❤️ In Hamar
           <Link href="https://suuqyo.com/"> suuqyo.com </Link>
         </Box>
       </Container>
