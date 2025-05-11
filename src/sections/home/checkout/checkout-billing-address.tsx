@@ -21,6 +21,8 @@ export function CheckoutBillingAddress() {
 
   const addressForm = useBoolean();
   const { currentShippingAddress } = useCurrentShippingAddress();
+  console.log('shopAddressssssssss', checkoutState.shopAddress);
+  console.log('currentShippingAddress', currentShippingAddress?.address);
 
   return (
     <>

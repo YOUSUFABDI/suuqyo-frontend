@@ -30,6 +30,7 @@ const initialState: ICheckoutState = {
   billing: null,
   totalItems: 0,
   paymentMethods: [],
+  shopAddress: '',
 };
 
 // ----------------------------------------------------------------------
@@ -110,6 +111,13 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
       router.push(redirectPath);
     },
     [activeStep, router]
+  );
+
+  const onSetShopAddress = useCallback(
+    (address: string) => {
+      setField('shopAddress', address);
+    },
+    [setField]
   );
 
   const onAddToCart = useCallback(
@@ -213,6 +221,7 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
       onChangeItemQuantity,
       onCreateBillingAddress,
       onSetPaymentMethods,
+      onSetShopAddress,
     }),
     [
       state,
@@ -231,6 +240,7 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
       onChangeItemQuantity,
       onCreateBillingAddress,
       onSetPaymentMethods,
+      onSetShopAddress,
     ]
   );
 

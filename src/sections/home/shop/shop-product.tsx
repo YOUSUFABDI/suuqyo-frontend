@@ -1,12 +1,22 @@
 import { Box, Card } from '@mui/material';
 import { ShopInfoDT } from './types/types';
 import { ProductList } from '../components/product-list';
+import { useCheckoutContext } from '../checkout/context';
+import { useEffect } from 'react';
 
 type Props = {
   shop: ShopInfoDT | null;
 };
 
 export const ShopProduct = ({ shop }: Props) => {
+  const { onSetShopAddress } = useCheckoutContext();
+
+  useEffect(() => {
+    if (shop?.shopAddress) {
+      onSetShopAddress(shop.shopAddress);
+    }
+  }, [shop?.shopAddress, onSetShopAddress]);
+
   return (
     <Card sx={{ borderRadius: 0, boxShadow: 0 }}>
       <Box
