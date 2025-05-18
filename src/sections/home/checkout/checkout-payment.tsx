@@ -22,16 +22,18 @@ import { CheckoutBillingInfo } from './checkout-billing-info';
 import { CheckoutPaymentMethods } from './checkout-payment-methods';
 import { useCreateOrderMutation } from 'src/store/customer/order';
 import { getErrorMessage } from 'src/utils/error.message';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { calculateDistanceInKm, geocodeAddress } from 'src/utils/geocoding';
+import { calculateDeliveryFee } from 'src/utils/calculateDeliveryFee';
 
 // ----------------------------------------------------------------------
 
-const DELIVERY_OPTIONS: ICheckoutDeliveryOption[] = [
-  // { value: 0, label: 'Free', description: '5-7 days delivery' },
-  { value: 0, label: 'Free', description: 'Pick up by your self' },
-  { value: 1.5, label: 'Standard', description: '3-5 days delivery' },
-  // { value: 20, label: 'Express', description: '2-3 days delivery' },
-];
+// const DELIVERY_OPTIONS: ICheckoutDeliveryOption[] = [
+//   // { value: 0, label: 'Free', description: '5-7 days delivery' },
+//   { value: 0, label: 'Free', description: 'Pick up by your self' },
+//   { value: 1.5, label: 'Standard', description: '3-5 days delivery' },
+//   // { value: 20, label: 'Express', description: '2-3 days delivery' },
+// ];
 
 const PAYMENT_OPTIONS: ICheckoutPaymentOption[] = [
   // {
@@ -93,7 +95,19 @@ export function CheckoutPayment() {
     state: checkoutState,
   } = useCheckoutContext();
 
+  const [deliveryOptions, setDeliveryOptions] = useState<ICheckoutDeliveryOption[]>([
+    { value: 0, label: 'Free', description: 'Pick up by yourself' },
+    { value: 1.5, label: 'Standard', description: '3-5 days delivery' }, // initial fallback
+  ]);
+  const [distanceKm, setDistanceKm] = useState<number | null>(null);
+  // console.log('distanceKm', distanceKm);
+
   const [createOrder, { isLoading }] = useCreateOrderMutation();
+
+  const addressToDeliver = checkoutState.billing?.address;
+  const shopAddress = checkoutState.shopAddress;
+  // console.log('addressToDeliver', addressToDeliver);
+  // console.log('shopAddress', shopAddress);
 
   const defaultValues: PaymentSchemaType = {
     delivery: checkoutState.shipping,
@@ -117,6 +131,7 @@ export function CheckoutPayment() {
         productId: item.id,
         quantity: item.quantity,
       }));
+      // console.log('data.delivery', data.delivery);
 
       const shippingAddressId = checkoutState.billing?.id;
       if (!shippingAddressId) {
@@ -141,6 +156,7 @@ export function CheckoutPayment() {
         items,
         shippingAddressId,
         paymentMethod: selectedPaymentMethod?.paymentName,
+        shippingFee: data.delivery,
         ...(data.payment !== 'cash' && { senderPhone: data.phoneNumber }),
       };
 
@@ -156,6 +172,45 @@ export function CheckoutPayment() {
     }
   });
 
+  useEffect(() => {
+    const fetchCoordinatesAndCalculateDistance = async () => {
+      if (!addressToDeliver || !shopAddress) {
+        console.warn('Both delivery and shop addresses are required.');
+        return;
+      }
+
+      try {
+        const [deliveryCoords, shopCoords] = await Promise.all([
+          geocodeAddress(addressToDeliver),
+          geocodeAddress(shopAddress),
+        ]);
+
+        const distance = calculateDistanceInKm(deliveryCoords, shopCoords);
+        setDistanceKm(distance);
+        console.log(`Distance between addresses: ${distance.toFixed(2)} km`);
+      } catch (error) {
+        console.error('Error calculating distance:', error);
+      }
+    };
+
+    fetchCoordinatesAndCalculateDistance();
+  }, [addressToDeliver, shopAddress]);
+
+  useEffect(() => {
+    if (distanceKm !== null) {
+      const fee = calculateDeliveryFee(distanceKm);
+
+      setDeliveryOptions([
+        { value: 0, label: 'Free', description: 'Pick it up by yourself' },
+        {
+          value: fee,
+          label: 'Standard',
+          description: `${distanceKm.toFixed(2)} km delivery - $${fee}`,
+        },
+      ]);
+    }
+  }, [distanceKm]);
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -163,7 +218,8 @@ export function CheckoutPayment() {
           <CheckoutDelivery
             name="delivery"
             onApplyShipping={onApplyShipping}
-            options={DELIVERY_OPTIONS}
+            // options={DELIVERY_OPTIONS}
+            options={deliveryOptions}
           />
 
           <CheckoutPaymentMethods

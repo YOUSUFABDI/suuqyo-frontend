@@ -40,17 +40,19 @@ export function OrderDetailsItems({
         flexDirection: 'column',
       }}
     >
-      {/* <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex' }}>
         <Box sx={{ color: 'text.secondary' }}>Subtotal</Box>
         <Box sx={{ width: 160, typography: 'subtitle2' }}>{fCurrency(subtotal) || '-'}</Box>
-      </Box> */}
+      </Box>
 
-      {/* <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex' }}>
         <Box sx={{ color: 'text.secondary' }}>Shipping</Box>
-        <Box sx={{ width: 160, ...(shipping && { color: 'error.main' }) }}>
-          {shipping ? `- ${fCurrency(shipping)}` : '-'}
+        {/* <Box sx={{ width: 160, ...(shipping && { color: 'error.main' }) }}> */}
+        <Box sx={{ width: 160 }}>
+          {/* {shipping ? `- ${fCurrency(shipping)}` : '-'} */}
+          {shipping}
         </Box>
-      </Box> */}
+      </Box>
 
       {/* <Box sx={{ display: 'flex' }}>
         <Box sx={{ color: 'text.secondary' }}>Discount</Box>

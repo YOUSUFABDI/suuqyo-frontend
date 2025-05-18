@@ -78,9 +78,9 @@ export function OrderDetailsView({ order }: Props) {
             <OrderDetailsItems
               items={order?.items}
               // taxes={0}
-              // shipping={0}
+              shipping={order?.shippingFee}
               // discount={0}
-              // subtotal={order?.subtotal}
+              subtotal={order?.subtotal}
               totalAmount={order?.total}
             />
 

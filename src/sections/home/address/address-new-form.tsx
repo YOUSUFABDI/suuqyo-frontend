@@ -19,6 +19,8 @@ import {
   useUpdateShippingAddressMutation,
 } from 'src/store/customer/order';
 import { getErrorMessage } from 'src/utils/error.message';
+import 'leaflet/dist/leaflet.css';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +47,8 @@ type Props = {
 };
 
 export function AddressNewForm({ open, onClose, onCreate }: Props) {
+  const [hasFetchedAddress, setHasFetchedAddress] = useState(false);
+
   const defaultValues: NewAddressSchemaType = {
     name: '',
     city: '',
@@ -98,55 +102,137 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
     }
   });
 
+  // const handleUseCurrentLocation = () => {
+  //   if (!navigator.geolocation) {
+  //     toast.error('Geolocation is not supported by your browser');
+  //     return;
+  //   }
+
+  //   navigator.geolocation.getCurrentPosition(
+  //     async (position) => {
+  //       const { latitude, longitude } = position.coords;
+
+  //       try {
+  //         // Call OpenStreetMap Reverse Geocoding API
+  //         const response = await fetch(
+  //           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+  //           {
+  //             headers: { 'User-Agent': 'YourAppName/1.0' },
+  //           }
+  //         );
+
+  //         const data = await response.json();
+
+  //         if (data && data.display_name) {
+  //           methods.setValue('address', data.display_name);
+  //           toast.success('Address autofilled!');
+  //         } else {
+  //           toast.error('Could not fetch address from location');
+  //         }
+  //       } catch (error) {
+  //         toast.error('Error fetching address');
+  //       }
+  //     },
+  //     (error) => {
+  //       toast.error('Could not get your location');
+  //     }
+  //   );
+  // };
+
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by your browser');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyCshsTPtTESZ2xsLnaH5E65yr5CzWJkCHQ`
+          );
+
+          const data = await response.json();
+
+          if (data.status === 'OK' && data.results.length > 0) {
+            const address = data.results[0].formatted_address;
+            methods.setValue('address', address);
+            setHasFetchedAddress(true); // 👈 Show address field
+            toast.success('Address autofilled!');
+          } else {
+            toast.error('Could not fetch address from location');
+          }
+        } catch (error) {
+          toast.error('Error fetching address');
+        }
+      },
+      (error) => {
+        toast.error('Could not get your location');
+      }
+    );
+  };
+
   return (
-    <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
-      <Form methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>New address</DialogTitle>
+    <>
+      <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
+        <Form methods={methods} onSubmit={onSubmit}>
+          <DialogTitle>New address</DialogTitle>
 
-        <DialogContent dividers>
-          <Stack spacing={3}>
-            <Box
-              sx={{
-                mt: 1,
-                rowGap: 3,
-                columnGap: 2,
-                display: 'grid',
-                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-              }}
-            >
-              <Field.Text name="name" label="Full name" />
+          <DialogContent dividers>
+            <Stack spacing={3}>
+              <Box
+                sx={{
+                  mt: 1,
+                  rowGap: 3,
+                  columnGap: 2,
+                  display: 'grid',
+                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                }}
+              >
+                <Field.Text name="name" label="Full name" />
 
-              <Field.Phone name="phoneNumber" label="Phone number" country="US" />
-            </Box>
+                <Field.Phone name="phoneNumber" label="Phone number" country="US" />
+              </Box>
 
-            <Field.CountrySelect name="country" label="Country" placeholder="Choose a country" />
+              <Field.CountrySelect name="country" label="Country" placeholder="Choose a country" />
 
-            <Box
-              sx={{
-                rowGap: 3,
-                columnGap: 2,
-                display: 'grid',
-                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-              }}
-            >
-              <Field.Text name="city" label="Town/city" />
+              <Box
+                sx={{
+                  rowGap: 3,
+                  columnGap: 2,
+                  display: 'grid',
+                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                }}
+              >
+                <Field.Text name="city" label="Town/city" />
 
-              <Field.Text name="state" label="State" />
-            </Box>
-            <Field.Text name="address" label="Address" />
-          </Stack>
-        </DialogContent>
+                <Field.Text name="state" label="State" />
+              </Box>
+              <Box>
+                {hasFetchedAddress && <Field.Text name="address" label="Address" />}
 
-        <DialogActions>
-          <Button color="inherit" variant="outlined" onClick={onClose}>
-            Cancel
-          </Button>
+                <Stack direction="row" spacing={1} mt={1}>
+                  <Button variant="text" size="small" onClick={handleUseCurrentLocation}>
+                    Use my current location
+                  </Button>
+                </Stack>
+              </Box>
+            </Stack>
+          </DialogContent>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting || isLoading}>
-            Deliver to this address
-          </LoadingButton>
-        </DialogActions>
-      </Form>
-    </Dialog>
+          <DialogActions>
+            <Button color="inherit" variant="outlined" onClick={onClose}>
+              Cancel
+            </Button>
+
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting || isLoading}>
+              Deliver to this address
+            </LoadingButton>
+          </DialogActions>
+        </Form>
+      </Dialog>
+    </>
   );
 }

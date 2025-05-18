@@ -61,7 +61,8 @@ export const NewUserSchema = zod.object({
     .string()
     .min(1, { message: 'Password is required!' })
     .min(6, { message: 'Password must be at least 6 characters!' })
-    .optional(),
+    .optional()
+    .or(zod.literal('')),
   // Shop detail
   shopLogo: schemaHelper.file().nullable().optional(),
   businessProof: schemaHelper.file().nullable().optional(),
@@ -124,6 +125,15 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
     mode: 'onSubmit',
     resolver: zodResolver(NewUserSchema),
     defaultValues: currentUser || defaultValues,
+    // defaultValues: {
+    //   // currentUser || defaultValues
+    //   ...defaultValues,
+    //   ...currentUser,
+    //   password: '',
+    //   paymentMethods: currentUser?.paymentMethods?.length
+    //     ? currentUser.paymentMethods
+    //     : [{ paymentName: 'EVC_PLUS', paymentPhone: '' }],
+    // },
   });
 
   const {
@@ -152,12 +162,12 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const updateShopOwnerDto = {
+      const updateShopOwnerDto: any = {
         fullName: data.fullName,
         username: data.username,
         email: data.email,
         phoneNumber: data.phoneNumber,
-        password: data.password,
+        // password: data.password && data.password,
         // address
         country: data.country,
         state: data.state,
@@ -169,6 +179,10 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
         shopAddress: data.shopAddress,
         paymentMethods: data.paymentMethods,
       };
+      // ✅ Only include password if it's not empty
+      if (data.password?.trim()) {
+        updateShopOwnerDto.password = data.password;
+      }
       const profileImage = data.profileImage;
       const shopLogo = data.shopLogo;
       const businessProof = data.businessProof;
@@ -253,6 +267,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
       const mapped = {
         ...defaultValues,
         ...currentUser,
+        password: '',
         paymentMethods: currentUser.paymentMethods || defaultValues.paymentMethods,
       };
       reset(mapped);
