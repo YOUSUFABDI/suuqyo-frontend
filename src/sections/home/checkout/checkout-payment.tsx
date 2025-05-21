@@ -97,7 +97,11 @@ export function CheckoutPayment() {
 
   const [deliveryOptions, setDeliveryOptions] = useState<ICheckoutDeliveryOption[]>([
     { value: 0, label: 'Free', description: 'Pick up by yourself' },
-    { value: 1.5, label: 'Standard', description: '3-5 days delivery' }, // initial fallback
+    {
+      value: 1.5,
+      label: 'Standard',
+      description: 'Fast enough, affordable for all',
+    }, // initial fallback
   ]);
   const [distanceKm, setDistanceKm] = useState<number | null>(null);
   // console.log('distanceKm', distanceKm);
@@ -156,9 +160,11 @@ export function CheckoutPayment() {
         items,
         shippingAddressId,
         paymentMethod: selectedPaymentMethod?.paymentName,
+        paymentAccount: selectedPaymentMethod?.paymentPhone,
         shippingFee: data.delivery,
         ...(data.payment !== 'cash' && { senderPhone: data.phoneNumber }),
       };
+      // console.log('reqData', reqData);
 
       await createOrder(reqData).unwrap();
       toast.success('Order placed successfully!');

@@ -33,6 +33,7 @@ type Props = {
 };
 
 export function OrderDetailsView({ order }: Props) {
+  console.log('order', order);
   const [updateOrderStatus, { isLoading }] = useUpdateOrderStatusMutation();
   const { refetchAnalytics } = UseAnalytics();
   const [status, setStatus] = useState(order?.status);
@@ -95,6 +96,7 @@ export function OrderDetailsView({ order }: Props) {
             <Divider sx={{ borderStyle: 'dashed' }} />
             <OrderDetailsConfirmPayment
               paymentMethod={order?.paymentMethod}
+              paymentAccount={order?.paymentAccount}
               senderPhone={order?.senderPhone}
             />
 

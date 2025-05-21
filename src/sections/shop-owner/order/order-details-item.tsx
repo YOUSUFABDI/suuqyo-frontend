@@ -68,7 +68,7 @@ export function OrderDetailsItems({
       </Box> */}
 
       <Box sx={{ display: 'flex', typography: 'subtitle1' }}>
-        <div>Total</div>
+        <Box>Total</Box>
         <Box sx={{ width: 160 }}>{fCurrency(totalAmount) || '-'}</Box>
       </Box>
     </Box>

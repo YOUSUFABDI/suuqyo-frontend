@@ -71,6 +71,7 @@ export function SignUpView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const response = await signup(data).unwrap();
+      // console.log('response', response);
       if (response.error === null) {
         toast.success(`Verification code sent to your email!`);
         router.push(`${paths.auth.jwt.verify}?email=${data.email}`);

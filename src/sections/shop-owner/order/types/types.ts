@@ -106,6 +106,7 @@ export type OrderResDT = {
   customer: CustomerDT;
   items: OrderItemDT[];
   paymentMethod: string;
+  paymentAccount: string;
   shippingFee: number;
   senderPhone: string;
 };
