@@ -3,7 +3,7 @@
 import Container from '@mui/material/Container';
 import { LoadingScreen } from 'src/components/loading-screen';
 
-// import { ProductDetailsSkeleton } from 'src/sections/product/product-skeleton';
+import { ProductDetailsSkeleton } from 'src/sections/home/shop/shop-skeleton';
 
 // ----------------------------------------------------------------------
 

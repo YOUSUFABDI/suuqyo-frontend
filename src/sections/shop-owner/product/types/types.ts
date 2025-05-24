@@ -22,12 +22,10 @@ export interface ProductResDT {
   name: string;
   description: string;
   content: string;
-  purchasePrice: number;
   sellingPrice: number;
   discount: number;
   rate: number | null;
   quantity: number;
-  model: string;
   condition: string;
   createdAt: string;
   updatedAt: string;

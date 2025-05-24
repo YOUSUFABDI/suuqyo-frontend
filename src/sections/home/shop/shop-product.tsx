@@ -3,25 +3,21 @@ import { ShopInfoDT } from './types/types';
 import { ProductList } from '../components/product-list';
 import { useCheckoutContext } from '../checkout/context';
 import { useEffect } from 'react';
+import { LoadingScreen } from 'src/components/loading-screen';
+import { Product } from '../product/types/types';
 
 type Props = {
-  shop: ShopInfoDT | null;
+  // shop: ShopInfoDT | null;
+  products: Product[];
 };
 
-export const ShopProduct = ({ shop }: Props) => {
-  const { onSetShopAddress } = useCheckoutContext();
-
-  useEffect(() => {
-    if (shop?.shopAddress) {
-      onSetShopAddress(shop.shopAddress);
-    }
-  }, [shop?.shopAddress, onSetShopAddress]);
-
+export const ShopProduct = ({ products }: Props) => {
   return (
     <Card sx={{ borderRadius: 0, boxShadow: 0 }}>
       <Box
         component="img"
-        src={shop?.shopLogo}
+        // src={shop?.shopLogo}
+        src={products[0]?.shop?.shopLogo}
         alt="Shop Cover"
         sx={{
           width: '100%',
@@ -32,7 +28,8 @@ export const ShopProduct = ({ shop }: Props) => {
         }}
       />
       {/* Products */}
-      <ProductList products={shop?.user.Product} />
+      {/* <ProductList products={shop?.user.Product} /> */}
+      <ProductList products={products} />
     </Card>
   );
 };

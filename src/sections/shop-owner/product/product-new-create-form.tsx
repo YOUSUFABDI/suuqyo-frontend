@@ -49,7 +49,6 @@ export const NewProductSchema = zod.object({
   // Not required
   categoryId: zod.number({ coerce: true }).nullable(),
   condition: zod.string(),
-  model: zod.string(),
   description: zod.string(),
   discount: zod.number({ coerce: true }).nullable(),
 });
@@ -70,12 +69,10 @@ export function ProductNewCreateForm() {
     description: '',
     images: [],
     sellingPrice: null,
-    // purchasePrice: null,
     discount: null,
     quantity: null,
     categoryId: null,
     condition: '',
-    model: '',
   };
 
   const methods = useForm<NewProductSchemaType>({
@@ -102,7 +99,6 @@ export function ProductNewCreateForm() {
       sellingPrice: data.sellingPrice,
       discount: data.discount,
       quantity: data.quantity,
-      model: data.model,
       condition: data.condition,
     };
     const images = data.images;
@@ -231,8 +227,6 @@ export function ProductNewCreateForm() {
               </option>
             ))}
           </Field.Select>
-
-          <Field.Text name="model" label="Product model" />
         </Box>
       </Stack>
     </Card>

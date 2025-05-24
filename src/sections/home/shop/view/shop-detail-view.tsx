@@ -7,6 +7,7 @@ import { ShopDetail } from '../shop-detail';
 import { ShopProduct } from '../shop-product';
 import { CartIcon } from '../../components/cart-icon';
 import { useCheckoutContext } from '../../checkout/context';
+import { LoadingScreen } from 'src/components/loading-screen';
 
 type Props = {
   shop: ShopInfoDT | null;
@@ -14,14 +15,22 @@ type Props = {
 
 export const ShopDetailsView = ({ shop }: Props) => {
   // console.log('shop', shop);
-  console.log('PaymentMethodOfShop:--', shop?.user.PaymentMethodOfShop);
+  // console.log('PaymentMethodOfShop:--', shop?.user.PaymentMethodOfShop);
   const { state: checkoutState, onSetPaymentMethods } = useCheckoutContext();
 
-  useEffect(() => {
-    if (shop?.user.PaymentMethodOfShop) {
-      onSetPaymentMethods(shop.user.PaymentMethodOfShop); // save into checkout context
-    }
-  }, [shop, onSetPaymentMethods]);
+  // useEffect(() => {
+  //   if (shop?.data.) {
+  //     onSetPaymentMethods(shop.user.PaymentMethodOfShop); // save into checkout context
+  //   }
+  // }, [shop, onSetPaymentMethods]);
+
+  const products = shop;
+  console.log('productsproducts', products);
+
+  if (!shop) {
+    // return null;
+    return <LoadingScreen />;
+  }
 
   return (
     <Container sx={{ mb: 15 }}>
@@ -34,11 +43,16 @@ export const ShopDetailsView = ({ shop }: Props) => {
         }}
       >
         <Box sx={{ flex: { xs: '1 1 100%', md: '0 0 30%' } }}>
-          <ShopDetail shop={shop} />
+          {/* <ShopDetail shop={shop} /> */}
+          <ShopDetail
+            shop={products && products[0]?.shop}
+            products={products || []}
+            user={products && products[0]?.user}
+          />
         </Box>
 
         <Box sx={{ flex: 1 }}>
-          <ShopProduct shop={shop} />
+          <ShopProduct products={products || []} />
         </Box>
       </Box>
     </Container>

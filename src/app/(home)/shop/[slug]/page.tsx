@@ -14,6 +14,7 @@ type Props = {
 export default function Page({ params }: Props) {
   const { slug } = params;
   const { shop, isLoading, errorMessage } = useShopInfo(deslugify(slug));
+  console.log('shop page::', shop);
 
   return <ShopDetailsView shop={shop} />;
 }

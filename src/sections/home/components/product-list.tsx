@@ -1,14 +1,13 @@
 import type { BoxProps } from '@mui/material/Box';
-import type { IProductItem } from 'src/types/product';
 
 import Box from '@mui/material/Box';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
 import { paths } from 'src/routes/paths';
 
+import { Product, Shop } from '../product/types/types';
 import { ProductItem } from './product-item';
 import { ProductItemSkeleton } from './product-skeleton';
-import { Product } from '../shop/types/types';
 
 // ----------------------------------------------------------------------
 

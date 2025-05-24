@@ -56,7 +56,6 @@ export const NewUserSchema = zod.object({
   shopName: zod.string().min(1, { message: 'Shop name is required!' }),
   shopDescription: zod.string().min(1, { message: 'Shop description is required!' }),
   shopAddress: zod.string().min(1, { message: 'Shop address is required!' }),
-  // Payment methods
   paymentMethods: zod
     .array(
       zod.object({
@@ -64,7 +63,8 @@ export const NewUserSchema = zod.object({
         paymentPhone: zod.string().min(1, { message: 'Payment phone is required!' }),
       })
     )
-    .min(1, { message: 'At least one payment method is required!' }),
+    .min(1, { message: 'At least one payment method is required!' })
+    .max(3, { message: 'You can only add up to 3 payment methods!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -114,9 +114,18 @@ export function ShopOwnerNewForm() {
   const values = watch();
   const businessProof = watch('businessProof');
 
+  // const handleAddPaymentMethod = () => {
+  //   const currentMethods = methods.getValues('paymentMethods') || [];
+  //   methods.setValue('paymentMethods', [...currentMethods, { paymentName: '', paymentPhone: '' }]);
+  // };
   const handleAddPaymentMethod = () => {
     const currentMethods = methods.getValues('paymentMethods') || [];
-    methods.setValue('paymentMethods', [...currentMethods, { paymentName: '', paymentPhone: '' }]);
+    if (currentMethods.length < 3) {
+      methods.setValue('paymentMethods', [
+        ...currentMethods,
+        { paymentName: '', paymentPhone: '' },
+      ]);
+    }
   };
 
   const handleRemovePaymentMethod = (index: number) => {
@@ -329,7 +338,7 @@ export function ShopOwnerNewForm() {
                     </Box>
                   ))}
 
-                  <Box>
+                  {/* <Box>
                     <Button
                       variant="outlined"
                       startIcon={<Iconify icon="mingcute:add-line" />}
@@ -337,6 +346,21 @@ export function ShopOwnerNewForm() {
                     >
                       Add Payment Method
                     </Button>
+                  </Box> */}
+                  <Box>
+                    <Button
+                      variant="outlined"
+                      startIcon={<Iconify icon="mingcute:add-line" />}
+                      onClick={handleAddPaymentMethod}
+                      disabled={(methods.watch('paymentMethods')?.length || 0) >= 3}
+                    >
+                      Add Payment Method
+                    </Button>
+                    {(methods.watch('paymentMethods')?.length || 0) >= 3 && (
+                      <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+                        Maximum of 3 payment methods allowed.
+                      </Typography>
+                    )}
                   </Box>
                 </Stack>
               </Card>

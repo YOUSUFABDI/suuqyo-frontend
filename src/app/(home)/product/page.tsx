@@ -1,17 +1,12 @@
 import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';
-import { getProducts } from 'src/actions/product-ssr';
-
-// import { ProductShopView } from 'src/sections/product/view';
+import { ProductListView } from 'src/sections/home/product/product-list-view';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = { title: `Product shop - ${CONFIG.appName}` };
+export const metadata: Metadata = { title: `Products - ${CONFIG.appName}` };
 
 export default async function Page() {
-  // const { products } = await getProducts();
-
-  // return <ProductShopView products={products} />;
-  return <>ProductSView</>;
+  return <ProductListView />;
 }

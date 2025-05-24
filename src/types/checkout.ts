@@ -1,5 +1,5 @@
 import { AddressDT } from 'src/sections/home/address/types/types';
-import { PaymentMethodOfShopDT } from 'src/sections/home/shop/types/types';
+import { PaymentMethod } from 'src/sections/home/product/types/types';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ export type ICheckoutState = {
   shipping: number;
   totalItems: number;
   items: ICheckoutItem[];
-  paymentMethods: PaymentMethodOfShopDT[];
+  paymentMethods: PaymentMethod[];
   billing: AddressDT | null;
   shopAddress?: string;
 };
@@ -63,6 +63,6 @@ export type CheckoutContextValue = {
   onApplyDiscount: (discount: number) => void;
   onApplyShipping: (discount: number) => void;
   onCreateBillingAddress: (address: AddressDT) => void;
-  onSetPaymentMethods: (methods: PaymentMethodOfShopDT[]) => void;
+  onSetPaymentMethods: (methods: PaymentMethod[]) => void;
   onSetShopAddress: (address: string) => void;
 };

@@ -2,29 +2,30 @@
 
 import { Avatar, Box, Card, Divider, Stack, Typography, Chip } from '@mui/material';
 import { Iconify } from 'src/components/iconify';
-import { ShopInfoDT } from './types/types';
+import { ShopDT, ShopInfoDT } from './types/types';
+import { LoadingScreen } from 'src/components/loading-screen';
+import { Product, User } from '../product/types/types';
 
 type Props = {
-  shop: ShopInfoDT | null;
+  // shop: ShopInfoDT | null;
+  shop?: ShopDT | null;
+  user?: User | null;
+  products: Product[];
 };
 
-export const ShopDetail = ({ shop }: Props) => {
-  if (!shop) {
-    return null;
-  }
-
+export const ShopDetail = ({ shop, products, user }: Props) => {
   return (
     <Card sx={{ borderRadius: 0.6, boxShadow: 2 }}>
       {/* Shop Logo and Name */}
       <Stack direction="row" spacing={2} alignItems="center" textAlign="left" sx={{ px: 2, py: 3 }}>
         {/* Shop Logo */}
-        <Avatar src={shop.shopLogo} alt={shop.shopName} sx={{ width: 80, height: 80 }} />
+        <Avatar src={shop?.shopLogo} alt={shop?.shopName} sx={{ width: 80, height: 80 }} />
 
         {/* Shop Name & Products */}
         <Box>
           <Stack direction="row" alignItems="center" spacing={1}>
             <Typography variant="h6" fontWeight="bold">
-              {shop.shopName}
+              {shop?.shopName}
             </Typography>
 
             {/* Verified Badge */}
@@ -40,7 +41,7 @@ export const ShopDetail = ({ shop }: Props) => {
           </Stack>
 
           <Typography variant="body2" color="text.secondary">
-            {shop.user.Product.length} products
+            {products.length} products
           </Typography>
         </Box>
       </Stack>
@@ -53,7 +54,7 @@ export const ShopDetail = ({ shop }: Props) => {
           About this shop
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {shop.shopDescription}
+          {shop?.shopDescription}
         </Typography>
       </Box>
 
@@ -67,7 +68,7 @@ export const ShopDetail = ({ shop }: Props) => {
               Address
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {shop.shopAddress}
+              {shop?.shopAddress}
             </Typography>
           </Box>
 
@@ -76,7 +77,7 @@ export const ShopDetail = ({ shop }: Props) => {
               Phone
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {shop.user.phoneNumber}
+              {user?.phoneNumber}
             </Typography>
           </Box>
         </Stack>

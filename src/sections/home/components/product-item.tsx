@@ -1,7 +1,5 @@
 'use client';
 
-import type { IProductItem } from 'src/types/product';
-
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
@@ -17,21 +15,29 @@ import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 import { ColorPreview } from 'src/components/color-utils';
-import { Product } from '../shop/types/types';
+// import { Product } from '../shop/types/types';
 
 import { useCheckoutContext } from '../checkout/context';
+import { Product } from '../product/types/types';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  // product: IProductItem;
   product: Product;
   detailsHref: string;
 };
 
 export function ProductItem({ product, detailsHref }: Props) {
-  const { onAddToCart } = useCheckoutContext();
+  const {
+    state: checkoutState,
+    onAddToCart,
+    onSetPaymentMethods,
+    onSetShopAddress,
+  } = useCheckoutContext();
   const available = product.quantity > 0 ? true : false;
+
+  console.log('shop info:----', product.shop);
 
   // const { id, name,  price, colors,  } =
   //   product;
@@ -46,6 +52,15 @@ export function ProductItem({ product, detailsHref }: Props) {
       available: product.quantity,
     };
     try {
+      // Set related checkout context data when adding to cart
+      if (product?.user?.paymentMethods) {
+        onSetPaymentMethods(product.user.paymentMethods);
+      }
+
+      if (product?.shop?.shopAddress) {
+        onSetShopAddress(product.shop.shopAddress);
+      }
+
       onAddToCart(newProduct);
     } catch (error) {
       console.error(error);
@@ -125,7 +140,7 @@ export function ProductItem({ product, detailsHref }: Props) {
         {/* <Tooltip title="Color">
           <ColorPreview colors={colors} />
         </Tooltip> */}
-        <Box></Box>
+        <Box>{product?.shop?.shopName}</Box>
 
         <Box sx={{ gap: 0.5, display: 'flex', typography: 'subtitle1' }}>
           {/* {product.sellingPrice && (

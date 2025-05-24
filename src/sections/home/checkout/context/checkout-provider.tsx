@@ -13,8 +13,8 @@ import { paths } from 'src/routes/paths';
 import { SplashScreen } from 'src/components/loading-screen';
 
 import { AddressDT } from '../../address/types/types';
-import { PaymentMethodOfShopDT } from '../../shop/types/types';
 import { CheckoutContext } from './checkout-context';
+import { PaymentMethod } from '../../product/types/types';
 
 // ----------------------------------------------------------------------
 
@@ -143,7 +143,7 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
   );
 
   const onSetPaymentMethods = useCallback(
-    (methods: PaymentMethodOfShopDT[]) => {
+    (methods: PaymentMethod[]) => {
       setField('paymentMethods', methods);
     },
     [setField]

@@ -132,7 +132,7 @@ export function CheckoutPayment() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const items = checkoutState.items.map((item: any) => ({
-        productId: item.id,
+        productId: Number(item.id),
         quantity: item.quantity,
       }));
       // console.log('data.delivery', data.delivery);
@@ -164,7 +164,8 @@ export function CheckoutPayment() {
         shippingFee: data.delivery,
         ...(data.payment !== 'cash' && { senderPhone: data.phoneNumber }),
       };
-      // console.log('reqData', reqData);
+      console.log('reqData', reqData);
+      console.log('checkoutState', checkoutState);
 
       await createOrder(reqData).unwrap();
       toast.success('Order placed successfully!');
