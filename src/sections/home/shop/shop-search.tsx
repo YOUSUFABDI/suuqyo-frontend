@@ -80,7 +80,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
       onInputChange={(event, newValue) => setSearchQuery(newValue)}
       getOptionLabel={(option) => option.shopName}
       noOptionsText={<SearchNotFound query={debouncedQuery} />}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
+      isOptionEqualToValue={(option, value) => option.shopId === value.shopId}
       slotProps={{ paper: { sx: paperStyles } }}
       sx={[{ width: { xs: 1, sm: 260 } }, ...(Array.isArray(sx) ? sx : [sx])]}
       renderInput={(params) => (
@@ -110,7 +110,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
         const parts = parse(shop.shopName, matches);
 
         return (
-          <li {...props} key={shop.id}>
+          <li {...props} key={shop.shopId}>
             <Link
               component={RouterLink}
               href={redirectPath(slugify(shop.shopName))}
@@ -118,7 +118,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
               underline="none"
             >
               <Avatar
-                key={shop.id}
+                key={shop.shopId}
                 alt={shop.shopName}
                 src={shop.shopLogo}
                 variant="rounded"

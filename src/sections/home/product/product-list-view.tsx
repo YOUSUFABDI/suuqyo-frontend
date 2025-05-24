@@ -1,37 +1,36 @@
 'use client';
 
-import type { IProductItem, IProductFilters } from 'src/types/product';
+import type { IProductFilters } from 'src/types/product';
 
-import { useEffect, useState } from 'react';
 import { orderBy } from 'es-toolkit';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
+import { useState } from 'react';
 
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
 import {
-  PRODUCT_SORT_OPTIONS,
   PRODUCT_COLOR_OPTIONS,
   PRODUCT_GENDER_OPTIONS,
   PRODUCT_RATING_OPTIONS,
-  PRODUCT_CATEGORY_OPTIONS,
+  PRODUCT_SORT_OPTIONS,
 } from 'src/_mock';
 
 import { EmptyContent } from 'src/components/empty-content';
 
+import { useCheckoutContext } from '../checkout/context';
 import { CartIcon } from '../components/cart-icon';
 import { ProductList } from '../components/product-list';
-import { ProductSort } from './product-sort';
-import { ProductSearch } from './product-search';
-import { useCheckoutContext } from '../checkout/context';
+import { useAllProduct } from './hooks';
 import { ProductFiltersDrawer } from './product-filters-drawer';
 import { ProductFiltersResult } from './product-filters-result';
-import { useAllProduct } from './hooks';
-import { Product, ProductResponse } from './types/types';
+import { ProductSearch } from './product-search';
+import { ProductSort } from './product-sort';
+import { Product, PRODUCT_CATEGORY_OPTIONS } from './types/types';
 
 // ----------------------------------------------------------------------
 
@@ -133,13 +132,8 @@ export function ProductListView() {
 
       {(notFound || productsEmpty) && renderNotFound()}
 
-      {/* <ProductList products={dataFiltered} /> */}
-      {/* <ProductList
-        products={dataFiltered.map((product) => ({ ...product, id: String(product.id) }))}
-      /> */}
       <ProductList
         products={dataFiltered.map((product) => ({ ...product, id: String(product.id) }))}
-        // shop={rawShop}
       />
     </Container>
   );
@@ -170,21 +164,29 @@ function applyFilter({ inputData, filters, sortBy }: ApplyFilterProps) {
     inputData = orderBy(inputData, ['createdAt'], ['desc']);
   }
 
-  // if (sortBy === 'priceDesc') {
-  //   inputData = orderBy(inputData, ['price'], ['desc']);
-  // }
+  if (sortBy === 'priceDesc') {
+    inputData = orderBy(inputData, ['sellingPrice'], ['desc']);
+  }
 
-  // if (sortBy === 'priceAsc') {
-  //   inputData = orderBy(inputData, ['price'], ['asc']);
-  // }
+  if (sortBy === 'priceAsc') {
+    inputData = orderBy(inputData, ['sellingPrice'], ['asc']);
+  }
+
+  if (min !== 0 || max !== 200) {
+    inputData = inputData.filter(
+      (product) => product.sellingPrice >= min && product.sellingPrice <= max
+    );
+  }
+
+  if (category !== 'all') {
+    inputData = inputData.filter(
+      (product) => product?.category?.name.toLowerCase() === category.toLowerCase()
+    );
+  }
 
   // filters
   // if (gender.length) {
   //   inputData = inputData.filter((product) => product.gender.some((i) => gender.includes(i)));
-  // }
-
-  // if (category !== 'all') {
-  //   inputData = inputData.filter((product) => product.category === category);
   // }
 
   // if (colors.length) {
@@ -192,12 +194,6 @@ function applyFilter({ inputData, filters, sortBy }: ApplyFilterProps) {
   //     product.colors.some((color) => colors.includes(color))
   //   );
   // }
-
-  if (min !== 0 || max !== 200) {
-    inputData = inputData.filter(
-      (product) => product.sellingPrice >= min && product.sellingPrice <= max
-    );
-  }
 
   // if (rating) {
   //   inputData = inputData.filter((product) => {

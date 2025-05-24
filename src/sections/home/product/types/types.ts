@@ -12,6 +12,12 @@ export interface Product {
   discount: number | null;
   rate: number | null;
   condition: string;
+  category: {
+    id: number;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+  };
   quantity: number;
   createdAt: string;
   updatedAt: string;
@@ -50,3 +56,5 @@ export interface User {
 export interface ProductResponse {
   product: Product;
 }
+
+export const PRODUCT_CATEGORY_OPTIONS = ['Shoes', 'Electronic', 'Food'];

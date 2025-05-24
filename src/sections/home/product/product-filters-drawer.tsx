@@ -263,11 +263,11 @@ export function ProductFiltersDrawer({ open, onOpen, onClose, canReset, filters,
 
         <Scrollbar sx={{ px: 2.5, py: 3 }}>
           <Stack spacing={3}>
-            {renderGender()}
+            {/* {renderGender()} */}
             {renderCategory()}
-            {renderColor()}
+            {/* {renderColor()} */}
             {renderPrice()}
-            {renderRating()}
+            {/* {renderRating()} */}
           </Stack>
         </Scrollbar>
       </Drawer>
