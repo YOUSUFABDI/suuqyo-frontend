@@ -25,6 +25,7 @@ import { ProductDetailsSummary } from './product-details-summary';
 import { ProductDetailsCarousel } from './product-details-carousel';
 import { ProductDetailsDescription } from './product-details-description';
 import { ProductResponse } from './types/types';
+import { ProductDetailsSkeleton } from '../components/product-skeleton';
 
 // ----------------------------------------------------------------------
 
@@ -65,6 +66,11 @@ export function ProductShopDetailsView({ product }: Props) {
   const available = product?.product.quantity != null && product?.product.quantity > 0;
 
   const tabs = useTabs('description');
+
+  if (!product) {
+    // return null;
+    return <ProductDetailsSkeleton />;
+  }
 
   return (
     <Container sx={{ mt: 5, mb: 10 }}>

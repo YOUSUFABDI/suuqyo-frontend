@@ -4,6 +4,7 @@ export type AddressDT = {
   city: string;
   state: string;
   address: string;
+  deliveryAddress: string;
   phoneNumber: string;
   fullName: string;
 

@@ -98,6 +98,7 @@ export function CheckoutPaymentMethods({ name, options, sx, ...other }: Props) {
         {selectedPayment && selectedPayment !== 'cash' && (
           <Box sx={{ p: 3 }}>
             <Field.Text
+              type="tel"
               name="phoneNumber"
               label="Number lacagta aa kaso direesid"
               helperText="Number lacagta aa kaso direesid"

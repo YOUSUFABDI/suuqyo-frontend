@@ -20,7 +20,8 @@ export function OrderDetailsShipping({ shippingAddress }: Props) {
             Address
           </Box>
 
-          {shippingAddress?.address}
+          {/* {shippingAddress?.address} */}
+          {shippingAddress?.deliveryAddress}
         </Box>
         <Box sx={{ display: 'flex' }}>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>

@@ -29,7 +29,7 @@ export function OrderDetailsCustomer({ customer }: Props) {
           <Box sx={{ color: 'text.secondary' }}>{customer?.email}</Box>
           {/* <Box sx={{ color: 'text.secondary' }}>{customer?.phoneNumber}</Box> */}
           <Box>
-            Phone:
+            {/* Phone: */}
             <Box component="span" sx={{ color: 'text.secondary', ml: 0.25 }}>
               {customer?.phoneNumber}
             </Box>

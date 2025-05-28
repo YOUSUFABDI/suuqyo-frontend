@@ -15,6 +15,7 @@ export interface ShopOwnerDT {
 export interface ShippingAddressDT {
   id: number;
   address: string;
+  deliveryAddress: string;
   phoneNumber: string;
   fullName: string;
   createdAt: string;

@@ -1,8 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { isValidPhoneNumber } from 'react-phone-number-input/input';
-import { z as zod } from 'zod';
-import { toast } from 'src/components/snackbar';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,16 +7,17 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import { useForm } from 'react-hook-form';
+import { isValidPhoneNumber } from 'react-phone-number-input/input';
+import { toast } from 'src/components/snackbar';
+import { z as zod } from 'zod';
 
-import { Field, Form, schemaHelper } from 'src/components/hook-form';
-import { AddressDT } from './types/types';
-import {
-  useGetCurrentShippingAddressQuery,
-  useUpdateShippingAddressMutation,
-} from 'src/store/customer/order';
-import { getErrorMessage } from 'src/utils/error.message';
 import 'leaflet/dist/leaflet.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Field, Form, schemaHelper } from 'src/components/hook-form';
+import { useUpdateShippingAddressMutation } from 'src/store/customer/order';
+import { getErrorMessage } from 'src/utils/error.message';
+import { AddressDT } from './types/types';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +28,7 @@ export const NewAddressSchema = zod.object({
   state: zod.string().min(1, { message: 'State is required!' }),
   name: zod.string().min(1, { message: 'Name is required!' }),
   address: zod.string().min(1, { message: 'Address is required!' }),
+  deliveryAddress: zod.string().min(1, { message: 'deliveryAddress is required!' }),
   phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
   country: schemaHelper.nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
     // message for null value
@@ -54,6 +52,7 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
     city: '',
     state: '',
     address: '',
+    deliveryAddress: '',
     country: '',
     phoneNumber: '',
   };
@@ -67,6 +66,7 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
   const {
     handleSubmit,
     formState: { isSubmitting },
+    setValue,
   } = methods;
 
   const [updateShippingAddress, { isLoading }] = useUpdateShippingAddressMutation();
@@ -78,6 +78,7 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
       city: data.city,
       state: data.state,
       address: data.address,
+      deliveryAddress: data.deliveryAddress,
       phoneNumber: String(data.phoneNumber),
     };
     try {
@@ -90,6 +91,7 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
           city: data.city,
           state: data.state,
           address: data.address,
+          deliveryAddress: data.deliveryAddress,
           phoneNumber: data.phoneNumber,
         };
         onCreate(newAddress); // Pass the new address to parent
@@ -101,43 +103,6 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
       toast.error(errorMessage);
     }
   });
-
-  // const handleUseCurrentLocation = () => {
-  //   if (!navigator.geolocation) {
-  //     toast.error('Geolocation is not supported by your browser');
-  //     return;
-  //   }
-
-  //   navigator.geolocation.getCurrentPosition(
-  //     async (position) => {
-  //       const { latitude, longitude } = position.coords;
-
-  //       try {
-  //         // Call OpenStreetMap Reverse Geocoding API
-  //         const response = await fetch(
-  //           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
-  //           {
-  //             headers: { 'User-Agent': 'YourAppName/1.0' },
-  //           }
-  //         );
-
-  //         const data = await response.json();
-
-  //         if (data && data.display_name) {
-  //           methods.setValue('address', data.display_name);
-  //           toast.success('Address autofilled!');
-  //         } else {
-  //           toast.error('Could not fetch address from location');
-  //         }
-  //       } catch (error) {
-  //         toast.error('Error fetching address');
-  //       }
-  //     },
-  //     (error) => {
-  //       toast.error('Could not get your location');
-  //     }
-  //   );
-  // };
 
   const handleUseCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -173,6 +138,44 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
       }
     );
   };
+
+  // Auto-fetch user's address on open
+  useEffect(() => {
+    if (!open || hasFetchedAddress) return;
+
+    if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by your browser');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyCshsTPtTESZ2xsLnaH5E65yr5CzWJkCHQ`
+          );
+
+          const data = await response.json();
+
+          if (data.status === 'OK' && data.results.length > 0) {
+            const address = data.results[0].formatted_address;
+            setValue('address', address);
+            setHasFetchedAddress(true);
+            toast.success('Address autofilled!');
+          } else {
+            toast.error('Could not fetch address from location');
+          }
+        } catch (error) {
+          toast.error('Error fetching address');
+        }
+      },
+      () => {
+        toast.error('Could not get your location');
+      }
+    );
+  }, [open, hasFetchedAddress, setValue]);
 
   return (
     <>
@@ -210,14 +213,18 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
 
                 <Field.Text name="state" label="State" />
               </Box>
-              <Box>
-                {hasFetchedAddress && <Field.Text name="address" label="Address" />}
 
-                <Stack direction="row" spacing={1} mt={1}>
+              <Box>
+                <Field.Text name="deliveryAddress" label="Delivery address" />
+                {hasFetchedAddress && (
+                  <Field.Text name="address" label="Address" sx={{ display: 'none' }} />
+                )}
+
+                {/* <Stack direction="row" spacing={1} mt={1}>
                   <Button variant="text" size="small" onClick={handleUseCurrentLocation}>
                     Use my current location
                   </Button>
-                </Stack>
+                </Stack> */}
               </Box>
             </Stack>
           </DialogContent>

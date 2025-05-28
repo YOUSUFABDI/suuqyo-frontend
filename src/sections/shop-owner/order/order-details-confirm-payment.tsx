@@ -19,14 +19,14 @@ export function OrderDetailsConfirmPayment({ paymentMethod, paymentAccount, send
           <Box fontWeight="fontWeightBold">Receiver Details</Box>
 
           <Box sx={{ display: 'flex' }}>
-            <Box component="span" sx={{ color: 'text.secondary', width: 200, flexShrink: 0 }}>
+            <Box component="span" sx={{ color: 'text.secondary', width: 170, flexShrink: 0 }}>
               Payment Method:
             </Box>
             {paymentMethod ?? 'N/A'}
           </Box>
 
           <Box sx={{ display: 'flex' }}>
-            <Box component="span" sx={{ color: 'text.secondary', width: 200, flexShrink: 0 }}>
+            <Box component="span" sx={{ color: 'text.secondary', width: 170, flexShrink: 0 }}>
               Account Number:
             </Box>
             {paymentAccount ?? 'N/A'}
@@ -37,21 +37,21 @@ export function OrderDetailsConfirmPayment({ paymentMethod, paymentAccount, send
           <Box fontWeight="fontWeightBold">Sender Details</Box>
 
           <Box sx={{ display: 'flex' }}>
-            <Box component="span" sx={{ color: 'text.secondary', width: 200, flexShrink: 0 }}>
+            <Box component="span" sx={{ color: 'text.secondary', width: 170, flexShrink: 0 }}>
               Payment Method Used:
             </Box>
             {paymentMethod ?? 'N/A'}
           </Box>
 
           <Box sx={{ display: 'flex' }}>
-            <Box component="span" sx={{ color: 'text.secondary', width: 200, flexShrink: 0 }}>
+            <Box component="span" sx={{ color: 'text.secondary', width: 170, flexShrink: 0 }}>
               Account Number:
             </Box>
             {paymentAccount ?? 'N/A'}
           </Box>
 
           <Box sx={{ display: 'flex' }}>
-            <Box component="span" sx={{ color: 'text.secondary', width: 200, flexShrink: 0 }}>
+            <Box component="span" sx={{ color: 'text.secondary', width: 170, flexShrink: 0 }}>
               Sender Source Account:
             </Box>
             {senderPhone ?? 'N/A'}

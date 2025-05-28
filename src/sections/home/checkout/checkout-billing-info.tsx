@@ -55,7 +55,10 @@ export function CheckoutBillingInfo({ checkoutState, onChangeStep, loading, sx, 
               </Box> */}
             </Box>
 
-            <Box sx={{ color: 'text.secondary', typography: 'body2' }}>{billing?.address}</Box>
+            <Box sx={{ color: 'text.secondary', typography: 'body2' }}>
+              {/* {billing?.address} */}
+              {billing?.deliveryAddress}
+            </Box>
             <Box sx={{ color: 'text.secondary', typography: 'body2' }}>{billing?.phoneNumber}</Box>
           </>
         )}

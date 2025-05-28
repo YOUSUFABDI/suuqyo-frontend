@@ -17,6 +17,7 @@ export interface Address {
   id: string;
   userId: number;
   address: string;
+  deliveryAddress: string;
   phoneNumber: string;
   fullName: string;
   createdAt: string;

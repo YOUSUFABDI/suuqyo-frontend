@@ -40,7 +40,8 @@ export function AddressItem({ address, action, sx, ...other }: Props) {
         </Box>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {address?.country}-{address?.city}-{address?.state}-{address?.address}
+          {/* {address?.country}-{address?.city}-{address?.state}-{address?.address} */}
+          {address?.country}-{address?.city}-{address?.state}-{address?.deliveryAddress}
         </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
