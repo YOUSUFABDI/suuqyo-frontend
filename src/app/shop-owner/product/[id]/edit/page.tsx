@@ -1,7 +1,7 @@
 'use client';
 
 import { CONFIG } from 'src/global-config';
-import { UseProducts } from 'src/sections/shop-owner/product/hooks';
+import { UseGetProduct } from 'src/sections/shop-owner/product/hooks';
 
 import { ProductEditView } from 'src/sections/shop-owner/product/view';
 
@@ -14,13 +14,9 @@ type Props = {
 export default async function Page({ params }: Props) {
   const { id } = params;
 
-  // const { product } = UseGetProduct(Number(id));
-  const { products } = UseProducts();
+  const { product } = UseGetProduct(Number(id));
 
-  const currentProduct = products.find((product) => Number(product.id) === Number(id));
-  console.log('currentProduct-----', currentProduct);
-
-  return <ProductEditView product={currentProduct} />;
+  return <ProductEditView product={product} />;
 }
 
 const dynamic = CONFIG.isStaticExport ? 'auto' : 'force-dynamic';

@@ -79,6 +79,13 @@ export const productApi = createApi({
         body: { productIds },
       }),
     }),
+    moveToTrashManyProducts: builder.mutation<void, number[]>({
+      query: (productIds) => ({
+        url: `/product/trash-products`,
+        method: 'DELETE',
+        body: { productIds },
+      }),
+    }),
     moveToTrash: builder.mutation<void, number>({
       query: (productId) => ({
         url: `/product/move-to-trash-product/${productId}`,
@@ -113,6 +120,7 @@ export const {
   useDeleteProductsMutation,
   useMoveToTrashMutation,
   useRestoreFromTrashMutation,
+  useMoveToTrashManyProductsMutation,
 
   useGetProductCategoriesQuery,
 } = productApi;

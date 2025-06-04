@@ -43,7 +43,7 @@ import { Iconify } from 'src/components/iconify';
 import { toast } from 'src/components/snackbar';
 
 import { getErrorMessage } from 'src/utils/error.message';
-import { UseDeleteProducts, UseProducts } from '../hooks';
+import { UseDeleteProducts, UseMoveToTrashManyProducts, UseProducts } from '../hooks';
 import { UseMoveToTrash } from '../hooks/use-move-to-trash-product';
 import { ProductTableFiltersResult } from '../product-table-filters-result';
 import {
@@ -69,9 +69,10 @@ export function ProductListView() {
   const confirmDialog = useBoolean();
   const theme = useTheme();
 
-  const { products, isLoading } = UseProducts();
+  const { products, refetchProducts, isLoading } = UseProducts();
   const { moveToTrash, isDeleting } = UseMoveToTrash();
-  const { deleteProducts, areDeleting } = UseDeleteProducts();
+  // const { deleteProducts, areDeleting } = UseDeleteProducts();
+  const { moveToTrashManyProducts, areMovingToTrash } = UseMoveToTrashManyProducts();
 
   const [tableData, setTableData] = useState<ProductResDT[]>(products);
   const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>([]);
@@ -115,18 +116,26 @@ export function ProductListView() {
 
   const handleDeleteRows = useCallback(async () => {
     try {
-      const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
+      // const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
+      const deleteRows = tableData.filter((row) => selectedRowIds.includes(row.id));
+      // console.log('deleteRows', deleteRows);
       if (!deleteRows.length) return;
 
+      // const deleteRowIds = deleteRows.map((row) => Number(row.id));
       const deleteRowIds = deleteRows.map((row) => Number(row.id));
-      await deleteProducts(deleteRowIds).unwrap();
-      toast.success('Deleted!');
-      setTableData(deleteRows);
+      // console.log('deleteRowIds', deleteRowIds);
+      await moveToTrashManyProducts(deleteRowIds).unwrap();
+      toast.success('Moved to trash!');
+      await refetchProducts();
+
+      // Remove deleted rows from tableData
+      setTableData((prev) => prev.filter((row) => !selectedRowIds.includes(row.id)));
+      setSelectedRowIds([]);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     }
-  }, [selectedRowIds, tableData, deleteProducts]);
+  }, [selectedRowIds, tableData, moveToTrashManyProducts, refetchProducts]);
 
   const CustomToolbarCallback = useCallback(
     () => (
@@ -230,12 +239,13 @@ export function ProductListView() {
         <Button
           variant="contained"
           color="error"
-          onClick={() => {
-            handleDeleteRows();
+          disabled={areMovingToTrash}
+          onClick={async () => {
+            await handleDeleteRows();
             confirmDialog.onFalse();
           }}
         >
-          Trash
+          {areMovingToTrash ? 'Trashing...' : 'Trash'}
         </Button>
       }
     />

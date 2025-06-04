@@ -71,7 +71,7 @@ const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 export function TrashProductListView() {
   const confirmDialog = useBoolean();
 
-  const { trashProducts, isLoading } = UseTrashProducts();
+  const { trashProducts, refetchTrashProducts, isLoading } = UseTrashProducts();
   const { deleteProduct, isDeleting } = UseDeleteProduct();
   const { restoreFromTrash, isRestoring } = UseRestoreFromTrash();
   const { deleteProducts, areDeleting } = UseDeleteProducts();
@@ -128,18 +128,24 @@ export function TrashProductListView() {
 
   const handleDeleteRows = useCallback(async () => {
     try {
-      const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
+      // const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
+      const deleteRows = tableData.filter((row) => selectedRowIds.includes(row.id));
       if (!deleteRows.length) return;
 
+      // const deleteRowIds = deleteRows.map((row) => Number(row.id));
       const deleteRowIds = deleteRows.map((row) => Number(row.id));
       await deleteProducts(deleteRowIds).unwrap();
       toast.success('Deleted!');
-      setTableData(deleteRows);
+      await refetchTrashProducts();
+
+      // Remove deleted rows from tableData
+      setTableData((prev) => prev.filter((row) => !selectedRowIds.includes(row.id)));
+      setSelectedRowIds([]);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     }
-  }, [selectedRowIds, tableData, deleteProducts]);
+  }, [selectedRowIds, tableData, deleteProducts, refetchTrashProducts]);
 
   const CustomToolbarCallback = useCallback(
     () => (
@@ -244,12 +250,13 @@ export function TrashProductListView() {
         <Button
           variant="contained"
           color="error"
-          onClick={() => {
-            handleDeleteRows();
+          disabled={areDeleting}
+          onClick={async () => {
+            await handleDeleteRows();
             confirmDialog.onFalse();
           }}
         >
-          Delete
+          {areDeleting ? 'Deleting...' : 'Delete'}
         </Button>
       }
     />

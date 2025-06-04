@@ -5,3 +5,4 @@ export { UseDeleteProduct } from './use-delete-product';
 export { UseDeleteProducts } from './use-delete-products';
 export { UseRestoreFromTrash } from './use-restore-from-trash-product';
 export { UseCategories } from './use-categories';
+export { UseMoveToTrashManyProducts } from './use-move-to-trash-many-products';

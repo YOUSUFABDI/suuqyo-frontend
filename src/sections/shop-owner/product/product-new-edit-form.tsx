@@ -49,7 +49,6 @@ export const NewProductSchema = zod.object({
   // Not required
   categoryId: zod.number({ coerce: true }).nullable(),
   condition: zod.string(),
-  model: zod.string(),
   description: zod.string(),
   discount: zod.number({ coerce: true }).nullable(),
 });
@@ -57,7 +56,7 @@ export const NewProductSchema = zod.object({
 // ----------------------------------------------------------------------
 
 type Props = {
-  currentProduct?: ProductResDT;
+  currentProduct?: ProductResDT | null;
 };
 
 export function ProductNewEditForm({ currentProduct }: Props) {
@@ -78,7 +77,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
     quantity: null,
     categoryId: null,
     condition: '',
-    model: '',
   };
 
   const methods = useForm<NewProductSchemaType>({
@@ -114,7 +112,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
       sellingPrice: data.sellingPrice,
       discount: data.discount,
       quantity: data.quantity,
-      model: data.model,
       condition: data.condition,
     };
 
@@ -271,8 +268,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
               </option>
             ))}
           </Field.Select>
-
-          <Field.Text name="model" label="Product model" />
         </Box>
       </Stack>
     </Card>

@@ -4,10 +4,10 @@ import { ProductResDT } from '../types/types';
 import { getErrorMessage } from 'src/utils/error.message';
 
 export const UseTrashProducts = () => {
-  const { data, error, isLoading } = useGetTrashProductsQuery();
+  const { data, refetch, error, isLoading } = useGetTrashProductsQuery();
 
   const trashProducts = isSuccessResponse<ProductResDT[]>(data) ? data.payload.data : [];
   const errorMessage = error ? getErrorMessage(error) : null;
 
-  return { trashProducts, errorMessage, isLoading };
+  return { trashProducts, refetchTrashProducts: refetch, errorMessage, isLoading };
 };

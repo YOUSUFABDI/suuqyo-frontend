@@ -4,10 +4,10 @@ import { ProductResDT } from '../types/types';
 import { getErrorMessage } from 'src/utils/error.message';
 
 export const UseProducts = () => {
-  const { data, error, isLoading } = useGetProductsQuery();
+  const { data, error, isLoading, refetch } = useGetProductsQuery();
 
   const products = isSuccessResponse<ProductResDT[]>(data) ? data.payload.data : [];
   const errorMessage = error ? getErrorMessage(error) : null;
 
-  return { products, errorMessage, isLoading };
+  return { products, errorMessage, isLoading, refetchProducts: refetch };
 };

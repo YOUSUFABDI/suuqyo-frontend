@@ -57,4 +57,4 @@ export interface ProductResponse {
   product: Product;
 }
 
-export const PRODUCT_CATEGORY_OPTIONS = ['Shoes', 'Electronic', 'Food'];
+export const PRODUCT_CATEGORY_OPTIONS = ['Shoes', 'Electronic', 'Food', 'Clothes'];
