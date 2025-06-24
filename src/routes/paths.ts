@@ -104,5 +104,7 @@ export const paths = {
       checkout: `/product/checkout`,
       details: (id: string) => `/product/${id}`,
     },
+    contact: '/contact-us',
+    about: '/about-us',
   },
 };

@@ -15,6 +15,28 @@ interface Category {
   updatedAt: string;
 }
 
+export interface Variant {
+  id: number;
+  colorId: number;
+  sizeId: number;
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
+  productId: number;
+  color: {
+    id: number;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  size: {
+    id: number;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
 export interface ProductResDT {
   id: string;
   userId: number;
@@ -31,6 +53,14 @@ export interface ProductResDT {
   updatedAt: string;
   images: Image[];
   category: Category;
+  isFood: boolean;
+  isAvailiable: boolean;
+  variants?: Variant[];
+}
+
+export interface VariantOptionDT {
+  id: number;
+  name: string;
 }
 
 export type IProductTableFilters = {
@@ -55,4 +85,14 @@ export type CategoryDT = {
   name: string;
   createdAt: string;
   updatedAt: string;
+};
+
+export interface VariantOptionDT {
+  id: number;
+  name: string;
+}
+
+export type VariantsDT = {
+  colors: VariantOptionDT[];
+  sizes: VariantOptionDT[];
 };

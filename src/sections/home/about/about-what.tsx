@@ -1,0 +1,114 @@
+import type { BoxProps } from '@mui/material/Box';
+
+import { m } from 'framer-motion';
+import { varAlpha } from 'minimal-shared/utils';
+
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid2';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import LinearProgress from '@mui/material/LinearProgress';
+
+import { fPercent } from 'src/utils/format-number';
+
+import { CONFIG } from 'src/global-config';
+
+import { Image } from 'src/components/image';
+import { Iconify } from 'src/components/iconify';
+import { varFade, MotionViewport } from 'src/components/animate';
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+
+// ----------------------------------------------------------------------
+
+export function AboutWhat({ sx, ...other }: BoxProps) {
+  return (
+    <Box
+      component="section"
+      sx={[{ overflow: 'hidden' }, ...(Array.isArray(sx) ? sx : [sx])]}
+      {...other}
+    >
+      <Container
+        component={MotionViewport}
+        sx={{ py: { xs: 10, md: 15 }, textAlign: { xs: 'center', md: 'unset' } }}
+      >
+        <Grid container columnSpacing={{ md: 3 }} sx={{ alignItems: 'flex-start' }}>
+          <Grid
+            container
+            size={{ xs: 12, md: 6, lg: 7 }}
+            sx={{ pr: { md: 7 }, alignItems: 'center', display: { xs: 'none', md: 'flex' } }}
+          >
+            <Grid size={6}>
+              <m.div variants={varFade('inUp')}>
+                <Image
+                  alt="Our office small"
+                  src={`${CONFIG.assetsDir}/assets/images/about/Suuqyo Delivery Brand-12.jpg`}
+                  ratio="1/1"
+                  sx={(theme) => ({
+                    borderRadius: 3,
+                    boxShadow: `-40px 40px 80px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.24)}`,
+                    ...theme.applyStyles('dark', {
+                      boxShadow: `-40px 40px 80px ${varAlpha(theme.vars.palette.common.blackChannel, 0.24)}`,
+                    }),
+                  })}
+                />
+              </m.div>
+            </Grid>
+
+            <Grid size={6}>
+              <m.div variants={varFade('inUp')}>
+                <Image
+                  alt="Our office large"
+                  src={`${CONFIG.assetsDir}/assets/images/about/Suuqyo Delivery Brand-03.jpg`}
+                  ratio="3/4"
+                  sx={(theme) => ({
+                    borderRadius: 3,
+                    boxShadow: `-40px 40px 80px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.24)}`,
+                    ...theme.applyStyles('dark', {
+                      boxShadow: `-40px 40px 80px ${varAlpha(theme.vars.palette.common.blackChannel, 0.24)}`,
+                    }),
+                  })}
+                />
+              </m.div>
+            </Grid>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6, lg: 5 }}>
+            <Typography component={m.h2} variants={varFade('inRight')} variant="h2" sx={{ mb: 3 }}>
+              What is Suuqyo?
+            </Typography>
+
+            <Typography
+              component={m.p}
+              variants={varFade('inRight')}
+              sx={[
+                (theme) => ({
+                  color: 'text.secondary',
+                  ...theme.applyStyles('dark', {
+                    color: 'common.white',
+                  }),
+                }),
+              ]}
+            >
+              Suuqyois an online marketplace that connects buyers with shop owners. It's designed to
+              make it simple and seamless for you to find quality products or sell your own.
+            </Typography>
+
+            <Button
+              sx={{ mt: 3 }}
+              component={RouterLink}
+              href={paths.customer.contact}
+              variant="outlined"
+              color="inherit"
+              size="large"
+              endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
+            >
+              Contact us
+            </Button>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  );
+}

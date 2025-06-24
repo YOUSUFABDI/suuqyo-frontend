@@ -17,4 +17,14 @@ export const navData: NavMainProps['data'] = [
     path: paths.customer.shop.root,
     icon: <Iconify width={22} icon="material-symbols:storefront-rounded" />,
   },
+  {
+    title: 'Contact us',
+    path: paths.customer.contact,
+    icon: <Iconify width={22} icon="ic:round-support-agent" />,
+  },
+  {
+    title: 'About us',
+    path: paths.customer.about,
+    icon: <Iconify width={22} icon="ic:round-people" />,
+  },
 ];

@@ -25,6 +25,7 @@ import { CustomPopover } from 'src/components/custom-popover';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { OrderResDT } from './types/types';
+import { BoxZoomHandler } from 'mapbox-gl';
 
 // ----------------------------------------------------------------------
 
@@ -154,7 +155,11 @@ export function OrderTableRow({ row, selected, onSelectRow, onDeleteRow, details
                   secondaryTypographyProps={{ component: 'span', color: 'text.disabled', mt: 0.5 }}
                 />
 
-                <div>x{item.quantity} </div>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <Box>{item?.color?.name} </Box>
+                  <Box>{item?.size?.name.toUpperCase()} </Box>
+                  <Box>x{item.quantity} </Box>
+                </Box>
 
                 <Box sx={{ width: 110, textAlign: 'right' }}>{fCurrency(item.price)}</Box>
               </Box>

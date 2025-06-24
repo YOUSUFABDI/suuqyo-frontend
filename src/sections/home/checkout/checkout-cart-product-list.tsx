@@ -3,6 +3,7 @@ import type { TableHeadCellProps } from 'src/components/table';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
+import Divider from '@mui/material/Divider';
 
 import { Scrollbar } from 'src/components/scrollbar';
 import { TableHeadCustom } from 'src/components/table';

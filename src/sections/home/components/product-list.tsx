@@ -8,13 +8,13 @@ import { paths } from 'src/routes/paths';
 import { Product, Shop } from '../product/types/types';
 import { ProductItem } from './product-item';
 import { ProductItemSkeleton } from './product-skeleton';
+import { EmptyContent } from 'src/components/empty-content';
 
 // ----------------------------------------------------------------------
 
 type Props = BoxProps & {
   loading?: boolean;
-  // products: IProductItem[];
-  products?: Product[];
+  products: Product[];
 };
 
 export function ProductList({ products, loading, sx, ...other }: Props) {

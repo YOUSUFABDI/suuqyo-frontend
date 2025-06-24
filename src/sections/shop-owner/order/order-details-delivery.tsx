@@ -97,7 +97,7 @@ export function OrderDetailsDelivery({ delivery, orderId, onAssignmentSuccess }:
             <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
               Name
             </Box>
-            {selectedDeliveryUser?.user.fullName || delivery?.user.fullName}
+            {selectedDeliveryUser?.user.fullName || delivery?.user?.fullName}
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -105,10 +105,10 @@ export function OrderDetailsDelivery({ delivery, orderId, onAssignmentSuccess }:
               Phone no
             </Box>
             <Link
-              href={`tel:${selectedDeliveryUser?.user.phoneNumber || delivery?.user.phoneNumber}`}
+              href={`tel:${selectedDeliveryUser?.user.phoneNumber || delivery?.user?.phoneNumber}`}
               underline="always"
             >
-              {selectedDeliveryUser?.user.phoneNumber || delivery?.user.phoneNumber}
+              {selectedDeliveryUser?.user.phoneNumber || delivery?.user?.phoneNumber}
             </Link>
           </Box>
         </Box>

@@ -185,7 +185,8 @@ export function SignInView() {
             size="large"
             type="submit"
             variant="contained"
-            loading={isSubmitting || isLoading}
+            loading={isLoading}
+            disabled={isLoading}
             loadingIndicator="Sign in..."
           >
             Sign in

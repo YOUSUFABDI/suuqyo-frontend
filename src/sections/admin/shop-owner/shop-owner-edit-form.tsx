@@ -32,7 +32,7 @@ import { CardHeader, Divider } from '@mui/material';
 import { MultiFilePreview } from 'src/components/upload';
 import { useUpdateShopOwnerMutation } from 'src/store/admin/shop-owner';
 import { getErrorMessage } from 'src/utils/error.message';
-import { UseDeleteShopOwner } from './hooks';
+import { UseDeleteShopOwner, UseShopCategories } from './hooks';
 import { ShopOwnerDT } from './types/types';
 import { useEffect } from 'react';
 
@@ -69,6 +69,7 @@ export const NewUserSchema = zod.object({
   shopName: zod.string().min(1, { message: 'Shop name is required!' }),
   shopDescription: zod.string().min(1, { message: 'Shop description is required!' }),
   shopAddress: zod.string().min(1, { message: 'Shop address is required!' }),
+  shopCategoryId: zod.number({ coerce: true }).nullable(),
   // Payment methods
   paymentMethods: zod
     .array(
@@ -90,6 +91,7 @@ type Props = {
 export function ShopOwnerEditForm({ currentUser }: Props) {
   console.log('currentUser', currentUser);
   const router = useRouter();
+  const { shopCategories } = UseShopCategories();
   const showPassword = useBoolean();
   const confirmDialog = useBoolean();
 
@@ -116,6 +118,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
     shopName: '',
     shopDescription: '',
     shopAddress: '',
+    shopCategoryId: null,
     // paymentMethods: [{ paymentName: 'EVC_PLUS', paymentPhone: '' }],
     paymentMethods: currentUser?.paymentMethods?.length
       ? currentUser.paymentMethods
@@ -126,15 +129,6 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
     mode: 'onSubmit',
     resolver: zodResolver(NewUserSchema),
     defaultValues: currentUser || defaultValues,
-    // defaultValues: {
-    //   // currentUser || defaultValues
-    //   ...defaultValues,
-    //   ...currentUser,
-    //   password: '',
-    //   paymentMethods: currentUser?.paymentMethods?.length
-    //     ? currentUser.paymentMethods
-    //     : [{ paymentName: 'EVC_PLUS', paymentPhone: '' }],
-    // },
   });
 
   const {
@@ -149,11 +143,6 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
   const values = watch();
   const businessProof = watch('businessProof');
 
-  // In your component, add these helper functions
-  // const handleAddPaymentMethod = () => {
-  //   const currentMethods = methods.getValues('paymentMethods') || [];
-  //   methods.setValue('paymentMethods', [...currentMethods, { paymentName: '', paymentPhone: '' }]);
-  // };
   const handleAddPaymentMethod = () => {
     const currentMethods = methods.getValues('paymentMethods') || [];
     if (currentMethods.length < 3) {
@@ -177,8 +166,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
         username: data.username,
         email: data.email,
         phoneNumber: data.phoneNumber,
-        // password: data.password && data.password,
-        // address
+
         country: data.country,
         state: data.state,
         city: data.city,
@@ -187,6 +175,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
         shopName: data.shopName,
         shopDescription: data.shopDescription,
         shopAddress: data.shopAddress,
+        shopCategoryId: data.shopCategoryId,
         paymentMethods: data.paymentMethods,
       };
       // ✅ Only include password if it's not empty
@@ -279,6 +268,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
         ...currentUser,
         password: '',
         paymentMethods: currentUser.paymentMethods || defaultValues.paymentMethods,
+        shopCategoryId: currentUser.ShopCategory.id,
       };
       reset(mapped);
     }
@@ -396,19 +386,12 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                       }}
                     />
                   </Box>
-
-                  {/* <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
-                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Create shop owner
-                  </LoadingButton>
-                </Stack> */}
                 </Card>
               </Grid>
             </Grid>
           </Card>
           {/* shop owner detail */}
 
-          {/*  payment method */}
           {/* Payment method */}
           <Card sx={{ width: '100%' }}>
             <CardHeader
@@ -466,15 +449,6 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                       </Box>
                     ))}
 
-                    {/* <Box>
-                      <Button
-                        variant="outlined"
-                        startIcon={<Iconify icon="mingcute:add-line" />}
-                        onClick={handleAddPaymentMethod}
-                      >
-                        Add Payment Method
-                      </Button>
-                    </Box> */}
                     <Box>
                       <Button
                         variant="outlined"
@@ -496,7 +470,6 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
             </Grid>
           </Card>
           {/* Payment method */}
-          {/*  payment method */}
 
           {/* shop detail */}
           <Card sx={{ width: '100%' }}>
@@ -623,6 +596,18 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                     <Field.Text name="shopName" label="Shop name" />
                     <Field.Text name="shopDescription" label="Shop description" />
                     <Field.Text name="shopAddress" label="Shop address" />
+                    <Field.Select
+                      name="shopCategoryId"
+                      label="Shop category"
+                      slotProps={{ select: { native: true }, inputLabel: { shrink: true } }}
+                    >
+                      <option value="" />
+                      {shopCategories.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </Field.Select>
                   </Box>
                 </Card>
               </Grid>

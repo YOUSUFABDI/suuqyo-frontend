@@ -119,7 +119,7 @@ export function ProductListView() {
   return (
     // sx={{ mt: 5, mb: 10 }}
     <Container sx={{ mb: 15 }}>
-      <CartIcon totalItems={checkoutState.totalItems} />
+      <CartIcon totalItems={checkoutState?.items.length} />
 
       <Typography variant="h4" sx={{ my: { xs: 3, md: 5 } }}>
         Products

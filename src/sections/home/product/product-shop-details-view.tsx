@@ -74,13 +74,13 @@ export function ProductShopDetailsView({ product }: Props) {
 
   return (
     <Container sx={{ mt: 5, mb: 10 }}>
-      <CartIcon totalItems={checkoutState.totalItems} />
+      <CartIcon totalItems={checkoutState?.items.length} />
 
       <CustomBreadcrumbs
         links={[
           { name: 'Home', href: '/' },
           // { name: 'Shop', href: paths.product.root },
-          { name: 'Shop', href: paths.customer.product.root },
+          { name: 'Product', href: paths.customer.product.root },
           { name: product?.product.name },
         ]}
         sx={{ mb: 5 }}

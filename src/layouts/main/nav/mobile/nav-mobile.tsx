@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,7 +15,9 @@ import { NavList } from './nav-mobile-list';
 import { SignInButton } from '../../../components/sign-in-button';
 
 import type { NavMainProps } from '../types';
-
+import { useAuth } from 'src/sections/auth/hooks';
+import { AccountDrawer } from 'src/layouts/components/account-drawer';
+import { _account } from '../../../nav-config-account-main';
 // ----------------------------------------------------------------------
 
 export type NavMobileProps = NavMainProps & {
@@ -29,6 +31,8 @@ export type NavMobileProps = NavMainProps & {
 
 export function NavMobile({ data, open, onClose, slots, sx }: NavMobileProps) {
   const pathname = usePathname();
+  const { authenticated, role } = useAuth();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -36,6 +40,10 @@ export function NavMobile({ data, open, onClose, slots, sx }: NavMobileProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <Drawer
@@ -87,7 +95,15 @@ export function NavMobile({ data, open, onClose, slots, sx }: NavMobileProps) {
             display: 'flex',
           }}
         >
-          <SignInButton fullWidth />
+          {mounted && ( // Only render after hydration
+            <>
+              {authenticated && role === 'CUSTOMER' ? (
+                <AccountDrawer data={_account} />
+              ) : (
+                <SignInButton fullWidth />
+              )}
+            </>
+          )}
         </Box>
       )}
     </Drawer>

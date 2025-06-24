@@ -4,11 +4,11 @@ import Link from '@mui/material/Link';
 import { Iconify } from 'src/components/iconify';
 import { Image } from 'src/components/image';
 import { RouterLink } from 'src/routes/components';
-import { ShopDT } from './types/types';
+import { ShopInfoDT } from './types/types';
 // ----------------------------------------------------------------------
 
 type Props = {
-  shop: ShopDT;
+  shop: ShopInfoDT['shop'];
   detailsHref: string;
 };
 

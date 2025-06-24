@@ -60,7 +60,7 @@ export function HeroBackground({ sx, ...other }: BoxProps) {
       >
         <Dots />
 
-        {mdUp && <Texts />}
+        {/* {mdUp && <Texts />} */}
 
         <Box
           component={m.svg}

@@ -105,7 +105,11 @@ export function OrderDetailsItems({
               secondaryTypographyProps={{ component: 'span', color: 'text.disabled', mt: 0.5 }}
             />
 
-            <Box sx={{ typography: 'body2' }}>x{item.quantity}</Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <Box sx={{ typography: 'body2' }}>{item?.color?.name}</Box>
+              <Box sx={{ typography: 'body2' }}>{item?.size?.name.toUpperCase()}</Box>
+              <Box sx={{ typography: 'body2' }}>x{item.quantity}</Box>
+            </Box>
 
             <Box sx={{ width: 110, textAlign: 'right', typography: 'subtitle2' }}>
               {fCurrency(item.price)}

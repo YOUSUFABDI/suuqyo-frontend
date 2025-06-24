@@ -2,14 +2,13 @@
 
 import { Avatar, Box, Card, Divider, Stack, Typography, Chip } from '@mui/material';
 import { Iconify } from 'src/components/iconify';
-import { ShopDT, ShopInfoDT } from './types/types';
+import { ShopInfoDT } from './types/types';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Product, User } from '../product/types/types';
 
 type Props = {
-  // shop: ShopInfoDT | null;
-  shop?: ShopDT | null;
-  user?: User | null;
+  shop: ShopInfoDT['shop']; // Use the 'shop' part of ShopInfoDT
+  user: ShopInfoDT['user']; // Use the 'user' part of ShopInfoDT
   products: Product[];
 };
 

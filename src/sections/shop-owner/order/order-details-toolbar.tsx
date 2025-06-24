@@ -117,6 +117,8 @@ export function OrderDetailsToolbar({
             endIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
             onClick={menuActions.onOpen}
             sx={{ textTransform: 'capitalize' }}
+            disabled={status === 'COMPLETED' || status === 'CANCELED'}
+            // disabled={status === 'COMPLETED'}
           >
             {status?.toLocaleLowerCase()}
           </Button>

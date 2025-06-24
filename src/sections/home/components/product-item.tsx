@@ -20,6 +20,8 @@ import { ColorPreview } from 'src/components/color-utils';
 import { useCheckoutContext } from '../checkout/context';
 import { Product } from '../product/types/types';
 import { useEffect } from 'react';
+import { paths } from 'src/routes/paths';
+import { Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -37,35 +39,40 @@ export function ProductItem({ product, detailsHref }: Props) {
   } = useCheckoutContext();
   const available = product.quantity > 0 ? true : false;
 
-  console.log('shop info:----', product.shop);
+  // Extract unique colors from variants
+  const uniqueColors = Array.from(
+    new Set(product?.variants?.map((variant) => variant?.color?.name))
+  );
+
+  // console.log('shop info:----', product.shop);
 
   // const { id, name,  price, colors,  } =
   //   product;
 
-  const handleAddCart = async () => {
-    const newProduct = {
-      id: product.id,
-      name: product.name,
-      price: product.sellingPrice,
-      coverUrl: product.images[0]?.image,
-      quantity: 1,
-      available: product.quantity,
-    };
-    try {
-      // Set related checkout context data when adding to cart
-      if (product?.user?.paymentMethods) {
-        onSetPaymentMethods(product.user.paymentMethods);
-      }
+  // const handleAddCart = async () => {
+  //   const newProduct = {
+  //     id: product.id,
+  //     name: product.name,
+  //     price: product.sellingPrice,
+  //     coverUrl: product.images[0]?.image,
+  //     quantity: 1,
+  //     available: product.quantity,
+  //   };
+  //   try {
+  //     // Set related checkout context data when adding to cart
+  //     if (product?.user?.paymentMethods) {
+  //       onSetPaymentMethods(product.user.paymentMethods);
+  //     }
 
-      if (product?.shop?.shopAddress) {
-        onSetShopAddress(product.shop.shopAddress);
-      }
+  //     if (product?.shop?.shopAddress) {
+  //       onSetShopAddress(product.shop.shopAddress);
+  //     }
 
-      onAddToCart(newProduct);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     onAddToCart(newProduct);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   // const renderLabels = () =>
   //   (newLabel.enabled || saleLabel.enabled) && (
@@ -95,7 +102,7 @@ export function ProductItem({ product, detailsHref }: Props) {
 
   const renderImage = () => (
     <Box sx={{ position: 'relative', p: 1 }}>
-      {!!available && (
+      {/* {!!available && (
         <Fab
           size="medium"
           color="warning"
@@ -117,16 +124,17 @@ export function ProductItem({ product, detailsHref }: Props) {
         >
           <Iconify icon="solar:cart-plus-bold" width={24} />
         </Fab>
-      )}
+      )} */}
 
-      <Tooltip title={!available && 'Out of stock'} placement="bottom-end">
-        <Image
-          alt="Img"
-          src={product.images[0].image}
-          ratio="1/1"
-          sx={{ borderRadius: 1.5, ...(!available && { opacity: 0.48, filter: 'grayscale(1)' }) }}
-        />
-      </Tooltip>
+      {/* <Tooltip title={!available && 'Out of stock'} placement="bottom-end"> */}
+      <Image
+        alt="Img"
+        src={product.images[0].image}
+        ratio="1/1"
+        // sx={{ borderRadius: 1.5, ...(!available && { opacity: 0.48, filter: 'grayscale(1)' }) }}
+        sx={{ borderRadius: 1.5 }}
+      />
+      {/* </Tooltip> */}
     </Box>
   );
 
@@ -138,8 +146,13 @@ export function ProductItem({ product, detailsHref }: Props) {
 
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* <Tooltip title="Color">
-          <ColorPreview colors={colors} />
+          <ColorPreview colors={} />
         </Tooltip> */}
+        {uniqueColors?.length > 0 && (
+          <Tooltip title={`Available colors: ${uniqueColors?.join(', ')}`}>
+            <ColorPreview colors={uniqueColors} />
+          </Tooltip>
+        )}
         <Box>{product?.shop?.shopName}</Box>
 
         <Box sx={{ gap: 0.5, display: 'flex', typography: 'subtitle1' }}>
@@ -157,10 +170,14 @@ export function ProductItem({ product, detailsHref }: Props) {
 
   return (
     <Card
+      component={RouterLink}
+      href={detailsHref}
       sx={{
         '&:hover': {
           [`& .${fabClasses.root}`]: { opacity: 1, transform: 'scale(1)' },
         },
+        textDecoration: 'none',
+        cursor: 'pointer',
       }}
     >
       {/* {renderLabels()} */}

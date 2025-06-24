@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
   GetAllShopOwnersResponseDT,
   RegisterShopOwnerResDT,
+  ShopCategoryDT,
   ShopOwnerDT,
   UpdateShopOwnerResponseDT,
 } from 'src/sections/admin/shop-owner/types/types';
@@ -77,6 +78,13 @@ export const shopOwnerApi = createApi({
       }),
       invalidatesTags: ['shopOwnerApi'],
     }),
+    getShopCategories: builder.query<ApiResponseDT<ShopCategoryDT[]>, void>({
+      query: () => ({
+        url: '/admin-shop-owner/get-shop-categories',
+        method: 'GET',
+      }),
+      providesTags: ['shopOwnerApi'],
+    }),
   }),
 });
 
@@ -87,4 +95,5 @@ export const {
   useUpdateShopOwnerMutation,
   useDeleteShopOwnerMutation,
   useDeleteShopOwnersMutation,
+  useGetShopCategoriesQuery,
 } = shopOwnerApi;

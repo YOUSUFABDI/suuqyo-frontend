@@ -132,6 +132,12 @@ export function MyShop() {
               <Field.Text name="shopName" label="Shop name" />
               <Field.Text name="shopDescription" label="Shop description" />
               <Field.Text name="shopAddress" label="Shop address" />
+              <Field.Text
+                sx={{ pointerEvents: 'none' }}
+                name=""
+                defaultValue={shopDetail?.ShopCategory?.name}
+                // label="Shop category"
+              />
             </Box>
 
             <Stack spacing={3} sx={{ mt: 3, alignItems: 'flex-end' }}>

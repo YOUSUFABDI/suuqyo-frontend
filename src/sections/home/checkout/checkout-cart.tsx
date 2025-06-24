@@ -65,7 +65,7 @@ export function CheckoutCart() {
               <Typography variant="h6">
                 {`Cart `}
                 <Typography component="span" sx={{ color: 'text.secondary' }}>
-                  ({checkoutState.totalItems} items)
+                  ({checkoutState?.items.length} items)
                 </Typography>
               </Typography>
             }

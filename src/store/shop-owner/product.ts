@@ -4,6 +4,7 @@ import {
   CreateProductResDT,
   ProductResDT,
   UpdatedProductResDT,
+  VariantsDT,
 } from 'src/sections/shop-owner/product/types/types';
 import { ApiResponseDT } from 'src/types/api-response';
 import { API } from '../api';
@@ -107,6 +108,13 @@ export const productApi = createApi({
       }),
       providesTags: ['productApi'],
     }),
+    getPoductVariants: builder.query<ApiResponseDT<VariantsDT>, void>({
+      query: () => ({
+        url: '/product/product-variants',
+        method: 'GET',
+      }),
+      providesTags: ['productApi'],
+    }),
   }),
 });
 
@@ -123,4 +131,6 @@ export const {
   useMoveToTrashManyProductsMutation,
 
   useGetProductCategoriesQuery,
+
+  useGetPoductVariantsQuery,
 } = productApi;

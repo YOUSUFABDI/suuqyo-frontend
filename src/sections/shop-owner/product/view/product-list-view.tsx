@@ -79,7 +79,7 @@ export function ProductListView() {
   const [filterButtonEl, setFilterButtonEl] = useState<HTMLButtonElement | null>(null);
 
   const totalSellingPrice = tableData.reduce(
-    (sum, product) => sum + (product.sellingPrice || 0),
+    (sum, product) => sum + (Number(product.sellingPrice) || 0),
     0
   );
 
@@ -387,7 +387,7 @@ function CustomToolbar({
 
           <GridToolbarColumnsButton />
           <GridToolbarFilterButton ref={setFilterButtonEl} />
-          <GridToolbarExport />
+          {/* <GridToolbarExport /> */}
         </Box>
       </GridToolbarContainer>
 

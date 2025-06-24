@@ -36,11 +36,41 @@ export const orderApi = createApi({
     }),
     createOrder: builder.mutation<
       ApiResponseDT<any>,
+      // {
+      //   items: Array<{
+      //     productId: number;
+      //     variants: Array<{
+      //       colorId: number;
+      //       sizeId: number;
+      //       quantity: number;
+      //     }>;
+      //   }>;
+      //   shippingAddressId: number;
+      //   paymentMethod: string;
+      //   paymentAccount: string;
+      //   senderPhone?: string;
+      //   shippingFee: number;
+      // }
       {
-        items: Array<{ productId: number; quantity: number }>;
+        items: Array<
+          | {
+              productId: number;
+              quantity: number;
+            }
+          | {
+              productId: number;
+              variants: Array<{
+                colorId: number;
+                sizeId: number;
+                quantity: number;
+              }>;
+            }
+        >;
         shippingAddressId: number;
         paymentMethod: string;
+        paymentAccount: string;
         senderPhone?: string;
+        shippingFee: number;
       }
     >({
       query: (body) => ({

@@ -89,9 +89,21 @@ export interface OrderItemDT {
   productId: number;
   quantity: number;
   price: number;
+  product: ProductDT;
+  color: {
+    id: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  size: {
+    id: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+  };
   createdAt: string;
   updatedAt: string;
-  product: ProductDT;
 }
 
 export type OrderResDT = {

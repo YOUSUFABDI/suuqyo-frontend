@@ -7,6 +7,7 @@ import { getErrorMessage } from 'src/utils/error.message';
 
 export const useShopInfo = (shopName: string) => {
   const { data, error, isLoading } = useGetShopInfoQuery(shopName);
+  // console.log('data', data);
 
   const shop = isSuccessResponse<ShopInfoDT>(data) ? data.payload.data : null;
   const errorMessage = error ? getErrorMessage(error) : null;

@@ -39,17 +39,31 @@ export function RenderCellCreatedAt({ params }: ParamsProps) {
 }
 
 export function RenderCellStock({ params }: ParamsProps) {
+  const { quantity, isFood, isAvailiable } = params.row;
   const maxQuantity = 100;
+
+  // 🟢 Food item with availability ON
+  if (isFood && isAvailiable) {
+    return <Box sx={{ typography: 'caption', color: 'success.main' }}>Available</Box>;
+  }
+
+  // 🔴 Food item with availability OFF
+  if (isFood && !isAvailiable) {
+    return <Box sx={{ typography: 'caption', color: 'error.main' }}>Not Available</Box>;
+  }
+
+  // 🟡 Regular (non-food) stock display
+  const safeQuantity = typeof quantity === 'number' ? quantity : 0;
+
+  const stockLabel =
+    safeQuantity === 0 ? 'out of stock' : safeQuantity <= 10 ? 'low stock' : 'in stock';
+
   return (
     <Stack justifyContent="center" sx={{ typography: 'caption', color: 'text.secondary' }}>
       <LinearProgress
-        value={(params.row.quantity * 100) / maxQuantity}
+        value={(safeQuantity * 100) / maxQuantity}
         variant="determinate"
-        color={
-          (params.row.quantity === 0 && 'error') ||
-          (params.row.quantity <= 10 && 'warning') ||
-          'success'
-        }
+        color={(safeQuantity === 0 && 'error') || (safeQuantity <= 10 && 'warning') || 'success'}
         sx={{
           mb: 1,
           width: 1,
@@ -57,12 +71,7 @@ export function RenderCellStock({ params }: ParamsProps) {
           maxWidth: 80,
         }}
       />
-      {params.row.quantity > 0 ? params.row.quantity : 0}
-      {params.row.quantity === 0
-        ? ' out of stock'
-        : params.row.quantity <= 10
-          ? ' low stock'
-          : ' in stock'}
+      {safeQuantity} {stockLabel}
     </Stack>
   );
 }

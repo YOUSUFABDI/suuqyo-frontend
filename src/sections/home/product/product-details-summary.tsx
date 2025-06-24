@@ -1,7 +1,7 @@
 import type { IProductItem } from 'src/types/product';
-import type { CheckoutContextValue } from 'src/types/checkout';
+import type { CheckoutContextValue, ICheckoutItem } from 'src/types/checkout';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -29,7 +29,6 @@ import { Product } from './types/types';
 // ----------------------------------------------------------------------
 
 type Props = {
-  // product: IProductItem;
   product: Product;
   disableActions?: boolean;
   items?: CheckoutContextValue['state']['items'];
@@ -48,69 +47,145 @@ export function ProductDetailsSummary({
   ...other
 }: Props) {
   const router = useRouter();
+  const variants = product.variants || [];
+  const isFood = product.isFood;
+  const isFoodAvailable = product.isAvailiable;
 
-  const {
-    id,
-    name,
-    sellingPrice,
-    description,
-    content,
-    // sizes,
-    // price,
-    // colors,
-    // coverUrl,
-    // newLabel,
-    // available,
-    // priceSale,
-    // saleLabel,
-    // totalRatings,
-    // totalReviews,
-    // inventoryType,
-    // subDescription,
-  } = product;
+  // Extract unique colors and sizes
+  const uniqueColors = useMemo(
+    () => Array.from(new Map(variants.map((v) => [v.color.id, v.color])).values()),
+    [variants]
+  );
 
-  const existProduct = !!items?.length && items.map((item) => item.id).includes(String(id));
-
-  // const available = product.quantity > 0 ? true : false;
+  // State management
+  const [selectedColorId, setSelectedColorId] = useState<number | null>(
+    uniqueColors[0]?.id ?? null
+  );
+  const [variantQuantities, setVariantQuantities] = useState<Record<string, number>>({});
   const available = product.quantity;
 
-  const isMaxQuantity =
-    !!items?.length &&
-    items.filter((item) => item.id === String(id)).map((item) => item.quantity)[0] >= available;
+  // Initialize quantities when product changes
+  useEffect(() => {
+    const initialQuantities: Record<string, number> = {};
+    variants.forEach((variant) => {
+      const key = `${variant.color.id}-${variant.size.id}`;
+      initialQuantities[key] = variantQuantities[key] || 0;
+    });
+    setVariantQuantities(initialQuantities);
+  }, [product.id]);
 
-  const defaultValues = {
-    id,
-    name,
-    quantity: available > 0 ? 1 : 0,
-    // coverUrl,
-    // available,
-    // price,
-    // colors: colors[0],
-    // size: sizes[4],
-    // quantity: available < 1 ? 0 : 1,
-  };
+  // Filtered variants for selected color
+  const filteredVariants = useMemo(() => {
+    if (!selectedColorId) return [];
+    return variants.filter((v) => v.color.id === selectedColorId);
+  }, [selectedColorId, variants]);
 
-  const methods = useForm<typeof defaultValues>({
-    defaultValues,
+  const { id, name, sellingPrice, description } = product;
+
+  const methods = useForm<Record<string, any>>({
+    defaultValues: {
+      id,
+      name,
+      quantity: 1,
+    },
   });
 
-  const { watch, control, setValue, handleSubmit } = methods;
+  const { handleSubmit, watch, setValue } = methods;
 
-  const values = watch();
+  // Get variant key helper
+  const getVariantKey = useCallback(
+    (colorId: number, sizeId: number) => `${colorId}-${sizeId}`,
+    []
+  );
 
-  const onSubmit = handleSubmit(async (data) => {
-    console.info('DATA', JSON.stringify(data, null, 2));
+  // Get grouped variants helper
+  const getGroupedVariants = useCallback((): ICheckoutItem[] => {
+    const grouped: Record<string, ICheckoutItem> = {};
 
+    Object.entries(variantQuantities)
+      .filter(([_, qty]) => qty > 0)
+      .forEach(([key, quantity]) => {
+        const [colorId, sizeId] = key.split('-').map(Number);
+        const variant = variants.find((v) => v.color.id === colorId && v.size.id === sizeId);
+
+        if (!variant) return;
+
+        const productKey = `${product.id}`;
+
+        if (!grouped[productKey]) {
+          grouped[productKey] = {
+            id: productKey,
+            name: product.name,
+            price: product.sellingPrice,
+            coverUrl: product.images[0]?.image || '',
+            available: product.quantity,
+            colors: [],
+          };
+        }
+
+        // Find or create the color entry
+        let colorEntry = grouped[productKey].colors.find((c) => c.id === colorId);
+        if (!colorEntry) {
+          colorEntry = {
+            id: variant.color.id,
+            name: variant.color.name,
+            code: variant.color.name,
+            sizes: [],
+          };
+          grouped[productKey].colors.push(colorEntry);
+        }
+
+        // Add the size to the color entry
+        colorEntry.sizes.push({
+          id: variant.size.id,
+          name: variant.size.name,
+          quantity,
+          available: variant.quantity,
+        });
+      });
+
+    return Object.values(grouped);
+  }, [variantQuantities, variants, product]);
+
+  const onSubmit = handleSubmit(async () => {
     try {
-      const newProduct = {
-        id: String(product.id),
-        name: product.name,
-        price: product.sellingPrice,
-        coverUrl: product.images[0]?.image,
-        quantity: 1,
-        available: product.quantity,
-      };
-      if (!existProduct) {
+      let checkoutItems: ICheckoutItem[] = [];
+
+      const quantity = watch('quantity'); // ✅ fetch the actual selected quantity
+
+      const groupedVariants = getGroupedVariants();
+
+      if (groupedVariants.length > 0) {
+        checkoutItems = groupedVariants;
+      } else if (!product.variants || product.variants.length === 0) {
+        // Fallback for products with no variants
+        checkoutItems = [
+          {
+            id: product.id.toString(),
+            name: product.name,
+            price: product.sellingPrice,
+            coverUrl: product.images[0]?.image || '',
+            available: product.quantity,
+            colors: [
+              {
+                id: 0,
+                name: 'Default',
+                code: '',
+                sizes: [
+                  {
+                    id: 0,
+                    name: 'Default',
+                    quantity: quantity || 1,
+                    available: product.quantity,
+                  },
+                ],
+              },
+            ],
+          },
+        ];
+      }
+
+      if (checkoutItems.length > 0) {
         if (product?.user?.paymentMethods) {
           onSetPaymentMethods?.(product.user.paymentMethods);
         }
@@ -118,27 +193,24 @@ export function ProductDetailsSummary({
         if (product?.shop?.shopAddress) {
           onSetShopAddress?.(product.shop.shopAddress);
         }
-        onAddToCart?.(newProduct);
-        // onAddToCart?.({ ...data, colors: [values.colors] });
-        // onAddToCart?.({ ...data, colors: [values.colors] });
+
+        checkoutItems.forEach((item) => {
+          onAddToCart?.(item);
+        });
+
+        router.push(paths.customer.product.checkout);
       }
-      router.push(paths.customer.product.checkout);
     } catch (error) {
       console.error(error);
     }
   });
 
+  // Handle add to cart
   const handleAddCart = useCallback(() => {
-    const newProduct = {
-      id: String(product.id),
-      name: product.name,
-      price: product.sellingPrice,
-      coverUrl: product.images[0]?.image,
-      quantity: 1,
-      available: product.quantity,
-    };
-    try {
-      // Set related checkout context data when adding to cart
+    const groupedVariants = getGroupedVariants();
+
+    // Add to cart if variants selected
+    if (groupedVariants.length > 0) {
       if (product?.user?.paymentMethods) {
         onSetPaymentMethods?.(product.user.paymentMethods);
       }
@@ -146,150 +218,160 @@ export function ProductDetailsSummary({
       if (product?.shop?.shopAddress) {
         onSetShopAddress?.(product.shop.shopAddress);
       }
-      onAddToCart?.(newProduct);
-    } catch (error) {
-      console.error(error);
+
+      groupedVariants.forEach((variant) => {
+        onAddToCart?.(variant);
+      });
     }
-  }, [onAddToCart, values]);
+  }, [getGroupedVariants, product, onSetPaymentMethods, onSetShopAddress, onAddToCart]);
 
-  const renderPrice = () => (
-    // <Box sx={{ typography: 'h5' }}>
-    //   {priceSale && (
-    //     <Box
-    //       component="span"
-    //       sx={{ color: 'text.disabled', textDecoration: 'line-through', mr: 0.5 }}
-    //     >
-    //       {fCurrency(priceSale)}
-    //     </Box>
-    //   )}
+  // Render price
+  const renderPrice = () => <Box sx={{ typography: 'h5' }}>{fCurrency(sellingPrice)}</Box>;
 
-    //   {fCurrency(price)}
-    // </Box>
-    <Box sx={{ typography: 'h5' }}>
-      {/* {sellingPrice && ( */}
-      {/* <Box
-        component="span"
-        sx={{ color: 'text.disabled', textDecoration: 'line-through', mr: 0.5 }}
-      >
-        {fCurrency(sellingPrice)}
-      </Box> */}
-      {/* )} */}
+  // Render variant selection UI
+  const renderVariant = () => {
+    // Get total quantity for color indicator
+    const getColorQuantity = (colorId: number) => {
+      return variants
+        .filter((v) => v.color.id === colorId)
+        .reduce((sum, v) => {
+          const key = getVariantKey(v.color.id, v.size.id);
+          return sum + (variantQuantities[key] || 0);
+        }, 0);
+    };
 
-      {fCurrency(sellingPrice)}
-    </Box>
-  );
+    return (
+      <Box>
+        <Typography variant="subtitle2">Color</Typography>
 
-  const renderShare = () => (
-    <Box
-      sx={{
-        gap: 3,
-        display: 'flex',
-        justifyContent: 'center',
-        [`& .${linkClasses.root}`]: {
-          gap: 1,
-          alignItems: 'center',
-          display: 'inline-flex',
-          color: 'text.secondary',
-          typography: 'subtitle2',
-        },
-      }}
-    >
-      <Link>
-        <Iconify icon="mingcute:add-line" width={16} />
-        Compare
-      </Link>
+        <Box sx={{ display: 'flex', gap: 1, mt: 1, flexWrap: 'wrap' }}>
+          {uniqueColors.map((color) => {
+            const totalQty = getColorQuantity(color.id);
 
-      <Link>
-        <Iconify icon="solar:heart-bold" width={16} />
-        Favorite
-      </Link>
+            return (
+              <Box key={color.id} sx={{ position: 'relative' }}>
+                {totalQty > 0 && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      zIndex: 99,
+                      top: -6,
+                      right: -6,
+                      width: 18,
+                      height: 18,
+                      borderRadius: '50%',
+                      bgcolor: 'primary.main',
+                      color: 'white',
+                      fontSize: 12,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {totalQty}
+                  </Box>
+                )}
 
-      <Link>
-        <Iconify icon="solar:share-bold" width={16} />
-        Share
-      </Link>
-    </Box>
-  );
+                <Button
+                  variant={selectedColorId === color.id ? 'contained' : 'outlined'}
+                  onClick={() => setSelectedColorId(color.id)}
+                >
+                  {color.name}
+                </Button>
+              </Box>
+            );
+          })}
+        </Box>
 
-  const renderColorOptions = () => (
-    <Box sx={{ display: 'flex' }}>
-      <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
-        Color
-      </Typography>
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="subtitle2">Size</Typography>
 
-      {/* <Controller
-        name="colors"
-        control={control}
-        render={({ field }) => (
-          <ColorPicker
-            options={colors}
-            value={field.value}
-            onChange={(color) => field.onChange(color as string)}
-            limit={4}
-          />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+            {filteredVariants.map((variant) => {
+              const key = getVariantKey(variant.color.id, variant.size.id);
+              const quantity = variantQuantities[key] || 0;
+
+              return (
+                <Box key={key} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography sx={{ width: 80, textTransform: 'capitalize' }}>
+                    {variant.size.name}
+                  </Typography>
+
+                  <NumberInput
+                    hideDivider
+                    value={quantity}
+                    onChange={(e, val) => {
+                      setVariantQuantities((prev) => ({
+                        ...prev,
+                        [key]: val,
+                      }));
+                    }}
+                    max={variant.quantity}
+                    min={0}
+                    sx={{ maxWidth: 112 }}
+                  />
+
+                  <Typography variant="caption" sx={{ ml: 2, color: 'text.secondary' }}>
+                    Available: {variant.quantity}
+                  </Typography>
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
+      </Box>
+    );
+  };
+
+  // Render action buttons
+  const renderActions = () => {
+    // Check if any variant has quantity > 0
+    const hasSelection = Object.values(variantQuantities).some((qty) => qty > 0);
+    const isNonVariantProduct = !product.variants || product.variants.length === 0;
+
+    return (
+      <Box sx={{ gap: 2, display: 'flex' }}>
+        {/* <Button
+          fullWidth
+          disabled={!hasSelection || disableActions}
+          size="large"
+          color="warning"
+          variant="contained"
+          startIcon={<Iconify icon="solar:cart-plus-bold" width={24} />}
+          onClick={handleAddCart}
+          sx={{ whiteSpace: 'nowrap' }}
+        >
+          Add to cart
+        </Button> */}
+
+        {isFood ? (
+          <Button
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            // disabled={(!hasSelection && !isNonVariantProduct) || disableActions}
+          >
+            Buy now
+          </Button>
+        ) : (
+          <Button
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            disabled={(!hasSelection && !isNonVariantProduct) || disableActions}
+          >
+            Buy now
+          </Button>
         )}
-      /> */}
-    </Box>
-  );
-
-  const renderSizeOptions = () => (
-    <Box sx={{ display: 'flex' }}>
-      <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
-        Size
-      </Typography>
-
-      <Field.Select
-        name="size"
-        size="small"
-        helperText={
-          <Link underline="always" color="text.primary">
-            Size chart
-          </Link>
-        }
-        sx={{
-          maxWidth: 88,
-          [`& .${formHelperTextClasses.root}`]: { mx: 0, mt: 1, textAlign: 'right' },
-        }}
-      >
-        {/* {sizes.map((size) => (
-          <MenuItem key={size} value={size}>
-            {size}
-          </MenuItem>
-          ))} */}
-        <MenuItem>size</MenuItem>
-      </Field.Select>
-    </Box>
-  );
-
-  // const renderQuantity = () => (
-  //   <Box sx={{ display: 'flex' }}>
-  //     <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
-  //       Quantity
-  //     </Typography>
-
-  //     <Stack spacing={1}>
-  //       <NumberInput
-  //         hideDivider
-  //         value={product.quantity}
-  //         // onChange={(event, quantity: number) => setValue('quantity', quantity)}
-  //         onChange={(event, quantity: number) => setValue('quantity', quantity)}
-  //         max={product.quantity}
-  //         sx={{ maxWidth: 112 }}
-  //       />
-
-  //       <Typography
-  //         variant="caption"
-  //         component="div"
-  //         sx={{ textAlign: 'right', color: 'text.secondary' }}
-  //       >
-  //         Available: {available}
-  //       </Typography>
-  //     </Stack>
-  //   </Box>
-  // );
+      </Box>
+    );
+  };
 
   const renderQuantity = () => {
     const quantity = watch('quantity'); // Watch the form quantity
+    const available = 100000;
 
     return (
       <Box sx={{ display: 'flex' }}>
@@ -312,101 +394,46 @@ export function ProductDetailsSummary({
             component="div"
             sx={{ textAlign: 'right', color: 'text.secondary' }}
           >
-            Available: {available}
+            {isFoodAvailable ? 'Available now' : 'Not available'}
           </Typography>
         </Stack>
       </Box>
     );
   };
 
-  const renderActions = () => (
-    <Box sx={{ gap: 2, display: 'flex' }}>
-      <Button
-        fullWidth
-        disabled={isMaxQuantity || disableActions}
-        size="large"
-        color="warning"
-        variant="contained"
-        startIcon={<Iconify icon="solar:cart-plus-bold" width={24} />}
-        onClick={handleAddCart}
-        sx={{ whiteSpace: 'nowrap' }}
-      >
-        Add to cart
-      </Button>
-
-      <Button fullWidth size="large" type="submit" variant="contained" disabled={disableActions}>
-        Buy now
-      </Button>
-    </Box>
-  );
-
+  // Render description
   const renderSubDescription = () => (
     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
       {description}
     </Typography>
   );
 
-  const renderRating = () => (
-    <Box
-      sx={{
-        display: 'flex',
-        typography: 'body2',
-        alignItems: 'center',
-        color: 'text.disabled',
-      }}
-    >
-      {/* <Rating size="small" value={totalRatings} precision={0.1} readOnly sx={{ mr: 1 }} />
-      {`(${fShortenNumber(totalReviews)} reviews)`} */}
-    </Box>
-  );
-
-  // const renderLabels = () =>
-  // (newLabel.enabled || saleLabel.enabled) && (
-  //   <Box sx={{ gap: 1, display: 'flex', alignItems: 'center' }}>
-  //     {newLabel.enabled && <Label color="info">{newLabel.content}</Label>}
-  //     {saleLabel.enabled && <Label color="error">{saleLabel.content}</Label>}
-  //   </Box>
-  // );
-
-  // const renderInventoryType = () => (
-  //   <Box
-  //     component="span"
-  //     sx={{
-  //       typography: 'overline',
-  //       color:
-  //         (inventoryType === 'out of stock' && 'error.main') ||
-  //         (inventoryType === 'low stock' && 'warning.main') ||
-  //         'success.main',
-  //     }}
-  //   >
-  //     {inventoryType}
-  //   </Box>
-  // );
-
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ pt: 3 }} {...other}>
         <Stack spacing={2} alignItems="flex-start">
-          {/* {renderLabels()} */}
-          {/* {renderInventoryType()} */}
-
           <Typography variant="h5">{name}</Typography>
-
-          {renderRating()}
           {renderPrice()}
           {renderSubDescription()}
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {/* {renderColorOptions()} */}
-        {/* {renderSizeOptions()} */}
-        {renderQuantity()}
+        {!variants.length && (
+          <>
+            {renderQuantity()}
+            <Divider sx={{ borderStyle: 'dashed' }} />
+          </>
+        )}
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        {variants.length > 0 && (
+          <>
+            {renderVariant()}
+            <Divider sx={{ borderStyle: 'dashed' }} />
+          </>
+        )}
 
         {renderActions()}
-        {/* {renderShare()} */}
       </Stack>
     </Form>
   );

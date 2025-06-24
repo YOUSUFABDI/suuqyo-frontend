@@ -69,8 +69,25 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
   const completed = activeStep === CHECKOUT_STEPS.length;
 
   const updateTotals = useCallback(() => {
-    const totalItems = state.items.reduce((total, item) => total + item.quantity, 0);
-    const subtotal = state.items.reduce((total, item) => total + item.quantity * item.price, 0);
+    // Calculate total items by summing all sizes' quantities across all colors
+    const totalItems = state.items.reduce((total, item) => {
+      return (
+        total +
+        item?.colors?.reduce((colorSum, color) => {
+          return colorSum + color.sizes.reduce((sizeSum, size) => sizeSum + size.quantity, 0);
+        }, 0)
+      );
+    }, 0);
+
+    // Calculate subtotal by summing (price * size quantity) for all items
+    const subtotal = state.items.reduce((total, item) => {
+      const itemTotal = item?.colors?.reduce((colorSum, color) => {
+        return (
+          colorSum + color.sizes.reduce((sizeSum, size) => sizeSum + size.quantity * item.price, 0)
+        );
+      }, 0);
+      return total + itemTotal;
+    }, 0);
 
     setField('subtotal', subtotal);
     setField('totalItems', totalItems);
@@ -122,22 +139,72 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
 
   const onAddToCart = useCallback(
     (newItem: ICheckoutItem) => {
-      const updatedItems = state.items.map((item) => {
-        if (item.id === newItem.id) {
+      // Find if there's an existing item with the same ID
+      const existingItemIndex = state.items.findIndex((item) => item.id === newItem.id);
+
+      if (existingItemIndex !== -1) {
+        // Merge new colors with existing ones
+        const updatedItems = [...state.items];
+        const existingItem = updatedItems[existingItemIndex];
+
+        // Create a map of existing colors for quick lookup
+        const colorMap = new Map();
+        existingItem.colors.forEach((color) => {
+          colorMap.set(color.id, color);
+        });
+
+        // Merge new colors with existing ones
+        const mergedColors = newItem.colors.map((newColor) => {
+          const existingColor = colorMap.get(newColor.id);
+          if (!existingColor) return newColor;
+
+          // Merge sizes within the color
+          const sizeMap = new Map();
+          existingColor.sizes.forEach(
+            (size: { id?: number; name: string; quantity: number; available: number }) => {
+              sizeMap.set(size.id, size);
+            }
+          );
+
+          const mergedSizes = newColor.sizes.map((newSize) => {
+            const existingSize = sizeMap.get(newSize.id);
+            return existingSize
+              ? { ...existingSize, quantity: existingSize.quantity + newSize.quantity }
+              : newSize;
+          });
+
+          // Add sizes that didn't exist before
+          existingColor.sizes.forEach(
+            (existingSize: { id?: number; name: string; quantity: number; available: number }) => {
+              if (!sizeMap.has(existingSize.id)) {
+                mergedSizes.push(existingSize);
+              }
+            }
+          );
+
           return {
-            ...item,
-            // colors: union(item.colors, newItem.colors),
-            quantity: item.quantity + newItem.quantity,
+            ...existingColor,
+            sizes: mergedSizes,
           };
-        }
-        return item;
-      });
+        });
 
-      if (!updatedItems.some((item) => item.id === newItem.id)) {
-        updatedItems.push(newItem);
+        // Add colors that didn't exist before
+        existingItem.colors.forEach((existingColor) => {
+          if (!colorMap.has(existingColor.id)) {
+            mergedColors.push(existingColor);
+          }
+        });
+
+        updatedItems[existingItemIndex] = {
+          ...existingItem,
+          colors: mergedColors,
+        };
+
+        setField('items', updatedItems);
+      } else {
+        // Add as new item
+        setField('items', [...state.items, newItem]);
       }
-
-      setField('items', updatedItems);
     },
     [setField, state.items]
   );
@@ -152,7 +219,6 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
   const onDeleteCartItem = useCallback(
     (itemId: string) => {
       const updatedItems = state.items.filter((item) => item.id !== itemId);
-
       setField('items', updatedItems);
     },
     [setField, state.items]
@@ -160,9 +226,24 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
 
   const onChangeItemQuantity = useCallback(
     (itemId: string, quantity: number) => {
+      const [productId, colorId, sizeId] = itemId.split('-');
+
       const updatedItems = state.items.map((item) => {
-        if (item.id === itemId) {
-          return { ...item, quantity };
+        if (item.id === productId) {
+          return {
+            ...item,
+            colors: item.colors.map((color) => {
+              if (color.id === parseInt(colorId)) {
+                return {
+                  ...color,
+                  sizes: color.sizes.map((size) =>
+                    size.id === parseInt(sizeId) ? { ...size, quantity } : size
+                  ),
+                };
+              }
+              return color;
+            }),
+          };
         }
         return item;
       });

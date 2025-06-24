@@ -102,6 +102,13 @@ export const _notifications = Array.from({ length: 9 }, (_, index) => ({
 // ----------------------------------------------------------------------
 
 export const _mapContact = [
+  // {
+  //   latlng: [2.0446, 45.3182], // Taleh, Mogadishu
+  //   address: 'Taleh, Banadir, Mogadishu, Somalia',
+  //   phoneNumber: '+252 682677560', // Replace with your actual number if needed
+  // },
+  // { latlng: [33, 65], address: _mock.fullAddress(1), phoneNumber: _mock.phoneNumber(1) },
+  // { latlng: [-12.5, 18.5], address: _mock.fullAddress(2), phoneNumber: _mock.phoneNumber(2) },
   { latlng: [33, 65], address: _mock.fullAddress(1), phoneNumber: _mock.phoneNumber(1) },
   { latlng: [-12.5, 18.5], address: _mock.fullAddress(2), phoneNumber: _mock.phoneNumber(2) },
 ];

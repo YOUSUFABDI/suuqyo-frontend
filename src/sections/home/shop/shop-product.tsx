@@ -1,23 +1,28 @@
 import { Box, Card } from '@mui/material';
-import { ShopInfoDT } from './types/types';
 import { ProductList } from '../components/product-list';
-import { useCheckoutContext } from '../checkout/context';
-import { useEffect } from 'react';
-import { LoadingScreen } from 'src/components/loading-screen';
 import { Product } from '../product/types/types';
+import { ShopInfoDT } from './types/types';
+import { EmptyContent } from 'src/components/empty-content';
 
 type Props = {
-  // shop: ShopInfoDT | null;
+  shop: ShopInfoDT['shop'];
   products: Product[];
 };
 
-export const ShopProduct = ({ products }: Props) => {
+export const ShopProduct = ({ products, shop }: Props) => {
+  const renderNotFound = (
+    <EmptyContent
+      filled
+      title="No Products Found"
+      sx={{ py: 10, borderRadius: 0.6 }} // Merge sx for consistent styling
+    />
+  );
+
   return (
     <Card sx={{ borderRadius: 0, boxShadow: 0 }}>
       <Box
         component="img"
-        // src={shop?.shopLogo}
-        src={products[0]?.shop?.shopLogo}
+        src={shop.shopLogo}
         alt="Shop Cover"
         sx={{
           width: '100%',
@@ -27,9 +32,8 @@ export const ShopProduct = ({ products }: Props) => {
           borderRadius: 0.6,
         }}
       />
-      {/* Products */}
-      {/* <ProductList products={shop?.user.Product} /> */}
-      <ProductList products={products} />
+
+      {!products.length ? renderNotFound : <ProductList products={products} />}
     </Card>
   );
 };

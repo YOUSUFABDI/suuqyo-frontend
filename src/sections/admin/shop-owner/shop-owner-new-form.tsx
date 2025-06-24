@@ -25,6 +25,7 @@ import { Button, CardHeader, Divider, IconButton, InputAdornment } from '@mui/ma
 import { Iconify } from 'src/components/iconify';
 import { MultiFilePreview } from 'src/components/upload';
 import { getErrorMessage } from 'src/utils/error.message';
+import { UseShopCategories } from './hooks';
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +57,7 @@ export const NewUserSchema = zod.object({
   shopName: zod.string().min(1, { message: 'Shop name is required!' }),
   shopDescription: zod.string().min(1, { message: 'Shop description is required!' }),
   shopAddress: zod.string().min(1, { message: 'Shop address is required!' }),
+  shopCategoryId: zod.number({ coerce: true }).nullable(),
   paymentMethods: zod
     .array(
       zod.object({
@@ -71,6 +73,7 @@ export const NewUserSchema = zod.object({
 
 export function ShopOwnerNewForm() {
   const router = useRouter();
+  const { shopCategories } = UseShopCategories();
 
   const [registerShopOwner, { isLoading }] = useRegisterShopOwnerMutation();
 
@@ -93,6 +96,7 @@ export function ShopOwnerNewForm() {
     shopName: '',
     shopDescription: '',
     shopAddress: '',
+    shopCategoryId: null,
     paymentMethods: [{ paymentName: 'EVC_PLUS', paymentPhone: '' }],
   };
 
@@ -114,10 +118,6 @@ export function ShopOwnerNewForm() {
   const values = watch();
   const businessProof = watch('businessProof');
 
-  // const handleAddPaymentMethod = () => {
-  //   const currentMethods = methods.getValues('paymentMethods') || [];
-  //   methods.setValue('paymentMethods', [...currentMethods, { paymentName: '', paymentPhone: '' }]);
-  // };
   const handleAddPaymentMethod = () => {
     const currentMethods = methods.getValues('paymentMethods') || [];
     if (currentMethods.length < 3) {
@@ -151,6 +151,7 @@ export function ShopOwnerNewForm() {
         shopName: data.shopName,
         shopDescription: data.shopDescription,
         shopAddress: data.shopAddress,
+        shopCategoryId: data.shopCategoryId,
 
         paymentMethods: data.paymentMethods,
       };
@@ -274,12 +275,6 @@ export function ShopOwnerNewForm() {
                     }}
                   />
                 </Box>
-
-                {/* <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
-                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Create shop owner
-                  </LoadingButton>
-                </Stack> */}
               </Card>
             </Grid>
           </Grid>
@@ -338,15 +333,6 @@ export function ShopOwnerNewForm() {
                     </Box>
                   ))}
 
-                  {/* <Box>
-                    <Button
-                      variant="outlined"
-                      startIcon={<Iconify icon="mingcute:add-line" />}
-                      onClick={handleAddPaymentMethod}
-                    >
-                      Add Payment Method
-                    </Button>
-                  </Box> */}
                   <Box>
                     <Button
                       variant="outlined"
@@ -479,6 +465,18 @@ export function ShopOwnerNewForm() {
                   <Field.Text name="shopName" label="Shop name" />
                   <Field.Text name="shopDescription" label="Shop description" />
                   <Field.Text name="shopAddress" label="Shop address" />
+                  <Field.Select
+                    name="shopCategoryId"
+                    label="Shop category"
+                    slotProps={{ select: { native: true }, inputLabel: { shrink: true } }}
+                  >
+                    <option value=""></option>
+                    {shopCategories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </Field.Select>
                 </Box>
               </Card>
             </Grid>

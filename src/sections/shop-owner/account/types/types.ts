@@ -90,4 +90,12 @@ export interface ShopDT {
   createdAt: string;
   updatedAt: string;
   user: UserDT;
+  ShopCategory: ShopCategoryDT;
+}
+
+export interface ShopCategoryDT {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
 }

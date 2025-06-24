@@ -7,6 +7,13 @@ export type IShopOwnerTableFilters = {
   phoneNumber: string;
 };
 
+export interface ShopCategoryDT {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type PaymentMethod = {
   id: number;
   userId: number;
@@ -59,6 +66,7 @@ export interface ShopOwnerDT {
   shopLogo: string;
   shopDescription: string;
   shopAddress: string;
+  ShopCategory: ShopCategoryDT;
   businessProof: string;
   paymentMethods: PaymentMethod[];
 }

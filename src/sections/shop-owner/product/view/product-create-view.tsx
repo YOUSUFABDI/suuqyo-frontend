@@ -17,7 +17,7 @@ export function ProductCreateView() {
         heading="Create a new product"
         links={[
           { name: 'Shop owner', href: paths.shopOwner.root },
-          { name: 'Product', href: paths.shopOwner.product.new },
+          { name: 'Product', href: paths.shopOwner.product.root },
           { name: 'New product' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

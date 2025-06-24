@@ -131,11 +131,51 @@ export function CheckoutPayment() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const items = checkoutState.items.map((item: any) => ({
-        productId: Number(item.id),
-        quantity: item.quantity,
-      }));
-      // console.log('data.delivery', data.delivery);
+      // const transformedItems = checkoutState.items.map((item) => {
+      //   const variants = item.colors.flatMap((color) =>
+      //     color.sizes
+      //       .filter((size) => size.quantity > 0)
+      //       .map((size) => ({
+      //         colorId: color.id as number, // Assert as number
+      //         sizeId: size.id as number, // Assert as number
+      //         quantity: size.quantity,
+      //       }))
+      //   );
+
+      //   return {
+      //     productId: Number(item.id),
+      //     variants,
+      //   };
+      // });
+
+      const transformedItems = checkoutState.items.map((item) => {
+        const allSizes = item.colors?.flatMap((color) => color.sizes) ?? [];
+
+        const isVariantBased = allSizes.some((size) => size.id !== 0 || size.name !== 'Default');
+
+        if (isVariantBased) {
+          const variants = item.colors.flatMap((color) =>
+            color.sizes
+              .filter((size) => size.quantity > 0)
+              .map((size) => ({
+                colorId: color.id as number,
+                sizeId: size.id as number,
+                quantity: size.quantity,
+              }))
+          );
+
+          return {
+            productId: Number(item.id),
+            variants,
+          };
+        } else {
+          const quantity = allSizes.reduce((sum, size) => sum + size.quantity, 0);
+          return {
+            productId: Number(item.id),
+            quantity,
+          };
+        }
+      });
 
       const shippingAddressId = checkoutState.billing?.id;
       if (!shippingAddressId) {
@@ -157,7 +197,7 @@ export function CheckoutPayment() {
       }
 
       const reqData = {
-        items,
+        items: transformedItems,
         shippingAddressId,
         paymentMethod: selectedPaymentMethod?.paymentName,
         paymentAccount: selectedPaymentMethod?.paymentPhone,
@@ -165,7 +205,7 @@ export function CheckoutPayment() {
         ...(data.payment !== 'cash' && { senderPhone: data.phoneNumber }),
       };
       console.log('reqData', reqData);
-      console.log('checkoutState', checkoutState);
+      // console.log('checkoutState', checkoutState);
 
       await createOrder(reqData).unwrap();
       toast.success('Order placed successfully!');

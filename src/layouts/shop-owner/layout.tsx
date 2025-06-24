@@ -140,7 +140,7 @@ export function ShopOwnerLayout({
           <Searchbar data={shopOwnerData} />
 
           {/** @slot Language popover */}
-          <LanguagePopover data={allLangs} />
+          {/* <LanguagePopover data={allLangs} /> */}
 
           {/** @slot Notifications popover */}
           {/* <NotificationsDrawer data={_notifications} /> */}

@@ -8,9 +8,21 @@ export type ICheckoutItem = {
   name: string;
   price: number;
   coverUrl: string;
-  quantity: number;
   available: number;
   subtotal?: number;
+  colors: Array<{
+    // Changed from single color to array of colors
+    id?: number;
+    name: string;
+    code?: string;
+    sizes: Array<{
+      // Moved sizes inside color object
+      id?: number;
+      name: string;
+      quantity: number;
+      available: number;
+    }>;
+  }>;
 };
 
 export type ICheckoutDeliveryOption = {

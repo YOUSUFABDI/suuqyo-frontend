@@ -18,7 +18,10 @@ export interface Product {
     createdAt: string;
     updatedAt: string;
   };
+  variants: ProductVariant[];
   quantity: number;
+  isFood: boolean;
+  isAvailiable: boolean;
   createdAt: string;
   updatedAt: string;
   images: ProductImage[];
@@ -53,8 +56,24 @@ export interface User {
   paymentMethods: PaymentMethod[];
 }
 
+export type VariantDT = {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export interface ProductVariant {
+  id: number;
+  color: VariantDT;
+  size: VariantDT;
+  quantity: number;
+  colorId: number;
+  sizeId: number;
+}
+
 export interface ProductResponse {
   product: Product;
 }
 
-export const PRODUCT_CATEGORY_OPTIONS = ['Shoes', 'Electronic', 'Food', 'Clothes'];
+export const PRODUCT_CATEGORY_OPTIONS = ['Shoes', 'Electronic', 'Food', 'Clothes', 'Drinks'];
