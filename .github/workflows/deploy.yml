@@ -38,7 +38,5 @@ jobs:
           key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           script: |
             cd /home/suuqyo
-            docker-compose down
-            docker system prune -af --volumes
             docker-compose pull frontend
-            docker-compose up -d --build
+            docker-compose up -d frontend
