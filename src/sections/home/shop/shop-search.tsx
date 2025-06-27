@@ -18,7 +18,7 @@ import { useRouter } from 'src/routes/hooks';
 import { Iconify } from 'src/components/iconify';
 import { SearchNotFound } from 'src/components/search-not-found';
 import { useSearchShops } from './hooks';
-import { ShopDT } from './types/types';
+import { ShopInfoDT } from './types/types';
 import { slugify } from 'src/utils/slugify';
 
 // ----------------------------------------------------------------------
@@ -32,13 +32,13 @@ export function ShopSearch({ redirectPath, sx }: Props) {
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedItem, setSelectedItem] = useState<ShopDT | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ShopInfoDT['shop'] | null>(null);
 
   const debouncedQuery = useDebounce(searchQuery);
   const { searchResults: options, searchLoading: loading } = useSearchShops(debouncedQuery);
 
   const handleChange = useCallback(
-    (item: ShopDT | null) => {
+    (item: ShopInfoDT['shop'] | null) => {
       setSelectedItem(item);
       if (item) {
         router.push(redirectPath(slugify(item.shopName)));
@@ -49,7 +49,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
 
   const filterOptions = createFilterOptions({
     matchFrom: 'any',
-    stringify: (option: ShopDT) => `${option.shopName} ${option.shopAddress}`,
+    stringify: (option: ShopInfoDT['shop']) => `${option.shopName} ${option.shopAddress}`,
   });
 
   const paperStyles: SxProps<Theme> = {
@@ -80,7 +80,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
       onInputChange={(event, newValue) => setSearchQuery(newValue)}
       getOptionLabel={(option) => option.shopName}
       noOptionsText={<SearchNotFound query={debouncedQuery} />}
-      isOptionEqualToValue={(option, value) => option.shopId === value.shopId}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
       slotProps={{ paper: { sx: paperStyles } }}
       sx={[{ width: { xs: 1, sm: 260 } }, ...(Array.isArray(sx) ? sx : [sx])]}
       renderInput={(params) => (
@@ -110,7 +110,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
         const parts = parse(shop.shopName, matches);
 
         return (
-          <li {...props} key={shop.shopId}>
+          <li {...props} key={shop.id}>
             <Link
               component={RouterLink}
               href={redirectPath(slugify(shop.shopName))}
@@ -118,7 +118,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
               underline="none"
             >
               <Avatar
-                key={shop.shopId}
+                key={shop.id}
                 alt={shop.shopName}
                 src={shop.shopLogo}
                 variant="rounded"
