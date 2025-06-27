@@ -25,7 +25,6 @@ import { CustomPopover } from 'src/components/custom-popover';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { OrderResDT } from './types/types';
-import { BoxZoomHandler } from 'mapbox-gl';
 
 // ----------------------------------------------------------------------
 
