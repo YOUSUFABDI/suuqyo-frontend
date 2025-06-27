@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API } from '../api';
 import { ApiResponseDT } from 'src/types/api-response';
-import { ShopDT, ShopInfoDT } from 'src/sections/home/shop/types/types';
+import { ShopInfoDT } from 'src/sections/home/shop/types/types';
 
 export const shopsManagementApi = createApi({
   reducerPath: 'shops',
@@ -19,7 +19,7 @@ export const shopsManagementApi = createApi({
   }),
   tagTypes: ['shops'],
   endpoints: (builder) => ({
-    shops: builder.query<ApiResponseDT<ShopDT[]>, void>({
+    shops: builder.query<ApiResponseDT<ShopInfoDT['shop'][]>, void>({
       query: () => ({
         url: '/shop/get-shops',
         method: 'GET',
