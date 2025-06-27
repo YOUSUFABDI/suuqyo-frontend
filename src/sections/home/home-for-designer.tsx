@@ -147,7 +147,7 @@ const renderActionButton = () => (
       variant="text"
       target="_blank"
       rel="noopener"
-      href={paths.figmaUrl}
+      href={''}
       endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
       sx={{ px: 2, borderRadius: 'inherit' }}
     >
