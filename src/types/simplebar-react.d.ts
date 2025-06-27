@@ -1,4 +1,4 @@
 declare module 'simplebar-react' {
-  const content: any;
-  export default content;
+  const SimpleBar: React.ComponentType<any>;
+  export default SimpleBar;
 }
