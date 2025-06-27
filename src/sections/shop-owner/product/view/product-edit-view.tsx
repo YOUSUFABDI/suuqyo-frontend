@@ -12,7 +12,7 @@ import { ProductResDT } from '../types/types';
 // ----------------------------------------------------------------------
 
 type Props = {
-  product?: ProductResDT | null;
+  product: ProductResDT | null;
 };
 
 export function ProductEditView({ product }: Props) {
