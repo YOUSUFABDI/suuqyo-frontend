@@ -76,7 +76,7 @@ export function HomeHugePackElements({ sx, ...other }: BoxProps) {
               variant="outlined"
               target="_blank"
               rel="noopener"
-              href={paths.components}
+              href={''}
               endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
               sx={{ mt: 5, mx: 'auto' }}
             >
