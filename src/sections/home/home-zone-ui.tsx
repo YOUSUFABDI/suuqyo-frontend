@@ -93,7 +93,7 @@ export function HomeZoneUI({ sx, ...other }: BoxProps) {
           variant="contained"
           target="_blank"
           rel="noopener"
-          href={paths.zoneStore}
+          href={'#'}
           endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
           sx={{
             color: 'grey.800',
