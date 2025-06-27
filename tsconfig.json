@@ -6,6 +6,7 @@
     "jsx": "preserve",
     "allowJs": true,
     "resolveJsonModule": true,
+    "typeRoots": ["./src/types", "./node_modules/@types"],
 
     /* Build */
     "target": "ES2017",
