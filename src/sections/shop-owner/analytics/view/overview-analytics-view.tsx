@@ -177,9 +177,9 @@ export function OverviewAnalyticsView() {
           <AnalyticsWelcome
             title={`Congratulations 🎉  \n ${user?.username}`}
             description={
-              summary.completedOrders.current === 0
+              summary?.completedOrders.current === 0
                 ? 'Your shop is ready for its first sale!'
-                : `Great news! You've successfully sold ${summary.productsSold.current} product${summary.productsSold.current !== 1 ? 's' : ''}.`
+                : `Great news! You've successfully sold ${summary?.productsSold.current} product${summary?.productsSold.current !== 1 ? 's' : ''}.`
             }
             img={<MotivationIllustration hideBackground />}
           />
@@ -190,37 +190,37 @@ export function OverviewAnalyticsView() {
           <AnalyticsNewProducts list={newProducts} />
         </Grid>
 
-        {/* Summary widgets */}
+        {/* Summary? widgets */}
         <Widget
           title="Total products"
-          total={summary.totalProducts.current}
+          total={summary?.totalProducts.current || 0}
           chart={{ categories: chartData.categories, series: chartData.orders }}
         />
         <Widget
           title="Quantity sold"
-          total={summary.productsSold.current}
+          total={summary?.productsSold.current || 0}
           chart={{ categories: chartData.categories, series: chartData.productsSold }}
         />
         <Widget
           title="Total sale"
-          total={summary.totalRevenue.current}
+          total={summary?.totalRevenue.current || 0}
           prefix="$"
           chart={{ categories: chartData.categories, series: chartData.revenue }}
         />
         <Widget
           title="Total profit"
-          total={summary.totalProfit.current}
+          total={summary?.totalProfit.current || 0}
           prefix="$"
           chart={{ categories: chartData.categories, series: chartData.profit }}
         />
         <Widget
           title="Pending orders"
-          total={summary.totalOrders.current}
+          total={summary?.totalOrders.current || 0}
           chart={{ categories: chartData.categories, series: chartData.orders }}
         />
         <Widget
           title="Completed orders"
-          total={summary.completedOrders.current}
+          total={summary?.completedOrders.current || 0}
           chart={{ categories: chartData.categories, series: chartData.completedOrders }}
         />
 
