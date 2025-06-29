@@ -139,7 +139,7 @@
 'use client';
 
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Grid'; // <-- stable Grid
+import Grid from '@mui/material/Grid';
 import { MotivationIllustration } from 'src/assets/illustrations';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -156,11 +156,12 @@ export function OverviewAnalyticsView() {
   const { analyticsData, isLoading } = UseAnalytics();
   const theme = useTheme();
 
-  if (isLoading) {
+  // Short-circuit if still loading or if data didn't arrive
+  if (isLoading || !analyticsData) {
     return <LoadingScreen />;
   }
 
-  const { summary, chartData, newProducts, getTopDeliveryUsers } = analyticsData!;
+  const { summary, chartData, newProducts, getTopDeliveryUsers } = analyticsData;
 
   // Helper: render a widget with responsive sizing
   const Widget = (props: React.ComponentProps<typeof AnalyticsWidgetSummary>) => (
