@@ -156,12 +156,11 @@ export function OverviewAnalyticsView() {
   const { analyticsData, isLoading } = UseAnalytics();
   const theme = useTheme();
 
-  // Short-circuit if still loading or if data didn't arrive
-  if (isLoading || !analyticsData) {
+  if (isLoading) {
     return <LoadingScreen />;
   }
 
-  const { summary, chartData, newProducts, getTopDeliveryUsers } = analyticsData;
+  const { summary, chartData, newProducts, getTopDeliveryUsers } = analyticsData!;
 
   // Helper: render a widget with responsive sizing
   const Widget = (props: React.ComponentProps<typeof AnalyticsWidgetSummary>) => (
