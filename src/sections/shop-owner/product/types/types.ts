@@ -45,6 +45,7 @@ export interface ProductResDT {
   description: string;
   content: string;
   sellingPrice: number;
+  purchasePrice: number;
   discount: number;
   rate: number | null;
   quantity: number;

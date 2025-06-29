@@ -28,6 +28,8 @@ type AnalyticsSummary = {
   completedOrders: Metric;
   totalRevenue: Metric;
   productsSold: Metric;
+  totalCost: Metric; // ← new
+  totalProfit: Metric; // ← new
 };
 
 // Chart data type
@@ -37,6 +39,8 @@ type AnalyticsChartData = {
   completedOrders: number[];
   productsSold: number[];
   revenue: number[];
+  cost: number[]; // ← new
+  profit: number[]; // ← new
 };
 
 // Complete analytics response type

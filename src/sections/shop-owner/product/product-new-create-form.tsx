@@ -37,6 +37,10 @@ export const NewProductSchema = zod
       zod.number({ coerce: true }).min(1, { message: 'Price is required!' }),
       { message: 'Price is required!' }
     ),
+    purchasePrice: schemaHelper.nullableInput(
+      zod.number({ coerce: true }).min(1, { message: 'Purchase price is required!' }),
+      { message: 'Purchase price is required!' }
+    ),
     categoryId: zod.number({ coerce: true }).nullable(),
     description: zod.string(),
     isFood: zod.boolean(),
@@ -83,6 +87,7 @@ export function ProductNewCreateForm() {
     description: '',
     images: [],
     sellingPrice: null,
+    purchasePrice: null,
     categoryId: null,
     isFood: false,
     isAvailiable: false,
@@ -121,6 +126,7 @@ export function ProductNewCreateForm() {
         description: data.description,
         content: data.content,
         sellingPrice: data.sellingPrice,
+        purchasePrice: data.purchasePrice,
         isFood: data.isFood,
         isAvailiable: data.isAvailiable,
       };
@@ -352,6 +358,24 @@ export function ProductNewCreateForm() {
       <CardHeader title="Pricing" subheader="Price related inputs" sx={{ mb: 3 }} />
       <Divider />
       <Stack spacing={3} sx={{ p: 3 }}>
+        <Field.Text
+          name="purchasePrice"
+          label="Purchase price"
+          placeholder="0.00"
+          type="number"
+          slotProps={{
+            inputLabel: { shrink: true },
+            input: {
+              startAdornment: (
+                <InputAdornment position="start" sx={{ mr: 0.75 }}>
+                  <Box component="span" sx={{ color: 'text.disabled' }}>
+                    $
+                  </Box>
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
         <Field.Text
           name="sellingPrice"
           label="Price"
