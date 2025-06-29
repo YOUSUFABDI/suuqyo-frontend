@@ -160,8 +160,6 @@ export function OverviewAnalyticsView() {
     return <LoadingScreen />;
   }
 
-  const { summary, chartData, newProducts, getTopDeliveryUsers } = analyticsData!;
-
   // Helper: render a widget with responsive sizing
   const Widget = (props: React.ComponentProps<typeof AnalyticsWidgetSummary>) => (
     <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
@@ -177,9 +175,9 @@ export function OverviewAnalyticsView() {
           <AnalyticsWelcome
             title={`Congratulations 🎉  \n ${user?.username}`}
             description={
-              summary?.completedOrders.current === 0
+              analyticsData?.summary?.completedOrders.current === 0
                 ? 'Your shop is ready for its first sale!'
-                : `Great news! You've successfully sold ${summary?.productsSold.current} product${summary?.productsSold.current !== 1 ? 's' : ''}.`
+                : `Great news! You've successfully sold ${analyticsData?.summary?.productsSold.current} product${analyticsData?.summary?.productsSold.current !== 1 ? 's' : ''}.`
             }
             img={<MotivationIllustration hideBackground />}
           />
@@ -187,48 +185,66 @@ export function OverviewAnalyticsView() {
 
         {/* New products */}
         <Grid item xs={12} md={4}>
-          <AnalyticsNewProducts list={newProducts} />
+          <AnalyticsNewProducts list={analyticsData?.newProducts || []} />
         </Grid>
 
         {/* Summary? widgets */}
         <Widget
           title="Total products"
-          total={summary?.totalProducts.current || 0}
-          chart={{ categories: chartData.categories, series: chartData.orders }}
+          total={analyticsData?.summary?.totalProducts.current || 0}
+          chart={{
+            categories: analyticsData?.chartData.categories || [],
+            series: analyticsData?.chartData.orders || [],
+          }}
         />
         <Widget
           title="Quantity sold"
-          total={summary?.productsSold.current || 0}
-          chart={{ categories: chartData.categories, series: chartData.productsSold }}
+          total={analyticsData?.summary?.productsSold.current || 0}
+          chart={{
+            categories: analyticsData?.chartData.categories || [],
+            series: analyticsData?.chartData.productsSold || [],
+          }}
         />
         <Widget
           title="Total sale"
-          total={summary?.totalRevenue.current || 0}
+          total={analyticsData?.summary?.totalRevenue.current || 0}
           prefix="$"
-          chart={{ categories: chartData.categories, series: chartData.revenue }}
+          chart={{
+            categories: analyticsData?.chartData.categories || [],
+            series: analyticsData?.chartData.revenue || [],
+          }}
         />
         <Widget
           title="Total profit"
-          total={summary?.totalProfit.current || 0}
+          total={analyticsData?.summary?.totalProfit.current || 0}
           prefix="$"
-          chart={{ categories: chartData.categories, series: chartData.profit }}
+          chart={{
+            categories: analyticsData?.chartData.categories || [],
+            series: analyticsData?.chartData.profit || [],
+          }}
         />
         <Widget
           title="Pending orders"
-          total={summary?.totalOrders.current || 0}
-          chart={{ categories: chartData.categories, series: chartData.orders }}
+          total={analyticsData?.summary?.totalOrders.current || 0}
+          chart={{
+            categories: analyticsData?.chartData.categories || [],
+            series: analyticsData?.chartData.orders || [],
+          }}
         />
         <Widget
           title="Completed orders"
-          total={summary?.completedOrders.current || 0}
-          chart={{ categories: chartData.categories, series: chartData.completedOrders }}
+          total={analyticsData?.summary?.completedOrders.current || 0}
+          chart={{
+            categories: analyticsData?.chartData.categories || [],
+            series: analyticsData?.chartData.completedOrders || [],
+          }}
         />
 
         {/* Best delivery users */}
         <Grid item xs={12} md={6} lg={8}>
           <AnalyticsBestDeliveryUser
             title="Best delivery users"
-            tableData={getTopDeliveryUsers}
+            tableData={analyticsData?.getTopDeliveryUsers || []}
             headCells={[
               { id: 'name', label: 'Name' },
               { id: 'phone', label: 'Phone' },
