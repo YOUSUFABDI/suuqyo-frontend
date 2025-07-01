@@ -19,7 +19,7 @@ type Props = CardProps & {
   total: number | string;
   prefix?: string;
   // percent: number;
-  chart: {
+  chart?: {
     colors?: string[];
     categories: string[];
     series: number[];
@@ -30,12 +30,12 @@ type Props = CardProps & {
 export function AnalyticsWidgetSummary({ title, total, chart, prefix = '', sx, ...other }: Props) {
   const theme = useTheme();
 
-  const chartColors = chart.colors ?? [theme.palette.primary.light, theme.palette.primary.main];
+  const chartColors = chart?.colors ?? [theme.palette.primary.light, theme.palette.primary.main];
 
   const chartOptions = useChart({
     chart: { sparkline: { enabled: true } },
     colors: [chartColors[1]],
-    xaxis: { categories: chart.categories },
+    xaxis: { categories: chart?.categories },
     grid: {
       padding: {
         top: 6,
@@ -56,7 +56,7 @@ export function AnalyticsWidgetSummary({ title, total, chart, prefix = '', sx, .
     tooltip: {
       y: { formatter: (value: number) => fNumber(value), title: { formatter: () => '' } },
     },
-    ...chart.options,
+    ...chart?.options,
   });
 
   // const renderTrending = () => (
@@ -121,7 +121,7 @@ export function AnalyticsWidgetSummary({ title, total, chart, prefix = '', sx, .
 
       <Chart
         type="line"
-        series={[{ data: chart.series }]}
+        series={[{ data: chart?.series || [] }]}
         options={chartOptions}
         sx={{ width: 100, height: 66 }}
       />

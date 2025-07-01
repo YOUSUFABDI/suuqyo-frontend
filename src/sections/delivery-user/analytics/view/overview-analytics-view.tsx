@@ -41,10 +41,6 @@ export function OverviewAnalyticsView() {
           <AnalyticsWidgetSummary
             title="Orders to delivery"
             total={analyticsData?.summary.ordersToDeliver.current || 0}
-            chart={{
-              categories: analyticsData?.chartData.categories || [],
-              series: analyticsData?.chartData.ordersToDeliver || [],
-            }}
           />
         </Grid>
 
@@ -52,10 +48,6 @@ export function OverviewAnalyticsView() {
           <AnalyticsWidgetSummary
             title="Completed deliveries"
             total={analyticsData?.summary.completedDeliveries.current || 0}
-            chart={{
-              categories: analyticsData?.chartData.categories || [],
-              series: analyticsData?.chartData.completedDeliveries || [],
-            }}
           />
         </Grid>
 
@@ -63,22 +55,11 @@ export function OverviewAnalyticsView() {
           <AnalyticsWidgetSummary
             title="Return deliveries"
             total={analyticsData?.summary.refundedDeliveries.current || 0}
-            chart={{
-              categories: analyticsData?.chartData.categories || [],
-              series: analyticsData?.chartData.refundedDeliveries || [],
-            }}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <AnalyticsWidgetSummary
-            title="All"
-            total={analyticsData?.summary.all.current || 0}
-            chart={{
-              categories: analyticsData?.chartData.categories || [],
-              series: analyticsData?.chartData.all || [],
-            }}
-          />
+          <AnalyticsWidgetSummary title="All" total={analyticsData?.summary.all.current || 0} />
         </Grid>
       </Grid>
     </DashboardContent>

@@ -1,6 +1,6 @@
-type Metric = {
-  current: number;
-};
+// type Metric = {
+//   current: number;
+// };
 
 // New product type
 type NewProduct = {
@@ -23,13 +23,15 @@ export type getTopDeliveryUsersDT = {
 
 // Summary data type
 type AnalyticsSummary = {
-  totalProducts: Metric;
-  totalOrders: Metric;
-  completedOrders: Metric;
-  totalRevenue: Metric;
-  productsSold: Metric;
-  totalCost: Metric; // ← new
-  totalProfit: Metric; // ← new
+  totalProducts: number;
+  totalOrders: number;
+  completedOrders: number;
+  pendingOrders: number;
+  totalSale: number;
+  quantitySold: number;
+  totalCost: number; // ← new
+  totalProfit: number; // ← new
+  getTopDeliveryUsers: getTopDeliveryUsersDT[];
 };
 
 // Chart data type
@@ -46,7 +48,7 @@ type AnalyticsChartData = {
 // Complete analytics response type
 export type ShopOwnerAnalyticsResDT = {
   summary: AnalyticsSummary;
-  chartData: AnalyticsChartData;
+  // chartData: AnalyticsChartData;
   newProducts: NewProduct[];
   getTopDeliveryUsers: getTopDeliveryUsersDT[];
   welcomeStats: {

@@ -51,6 +51,7 @@ import {
   RenderCellCreatedAt,
   RenderCellPrice,
   RenderCellProduct,
+  RenderCellPurchasePrice,
   RenderCellStock,
 } from '../product-table-row';
 import { ProductTableToolbar } from '../product-table-toolbar';
@@ -184,6 +185,13 @@ export function ProductListView() {
       width: 140,
       editable: true,
       renderCell: (params) => <RenderCellPrice params={params} />,
+    },
+    {
+      field: 'purchasePrice',
+      headerName: 'Purchase price',
+      width: 140,
+      editable: true,
+      renderCell: (params) => <RenderCellPurchasePrice params={params} />,
     },
     {
       field: 'condition',

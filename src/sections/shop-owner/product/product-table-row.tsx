@@ -22,6 +22,10 @@ export function RenderCellPrice({ params }: ParamsProps) {
   return fCurrency(params.row.sellingPrice);
 }
 
+export function RenderCellPurchasePrice({ params }: ParamsProps) {
+  return fCurrency(params.row.purchasePrice);
+}
+
 export function RenderCellCondition({ params }: ParamsProps) {
   return params.row?.condition;
 }

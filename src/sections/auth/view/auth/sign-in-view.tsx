@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useBoolean } from 'minimal-shared/hooks';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
@@ -13,21 +15,20 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 
-import { RouterLink } from 'src/routes/components';
-import { paths } from 'src/routes/paths';
-
 import { AnimateLogoRotate } from 'src/components/animate';
 import { Field, Form } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
-
+import { RouterLink } from 'src/routes/components';
+import { paths } from 'src/routes/paths';
 import { FormHead } from '../../components/form-head';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from 'src/store';
-import { useLoginMutation } from 'src/store/auth/auth';
-import { setCredentials } from 'src/store/auth/authSlice';
-import { getErrorMessage } from 'src/utils/error.message';
+import axios, { AxiosError } from 'axios';
+import { API } from 'src/store/api';
+
+// Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/store';
+import { setLoading as setAuthLoading, setCredentials } from 'src/store/auth/authSlice';
 
 // ----------------------------------------------------------------------
 
@@ -35,54 +36,28 @@ export type SignInSchemaType = zod.infer<typeof SignInSchema>;
 
 export const SignInSchema = zod.object({
   email: zod.string().min(1, { message: 'Email is required!' }),
-  // .({ message: 'Email must be a valid email address!' }),
   password: zod
     .string()
     .min(1, { message: 'Password is required!' })
     .min(6, { message: 'Password must be at least 6 characters!' }),
 });
 
-// ----------------------------------------------------------------------
-
 export function SignInView() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const showPassword = useBoolean();
-  const dispatch: AppDispatch = useDispatch();
-  const [login, { isLoading, data }] = useLoginMutation();
-
   const returnTo = searchParams.get('returnTo');
 
-  const handleRoleBasedRedirect = (role: string) => {
-    const redirectPath: any = returnTo; // Use returnTo if exists, else default
-
-    // Only override if no returnTo specified
-    if (!returnTo) {
-      switch (role) {
-        case 'ADMIN':
-          return '/dashboard';
-        case 'SHOP_OWNER':
-          return '/shop-owner';
-        case 'DELIVERY_USER':
-          return '/delivery-user';
-        default:
-          return '/';
-      }
-    }
-
-    return redirectPath;
-  };
-
+  // Local error state
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const defaultValues: SignInSchemaType = {
-    email: '',
-    password: '',
-  };
+  // Redux state
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state: RootState) => state.auth);
 
   const methods = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema),
-    defaultValues,
+    defaultValues: { email: '', password: '' },
   });
 
   const {
@@ -90,32 +65,47 @@ export function SignInView() {
     formState: { isSubmitting },
   } = methods;
 
+  const handleRoleBasedRedirect = (role: string) => {
+    if (returnTo) return returnTo;
+    switch (role) {
+      case 'ADMIN':
+        return '/dashboard';
+      case 'SHOP_OWNER':
+        return '/shop-owner';
+      case 'DELIVERY_USER':
+        return '/delivery-user';
+      default:
+        return '/';
+    }
+  };
+
   const onSubmit = handleSubmit(async (data) => {
+    dispatch(setAuthLoading(true));
+    setErrorMessage(null);
+
     try {
-      const response = await login({
+      const res = await axios.post(`${API}/auth/login`, {
         emailOrUsername: data.email,
         password: data.password,
-      }).unwrap();
+      });
 
-      if (response.error === null) {
-        dispatch(
-          setCredentials({
-            token: response?.payload?.data?.access_token || '',
-            email: response?.payload?.data.email || '',
-            role: response?.payload?.data.role || '',
-          })
-        );
-      }
+      const { access_token, role, email } = res.data.payload.data;
+      // Dispatch credentials
+      dispatch(setCredentials({ token: access_token, role, email }));
 
-      if (response.error === null) {
-        // Get the role from the response, not localStorage
-        const role = response?.payload?.data.role || '';
-        const redirectPath = handleRoleBasedRedirect(role);
-        router.push(redirectPath);
-      }
-    } catch (error: any) {
-      const errorMessage = getErrorMessage(error);
-      setErrorMessage(errorMessage);
+      // Redirect
+      router.push(handleRoleBasedRedirect(role));
+    } catch (err: any) {
+      const axiosErr = err as AxiosError<{
+        error: { details: string; message: string };
+        message: string;
+        statusCode: number;
+      }>;
+      const detailMessage = axiosErr.response?.data?.error?.message || 'An unknown error occurred';
+
+      setErrorMessage(detailMessage);
+    } finally {
+      dispatch(setAuthLoading(false));
     }
   });
 
@@ -127,7 +117,7 @@ export function SignInView() {
         title="Sign in to your account"
         description={
           <>
-            {`Don’t have an account? `}
+            Don’t have an account?{' '}
             <Link component={RouterLink} href={paths.auth.jwt.signUp} variant="subtitle2">
               Get started
             </Link>
@@ -135,20 +125,21 @@ export function SignInView() {
         }
       />
 
-      {!!errorMessage && (
+      {errorMessage && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {errorMessage}
         </Alert>
       )}
 
       <Form methods={methods} onSubmit={onSubmit}>
-        <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <Field.Text
             name="email"
             label="Email address or username"
             slotProps={{ inputLabel: { shrink: true } }}
           />
-          <Box sx={{ gap: 1.5, display: 'flex', flexDirection: 'column' }}>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             <Link
               component={RouterLink}
               href={paths.auth.jwt.resetPassword}
@@ -158,6 +149,7 @@ export function SignInView() {
             >
               Forgot password?
             </Link>
+
             <Field.Text
               name="password"
               label="Password"
@@ -179,17 +171,17 @@ export function SignInView() {
               }}
             />
           </Box>
+
           <LoadingButton
             fullWidth
             color="inherit"
             size="large"
             type="submit"
             variant="contained"
-            loading={isLoading}
-            disabled={isLoading}
-            loadingIndicator="Sign in..."
+            loading={loading || isSubmitting}
+            disabled={loading || isSubmitting}
           >
-            Sign in
+            {loading || isSubmitting ? 'Signing in…' : 'Sign in'}
           </LoadingButton>
         </Box>
       </Form>
