@@ -26,6 +26,11 @@ const NAV_ITEMS = [
     href: paths.customer.account.root,
   },
   {
+    label: 'Order History',
+    icon: <Iconify width={24} icon="ic:round-history" />,
+    href: `${paths.customer.account.orderHistory}`,
+  },
+  {
     label: 'Security',
     icon: <Iconify width={24} icon="ic:round-vpn-key" />,
     href: `${paths.customer.account.changePassword}`,

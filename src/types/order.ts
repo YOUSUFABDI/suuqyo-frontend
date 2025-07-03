@@ -14,7 +14,8 @@ export type IOrderHistory = {
   paymentTime: IDateValue;
   deliveryTime: IDateValue;
   completionTime: IDateValue;
-  timeline: { title: string; time: IDateValue }[];
+  // timeline: { title: string; time: IDateValue }[];
+  timeline: { title: string; time: string }[];
 };
 
 export type IOrderShippingAddress = {

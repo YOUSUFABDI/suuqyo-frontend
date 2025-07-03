@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API } from '../api';
 import { ApiResponseDT } from 'src/types/api-response';
 import { AddressDT } from 'src/sections/home/address/types/types';
+import { OrderHistoryDT } from 'src/sections/home/account/types/types';
 
 export const orderApi = createApi({
   reducerPath: 'order',
@@ -36,21 +37,6 @@ export const orderApi = createApi({
     }),
     createOrder: builder.mutation<
       ApiResponseDT<any>,
-      // {
-      //   items: Array<{
-      //     productId: number;
-      //     variants: Array<{
-      //       colorId: number;
-      //       sizeId: number;
-      //       quantity: number;
-      //     }>;
-      //   }>;
-      //   shippingAddressId: number;
-      //   paymentMethod: string;
-      //   paymentAccount: string;
-      //   senderPhone?: string;
-      //   shippingFee: number;
-      // }
       {
         items: Array<
           | {
@@ -80,6 +66,13 @@ export const orderApi = createApi({
       }),
       invalidatesTags: ['order'],
     }),
+    getOrderHistory: builder.query<ApiResponseDT<OrderHistoryDT[]>, void>({
+      query: () => ({
+        url: '/customer-order/get-order-history',
+        method: 'GET',
+      }),
+      providesTags: ['order'],
+    }),
   }),
 });
 
@@ -87,4 +80,5 @@ export const {
   useCreateOrderMutation,
   useGetCurrentShippingAddressQuery,
   useUpdateShippingAddressMutation,
+  useGetOrderHistoryQuery,
 } = orderApi;

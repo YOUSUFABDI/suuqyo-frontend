@@ -94,6 +94,7 @@ export const paths = {
     account: {
       root: `/account-setting`,
       changePassword: `/account-setting/change-password`,
+      orderHistory: `/account-setting/order-history`,
     },
     shop: {
       root: '/shop',
