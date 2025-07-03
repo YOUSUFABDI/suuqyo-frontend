@@ -21,6 +21,8 @@ import { shopsManagementApi } from './customer/shop';
 import { orderApi } from './customer/order';
 import { customerProductApi } from './customer/product';
 
+import { contactApi } from './public/public';
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -52,6 +54,10 @@ export const store = configureStore({
     [orderApi.reducerPath]: orderApi.reducer,
     [customerProductApi.reducerPath]: customerProductApi.reducer,
     // customer
+
+    // public
+    [contactApi.reducerPath]: contactApi.reducer,
+    // public
   },
   devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) =>
@@ -82,8 +88,12 @@ export const store = configureStore({
       // customer
       shopsManagementApi.middleware,
       orderApi.middleware,
-      customerProductApi.middleware
+      customerProductApi.middleware,
       // customer
+
+      // public
+      contactApi.middleware
+      // public
     ),
 });
 
