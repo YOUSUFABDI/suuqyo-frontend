@@ -17,8 +17,10 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import { IOrderHistory, OrderHistoryDT } from './types/types';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Grid } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 const MyOrderDetailsHistoryWithData = () => {
+  const theme = useTheme(); // Access the current theme
   const { orderHistory, errorMessage, isLoading } = UseOrderHistory(); // Use the hook to fetch order history
   const [selectedOrder, setSelectedOrder] = useState<IOrderHistory | null>(null); // Order state
 
@@ -64,13 +66,17 @@ const MyOrderDetailsHistoryWithData = () => {
                 p: 2,
                 mb: 1,
                 cursor: 'pointer',
-                '&:hover': { backgroundColor: '#f5f5f5' },
-                width: '100%', // Ensure the Paper doesn't overflow
+                '&:hover': { backgroundColor: theme.palette.action.hover },
+                width: '100%',
+                backgroundColor:
+                  selectedOrder?.id === order.id
+                    ? theme.palette.primary.light // Active order background color
+                    : 'transparent',
               }}
               onClick={() => handleOrderClick(order)} // Pass the entire order object
             >
               <Typography variant="body2">#Order-{order.orderNumber}</Typography>
-              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              <Typography variant="caption" sx={{ color: 'text.primary' }}>
                 {fDateTime(order.createdAt)}
               </Typography>
             </Paper>
