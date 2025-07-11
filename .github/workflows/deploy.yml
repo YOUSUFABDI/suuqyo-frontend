@@ -37,11 +37,7 @@ jobs:
             echo "🔧 Building frontend..."
             npm run build
 
-            echo "🌐 Exporting static site..."
-            npm run export
-
-            echo "📁 Deploying to NGINX..."
-            sudo rm -rf /var/www/suuqyo-frontend/*
-            sudo cp -r out/* /var/www/suuqyo-frontend/
+            echo "🚀 Restarting frontend with PM2..."
+            pm2 reload suuqyo-frontend || pm2 start npm --name suuqyo-frontend -- start
 
             echo "✅ Frontend deployment complete."
