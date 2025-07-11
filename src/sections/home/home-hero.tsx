@@ -79,7 +79,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         ]}
       >
         <Box component="span" sx={{ width: 1, opacity: 0.24 }}>
-          Welcome to
+          Welcome toooo
         </Box>
         {/* where shopping begins */}
         <Box
