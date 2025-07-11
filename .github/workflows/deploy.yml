@@ -6,39 +6,31 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/yousufabdi/suuqyo-frontend:latest
-
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to VPS
+      - name: Deploy over SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           script: |
-            cd /home/suuqyo
-            docker-compose stop frontend || true
-            docker-compose rm -f frontend || true
-            docker-compose pull frontend
-            docker-compose up -d frontend
+            cd /home/suuqyo/frontend
+
+            echo "🔄 Pulling latest frontend code..."
+            git pull origin main
+
+            echo "📦 Installing frontend dependencies..."
+            npm install
+
+            echo "🔧 Building frontend..."
+            npm run build
+
+            echo "📁 Copying build to NGINX directory..."
+            sudo rm -rf /var/www/suuqyo-frontend/*
+            sudo cp -r build/* /var/www/suuqyo-frontend/
