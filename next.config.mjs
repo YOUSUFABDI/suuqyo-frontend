@@ -5,7 +5,7 @@
 const isStaticExport = 'false';
 
 const nextConfig = {
-  // output: 'export',
+  output: 'export',
   reactStrictMode: true,
   trailingSlash: true,
   env: {
@@ -30,10 +30,9 @@ const nextConfig = {
 
     return config;
   },
-  ...(isStaticExport === 'true' &&
-    {
-      // output: 'export',
-    }),
+  ...(isStaticExport === 'true' && {
+    output: 'export',
+  }),
 };
 
 export default nextConfig;
