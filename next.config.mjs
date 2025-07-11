@@ -30,9 +30,10 @@ const nextConfig = {
 
     return config;
   },
-  ...(isStaticExport === 'true' && {
-    output: 'export',
-  }),
+  ...(isStaticExport === 'true' &&
+    {
+      // output: 'export',
+    }),
 };
 
 export default nextConfig;
