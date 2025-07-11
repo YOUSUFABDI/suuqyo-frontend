@@ -5,6 +5,8 @@
 const isStaticExport = 'false';
 
 const nextConfig = {
+  output: 'export',
+  reactStrictMode: true,
   trailingSlash: true,
   env: {
     BUILD_STATIC_EXPORT: isStaticExport,
