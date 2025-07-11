@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "next dev -p 8082",
     "start": "next start -p 8082",
-    "build": "next build",
+    "build": "next build && next export",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:print": "npx eslint --print-config eslint.config.mjs > eslint-show-config.json",
