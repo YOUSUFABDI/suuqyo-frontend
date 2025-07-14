@@ -31,6 +31,7 @@ import { ProductFiltersResult } from './product-filters-result';
 import { ProductSearch } from './product-search';
 import { ProductSort } from './product-sort';
 import { Product, PRODUCT_CATEGORY_OPTIONS } from './types/types';
+import { Button } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -86,7 +87,13 @@ export function ProductListView() {
     >
       <ProductSearch redirectPath={(id: string) => paths.customer.product.details(id)} />
 
-      <Box sx={{ gap: 1, flexShrink: 0, display: 'flex' }}>
+      <Box
+        sx={{
+          gap: 1,
+          flexShrink: 0,
+          display: 'flex',
+        }}
+      >
         <ProductFiltersDrawer
           filters={filters}
           canReset={canReset}
@@ -110,6 +117,47 @@ export function ProductListView() {
     </Box>
   );
 
+  const renderCatorgyButtons = () => (
+    <Stack
+      direction="row"
+      spacing={1}
+      sx={{
+        overflowX: 'auto', // Enable horizontal scrolling if the content overflows
+        flexWrap: 'nowrap', // Prevent buttons from wrapping to the next line
+        gap: 1, // Adjust gap between buttons
+        maxWidth: '100%', // Ensure that the stack doesn't exceed the width of its container
+        whiteSpace: 'nowrap', // Prevent the buttons from wrapping even on large screens
+        // '&::-webkit-scrollbar': {
+        //   display: 'none', // Hides the scrollbar
+        // },
+      }}
+    >
+      {/* Button for "All" categories */}
+      <Button
+        variant={currentFilters.category === 'all' ? 'contained' : 'outlined'}
+        onClick={() => filters.setState({ category: 'all' })}
+        sx={{
+          minWidth: 'max-content', // Ensure buttons don’t stretch too much
+        }}
+      >
+        All
+      </Button>
+      {/* Map through product categories and create a button for each */}
+      {PRODUCT_CATEGORY_OPTIONS.map((category) => (
+        <Button
+          key={category}
+          variant={currentFilters.category === category ? 'contained' : 'outlined'}
+          onClick={() => filters.setState({ category })}
+          sx={{
+            minWidth: 'max-content', // Ensure buttons don’t stretch too much
+          }}
+        >
+          {category}
+        </Button>
+      ))}
+    </Stack>
+  );
+
   const renderResults = () => (
     <ProductFiltersResult filters={filters} totalResults={dataFiltered.length} />
   );
@@ -126,7 +174,9 @@ export function ProductListView() {
       </Typography>
 
       <Stack spacing={2.5} sx={{ mb: { xs: 3, md: 5 } }}>
+        {renderCatorgyButtons()}
         {renderFilters()}
+
         {canReset && renderResults()}
       </Stack>
 

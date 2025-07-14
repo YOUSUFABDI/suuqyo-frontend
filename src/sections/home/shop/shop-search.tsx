@@ -82,7 +82,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
       noOptionsText={<SearchNotFound query={debouncedQuery} />}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       slotProps={{ paper: { sx: paperStyles } }}
-      sx={[{ width: { xs: 1, sm: 260 } }, ...(Array.isArray(sx) ? sx : [sx])]}
+      sx={[{ flex: 1, width: { xs: 1, sm: 260 } }, ...(Array.isArray(sx) ? sx : [sx])]}
       renderInput={(params) => (
         <TextField
           {...params}

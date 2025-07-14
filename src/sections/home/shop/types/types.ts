@@ -35,6 +35,7 @@ export const SHOP_CATEGORY_OPTIONS = [
   'Coffee',
   'Pizza',
   'Clothes',
+  'Shoe Stores',
 ];
 
 export const SHOP_SORT_OPTIONS = [
