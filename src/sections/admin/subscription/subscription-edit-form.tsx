@@ -37,7 +37,7 @@ const SUBSCRIPTION_TERMS = [
 // ----------------------------------------------------------------------
 
 interface SubscriptionEditFormProps {
-  currentSubscription: SubscriptionResDT;
+  currentSubscription?: SubscriptionResDT | null;
 }
 
 export function SubscriptionEditForm({ currentSubscription }: SubscriptionEditFormProps) {
