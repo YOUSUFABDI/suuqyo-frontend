@@ -14,7 +14,7 @@ export type SubscriptionTransactionResDT = {
   subscription: {
     id: number;
     shopOwnerId: number;
-    subscriptionType: string;
+    subscriptionTerm: string;
     startDate: string;
     endDate: string;
     isActive: boolean;

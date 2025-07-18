@@ -140,44 +140,6 @@ export const _socials = [
 
 // ----------------------------------------------------------------------
 
-export const _pricingPlans = [
-  {
-    subscription: 'basic',
-    price: 0,
-    caption: 'Forever',
-    lists: ['3 prototypes', '3 boards', 'Up to 5 team members'],
-    labelAction: 'Current plan',
-  },
-  {
-    subscription: 'starter',
-    price: 4.99,
-    caption: 'Saving $24 a year',
-    lists: [
-      '3 prototypes',
-      '3 boards',
-      'Up to 5 team members',
-      'Advanced security',
-      'Issue escalation',
-    ],
-    labelAction: 'Choose starter',
-  },
-  {
-    subscription: 'premium',
-    price: 9.99,
-    caption: 'Saving $124 a year',
-    lists: [
-      '3 prototypes',
-      '3 boards',
-      'Up to 5 team members',
-      'Advanced security',
-      'Issue escalation',
-      'Issue development license',
-      'Permissions & workflows',
-    ],
-    labelAction: 'Choose premium',
-  },
-];
-
 // ----------------------------------------------------------------------
 
 export const _testimonials = [

@@ -4,6 +4,7 @@ import {
   RenewResponseDataDT,
   SubscriptionReqDT,
   SubscriptionResDT,
+  UpdateSubscriptionReqDT,
 } from 'src/sections/admin/subscription/types/subscription';
 import { ApiResponseDT } from 'src/types/api-response';
 import { API } from '../api';
@@ -32,6 +33,17 @@ export const subscriptionApi = createApi({
       }),
       invalidatesTags: ['subscriptionApi'],
     }),
+    // NEW: The updateSubscription mutation
+    updateSubscription: builder.mutation<ApiResponseDT<SubscriptionResDT>, UpdateSubscriptionReqDT>(
+      {
+        query: (updateData) => ({
+          url: '/admin-subscription/update-subscription',
+          method: 'PATCH', // Using PATCH for partial updates
+          body: updateData,
+        }),
+        invalidatesTags: ['subscriptionApi'], // Refetch subscriptions after an update
+      }
+    ),
     getSubscriptions: builder.query<ApiResponseDT<SubscriptionResDT[]>, void>({
       query: () => ({
         url: '/admin-subscription/get-all-subscriptions',
@@ -39,8 +51,8 @@ export const subscriptionApi = createApi({
       }),
       providesTags: ['subscriptionApi'],
     }),
-    getOneSubscription: builder.query<ApiResponseDT<SubscriptionResDT>, { id: number }>({
-      query: ({ id }) => ({
+    getOneSubscription: builder.query<ApiResponseDT<SubscriptionResDT>, number>({
+      query: (id) => ({
         url: `/admin-subscription/get-one-subscription/${id}`,
         method: 'GET',
       }),
@@ -70,6 +82,7 @@ export const subscriptionApi = createApi({
 
 export const {
   useCreateSubscriptionMutation,
+  useUpdateSubscriptionMutation,
   useGetSubscriptionsQuery,
   useGetOneSubscriptionQuery,
   useSendReminderMutation,

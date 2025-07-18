@@ -16,7 +16,7 @@ export type SubscriptionRenewalResDT = {
     shopOwnerId: number;
     startDate: string; // ISO date string
     endDate: string; // ISO date string
-    subscriptionType: string;
+    subscriptionTerm: string;
     subscriptionFee: number;
     createdBy: string;
     createdAt: string; // ISO date string

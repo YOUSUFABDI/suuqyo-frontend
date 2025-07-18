@@ -50,7 +50,7 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...SUBS_STATUS_OPTIONS];
 const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'name', label: 'Name' },
   { id: 'phoneNumber', label: 'Phone number', width: 100 },
-  { id: 'subscriptionType', label: 'Subscription type' },
+  { id: 'subscriptionTerm', label: 'Subscription type' },
   { id: 'subscriptionFee', label: 'Subscription fee' },
   { id: 'discount', label: 'Discount' },
   { id: 'startDate', label: 'Start date' },
@@ -291,7 +291,7 @@ function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
 
   // Filter by subscriptionType
   if (subscriptionType.length) {
-    filteredData = filteredData.filter((user) => subscriptionType.includes(user.subscriptionType));
+    filteredData = filteredData.filter((user) => subscriptionType.includes(user.subscriptionTerm));
   }
 
   return filteredData;

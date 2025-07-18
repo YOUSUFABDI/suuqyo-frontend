@@ -22,7 +22,7 @@ export function ContactHero({ sx, ...other }: BoxProps) {
           ...theme.mixins.bgGradient({
             images: [
               `linear-gradient(0deg, ${varAlpha(theme.vars.palette.grey['900Channel'], 0.8)}, ${varAlpha(theme.vars.palette.grey['900Channel'], 0.8)})`,
-              `url(${CONFIG.assetsDir}/assets/images/contact/mogadishu.jpg)`,
+              `url(${CONFIG.assetsDir}/assets/background/overlay.svg)`,
             ],
           }),
           overflow: 'hidden',

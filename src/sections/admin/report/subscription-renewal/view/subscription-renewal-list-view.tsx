@@ -60,7 +60,7 @@ import { useSubscriptions } from 'src/sections/admin/subscription/hooks';
 const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'shopOwner', label: 'Shopowner' },
   { id: 'phone', label: 'Phone' },
-  { id: 'subscriptionType', label: 'Subscription type' },
+  { id: 'subscriptionTerm', label: 'Subscription type' },
   { id: 'subscriptionFee', label: 'Subscription fee' },
   { id: 'startDate', label: 'Start date' },
   { id: 'endDate', label: 'End date' },

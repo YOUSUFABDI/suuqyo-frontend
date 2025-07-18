@@ -38,6 +38,7 @@ export const paths = {
     subscription: {
       root: `${ROOTS.DASHBOARD}/subscription`,
       new: `${ROOTS.DASHBOARD}/subscription/new`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/subscription/${id}/edit`,
     },
     report: {
       root: `${ROOTS.DASHBOARD}/report`,
@@ -107,5 +108,6 @@ export const paths = {
     },
     contact: '/contact-us',
     about: '/about-us',
+    pricing: '/pricing',
   },
 };

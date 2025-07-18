@@ -58,7 +58,7 @@ export function SubscriptionRenewalTableRow({ row, selected, onSelectRow }: Prop
         </TableCell>
 
         <TableCell>{row.subscription.user.phoneNumber}</TableCell>
-        <TableCell>{row.subscription.subscriptionType}</TableCell>
+        <TableCell>{row.subscription.subscriptionTerm}</TableCell>
         <TableCell>{fCurrency(row.newFee)}</TableCell>
 
         <TableCell>

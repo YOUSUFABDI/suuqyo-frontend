@@ -159,14 +159,14 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         <Stack spacing={2.5} sx={{ alignItems: 'center' }}>
           <Button
             component={RouterLink}
-            href={paths.customer.product.root}
+            href={paths.customer.shop.root}
             color="inherit"
             size="large"
             variant="contained"
-            startIcon={<Iconify width={24} icon="fluent:box-20-filled" />}
+            startIcon={<Iconify width={24} icon="material-symbols:storefront-rounded" />}
           >
             <span>
-              Products
+              Shops
               <Box
                 component="small"
                 sx={{
@@ -200,16 +200,16 @@ export function HomeHero({ sx, ...other }: BoxProps) {
       <m.div {...motionProps}>
         <Button
           component={RouterLink}
-          href={paths.customer.shop.root}
+          href={paths.customer.product.root}
           color="inherit"
           size="large"
           variant="outlined"
           // target="_blank"
           rel="noopener"
-          startIcon={<Iconify width={24} icon="material-symbols:storefront-rounded" />}
+          startIcon={<Iconify width={24} icon="fluent:box-20-filled" />}
           sx={{ borderColor: 'text.primary' }}
         >
-          Shops
+          Products
         </Button>
       </m.div>
     </Box>

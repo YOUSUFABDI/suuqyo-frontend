@@ -49,7 +49,7 @@ export function HomeView() {
         <ShopView />
 
         {/* <HomeHugePackElements /> */}
-        <ProductListView />
+        {/* <ProductListView /> */}
 
         {/* <HomeForDesigner /> */}
 

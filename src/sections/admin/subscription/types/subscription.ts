@@ -1,7 +1,17 @@
+export type SubscriptionPlan = 'BASIC' | 'PRO' | 'PREMIUM';
+export type SubscriptionTerm = 'MONTHLY' | 'YEARLY';
+
 export interface SubscriptionReqDT {
   shopOwnerId: number;
-  subscriptionType: string;
-  isFree?: boolean;
+  subscriptionPlan: SubscriptionPlan;
+  subscriptionTerm: SubscriptionTerm;
+  discount?: number;
+}
+
+export interface UpdateSubscriptionReqDT {
+  shopOwnerId: number;
+  newPlan?: 'BASIC' | 'PRO' | 'PREMIUM';
+  newTerm?: 'MONTHLY' | 'YEARLY';
   discount?: number;
 }
 
@@ -11,8 +21,9 @@ export type SubscriptionResDT = {
   isActive: boolean;
   isFree: boolean;
   discount: number;
-  subscriptionType: string;
+  subscriptionTerm: string;
   subscriptionFee: number;
+  subscriptionPlan: string;
   subscriptionStatus: string;
   remainingTime: number;
   startDate: string;
@@ -20,14 +31,6 @@ export type SubscriptionResDT = {
   createdBy: string;
   createdAt: string;
   updatedAt: string;
-
-  // shopOwner: {
-  //   id: string;
-  //   userId: number;
-  // fullName: string;
-  // phoneNumber: string;
-  //   createdAt: string;
-  //   updatedAt: string;
   user: {
     id: string;
     fullName: string;

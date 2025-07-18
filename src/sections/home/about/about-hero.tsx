@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import { CONFIG } from 'src/global-config';
 
 import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/components/animate';
+import { varAlpha } from 'minimal-shared/utils';
 
 // ----------------------------------------------------------------------
 
@@ -19,9 +20,13 @@ export function AboutHero({ sx, ...other }: BoxProps) {
       sx={[
         (theme) => ({
           ...theme.mixins.bgGradient({
+            // images: [
+            //   `url(${CONFIG.assetsDir}/assets/background/overlay.svg)`,
+            //   `url(${CONFIG.assetsDir}/assets/images/about/about.jpg)`,
+            // ],
             images: [
+              `linear-gradient(0deg, ${varAlpha(theme.vars.palette.grey['900Channel'], 0.8)}, ${varAlpha(theme.vars.palette.grey['900Channel'], 0.8)})`,
               `url(${CONFIG.assetsDir}/assets/background/overlay.svg)`,
-              `url(${CONFIG.assetsDir}/assets/images/about/about.jpg)`,
             ],
           }),
           height: { md: 560 },

@@ -88,6 +88,12 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
     >
       <MenuList>
         <li>
+          <MenuItem component={RouterLink} href={editHref} onClick={() => menuActions.onClose()}>
+            <Iconify icon="solar:pen-bold" />
+            Edit
+          </MenuItem>
+        </li>
+        <li>
           <MenuItem onClick={handleSendReminder} disabled={isLoading}>
             <Iconify icon="solar:bell-bold" />
             Remind
@@ -139,7 +145,8 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.user.phoneNumber}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.subscriptionType}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.subscriptionTerm}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.subscriptionPlan}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>$ {row.subscriptionFee}</TableCell>
 

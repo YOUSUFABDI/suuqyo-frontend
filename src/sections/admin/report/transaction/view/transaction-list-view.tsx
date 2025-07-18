@@ -58,7 +58,7 @@ const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'transactionDate', label: 'Transaction Date' },
   { id: 'price', label: 'Amount' },
   { id: 'paymentMethod', label: 'Payment method' },
-  { id: 'subscriptionType', label: 'Subscription type' },
+  { id: 'subscriptionTerm', label: 'Subscription type' },
   { id: 'transactionType', label: 'Transaction type' },
   { id: 'status', label: 'Status' },
   { id: '' },

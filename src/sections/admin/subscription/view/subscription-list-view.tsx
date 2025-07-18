@@ -51,6 +51,7 @@ const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'name', label: 'Name' },
   { id: 'phoneNumber', label: 'Phone number', width: 100 },
   { id: 'subscriptionType', label: 'Subscription type' },
+  { id: 'subscriptionPlan', label: 'Subscription plan' },
   { id: 'subscriptionFee', label: 'Subscription fee' },
   { id: 'discount', label: 'Discount' },
   { id: 'startDate', label: 'Start date' },
@@ -230,7 +231,7 @@ export function SubscriptionListView() {
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
-                        editHref={'#'}
+                        editHref={paths.dashboard.subscription.edit(row.id)}
                       />
                     ))}
 
@@ -290,7 +291,7 @@ function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
 
   // Filter by subscriptionType
   if (subscriptionType.length) {
-    filteredData = filteredData.filter((user) => subscriptionType.includes(user.subscriptionType));
+    filteredData = filteredData.filter((user) => subscriptionType.includes(user.subscriptionTerm));
   }
 
   return filteredData;
