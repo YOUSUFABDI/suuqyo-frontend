@@ -37,9 +37,11 @@ export const ShopDetailsView = ({ shop }: Props) => {
           <ShopDetail shop={shopDetails} products={products} user={user} />
         </Box>
 
+        {/* here */}
         <Box sx={{ flex: 1 }}>
           <ShopProduct products={products} shop={shopDetails} />
         </Box>
+        {/* here */}
       </Box>
     </Container>
   );

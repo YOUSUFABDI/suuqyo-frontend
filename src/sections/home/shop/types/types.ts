@@ -51,3 +51,13 @@ export interface ShopCategoryDT {
   createdAt: string;
   updatedAt: string;
 }
+
+export const PRODUCT_CATEGORY_OPTIONS = [
+  'Shoes',
+  'Electronic',
+  'Food',
+  'Clothes',
+  'Drinks',
+  'Coffee',
+  'Pizza',
+];

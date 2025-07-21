@@ -100,6 +100,35 @@ export function ProductItem({ product, detailsHref }: Props) {
   //     </Box>
   //   );
 
+  const renderLabels = () => {
+    const labels = [];
+
+    // Add discount label if discount exists
+    if (product.discount && product.discount > 0) {
+      labels.push(
+        <Label key="discount" variant="filled" color="error">
+          {`-${product.discount}%`}
+        </Label>
+      );
+    }
+
+    return labels.length > 0 ? (
+      <Box
+        sx={{
+          gap: 1,
+          top: 16,
+          zIndex: 9,
+          right: 16,
+          display: 'flex',
+          position: 'absolute',
+          alignItems: 'center',
+        }}
+      >
+        {labels}
+      </Box>
+    ) : null;
+  };
+
   const renderImage = () => (
     <Box sx={{ position: 'relative', p: 1 }}>
       {/* {!!available && (
@@ -155,14 +184,30 @@ export function ProductItem({ product, detailsHref }: Props) {
         )}
         <Box>{product?.shop?.shopName}</Box>
 
-        <Box sx={{ gap: 0.5, display: 'flex', typography: 'subtitle1' }}>
-          {/* {product.sellingPrice && (
+        {/* <Box sx={{ gap: 0.5, display: 'flex', typography: 'subtitle1' }}>
+          {product.sellingPrice && (
             <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
               {fCurrency(product.sellingPrice)}
             </Box>
-          )} */}
+          )}
 
           <Box component="span">{fCurrency(product.sellingPrice)}</Box>
+        </Box> */}
+        <Box sx={{ gap: 0.5, display: 'flex', typography: 'subtitle1' }}>
+          {/* Show original price with strikethrough if discount exists */}
+          {product.discount && product.discount > 0 ? (
+            <>
+              <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
+                {fCurrency(product.sellingPrice)}
+              </Box>
+              <Box component="span">
+                {fCurrency(product.sellingPrice * (1 - product.discount / 100))}
+              </Box>
+            </>
+          ) : (
+            // Show regular price if no discount
+            <Box component="span">{fCurrency(product.sellingPrice)}</Box>
+          )}
         </Box>
       </Box>
     </Stack>
@@ -180,7 +225,7 @@ export function ProductItem({ product, detailsHref }: Props) {
         cursor: 'pointer',
       }}
     >
-      {/* {renderLabels()} */}
+      {renderLabels()}
       {renderImage()}
       {renderContent()}
     </Card>

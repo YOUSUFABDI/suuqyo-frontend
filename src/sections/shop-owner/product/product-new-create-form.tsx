@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback } from 'react';
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { useCallback, useMemo } from 'react';
+import { useForm, useFieldArray, Controller, useWatch } from 'react-hook-form';
 import { z as zod } from 'zod';
 
 import Box from '@mui/material/Box';
@@ -23,6 +23,7 @@ import { UseCategories, UseVariants } from './hooks';
 import { useCreateProductMutation } from 'src/store/shop-owner/product';
 import { getErrorMessage } from 'src/utils/error.message';
 import { Iconify } from 'src/components/iconify';
+import TextField from '@mui/material/TextField';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,16 @@ export const NewProductSchema = zod
       zod.number({ coerce: true }).min(1, { message: 'Purchase price is required!' }),
       { message: 'Purchase price is required!' }
     ),
+    // [!code ++]
+    discount: schemaHelper
+      .nullableInput(
+        zod
+          .number({ coerce: true })
+          .min(0, { message: 'Discount cannot be negative.' })
+          .max(100, { message: 'Discount cannot exceed 100.' })
+      )
+      .optional(),
+    // [!code ++],
     categoryId: zod.number({ coerce: true }).nullable(),
     description: zod.string(),
     isFood: zod.boolean(),
@@ -88,6 +99,7 @@ export function ProductNewCreateForm() {
     images: [],
     sellingPrice: null,
     purchasePrice: null,
+    discount: null, // [!code ++]
     categoryId: null,
     isFood: false,
     isAvailiable: false,
@@ -113,6 +125,19 @@ export function ProductNewCreateForm() {
   const isFood = values.isFood;
   const isAvailiable = values.isAvailiable;
 
+  // Watch sellingPrice and discount for after-discount calculation
+  const sellingPrice = useWatch({ control, name: 'sellingPrice' });
+  const discount = useWatch({ control, name: 'discount' });
+
+  // Calculate after-discount price safely
+  const afterDiscountPrice = useMemo(() => {
+    const price = sellingPrice ?? 0;
+    const disc = discount ?? 0;
+
+    if (disc <= 0) return price;
+    return price - price * (disc / 100);
+  }, [sellingPrice, discount]);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'variants',
@@ -130,6 +155,13 @@ export function ProductNewCreateForm() {
         isFood: data.isFood,
         isAvailiable: data.isAvailiable,
       };
+
+      // [!code ++]
+      // Only include discount if it has a value
+      if (data.discount !== null && data.discount !== undefined) {
+        dto.discount = data.discount;
+      }
+      // [!code ++]
 
       if (!data.isFood) {
         dto.condition = data.condition;
@@ -394,6 +426,44 @@ export function ProductNewCreateForm() {
             },
           }}
         />
+        {/* After Discount Price (Read-only) */}
+        <TextField
+          fullWidth
+          label="After Discount Price"
+          value={typeof afterDiscountPrice === 'number' ? afterDiscountPrice.toFixed(2) : '0.00'}
+          type="text"
+          InputProps={{
+            readOnly: true,
+            startAdornment: (
+              <InputAdornment position="start" sx={{ mr: 0.75 }}>
+                <Box component="span" sx={{ color: 'text.disabled' }}>
+                  $
+                </Box>
+              </InputAdornment>
+            ),
+          }}
+          InputLabelProps={{ shrink: true }}
+        />
+        {/* [!code ++] */}
+        <Field.Text
+          name="discount"
+          label="Discount"
+          placeholder="0"
+          type="number"
+          slotProps={{
+            inputLabel: { shrink: true },
+            input: {
+              endAdornment: (
+                <InputAdornment position="end" sx={{ mr: 0.75 }}>
+                  <Box component="span" sx={{ color: 'text.disabled' }}>
+                    %
+                  </Box>
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+        {/* [!code ++] */}
       </Stack>
     </Card>
   );
