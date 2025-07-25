@@ -37,12 +37,12 @@ const OrderCompleteIllustration = forwardRef<SVGSVGElement, SvgProps>((props, re
     >
       {!hideBackground && <BackgroundShape />}
 
-      <image
+      {/* <image
         href={`${CONFIG.assetsDir}/assets/illustrations/characters/character-10.webp`}
         height="300"
         x="300"
         y="30"
-      />
+      /> */}
 
       <path
         fill="#DFE3E8"

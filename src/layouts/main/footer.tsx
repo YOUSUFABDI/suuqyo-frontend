@@ -176,6 +176,9 @@ export function HomeFooter({ sx, ...other }: FooterProps) {
           <br /> Made With ❤️ In Hamar
           <Link href="https://suuqyo.com/"> suuqyo.com </Link>
         </Box>
+        <Box sx={{ mt: 1, typography: 'caption' }}>
+          <Link href={paths.customer.privacy}> Privacy notice </Link>
+        </Box>
       </Container>
     </FooterRoot>
   );

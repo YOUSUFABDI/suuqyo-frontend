@@ -109,5 +109,6 @@ export const paths = {
     contact: '/contact-us',
     about: '/about-us',
     pricing: '/pricing',
+    privacy: '/privacy',
   },
 };
