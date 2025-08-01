@@ -22,13 +22,16 @@ export const ShopDetail = ({ shop, products, user }: Props) => {
 
         {/* Shop Name & Products */}
         <Box>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Typography variant="h6" fontWeight="bold">
-              {shop?.shopName}
-            </Typography>
+          <Typography variant="h6" fontWeight="bold">
+            {shop?.shopName}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {products.length} products
+          </Typography>
 
+          <Box mt={1}>
             {/* Verified Badge */}
-            {/* {shop.user.status && (
+            {shop.isVerified && (
               <Chip
                 label="Verified"
                 color="success"
@@ -36,12 +39,8 @@ export const ShopDetail = ({ shop, products, user }: Props) => {
                 icon={<Iconify icon="mdi:check-decagram" width={14} />}
                 sx={{ fontWeight: 'medium', pl: 0.5 }}
               />
-            )} */}
-          </Stack>
-
-          <Typography variant="body2" color="text.secondary">
-            {products.length} products
-          </Typography>
+            )}
+          </Box>
         </Box>
       </Stack>
 

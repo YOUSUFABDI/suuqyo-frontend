@@ -8,6 +8,7 @@ export type ShopInfoDT = {
     shopAddress: string;
     shopDescription: string;
     businessProof: string;
+    isVerified: boolean;
     createdAt: string;
     updatedAt: string;
     ShopCategory: ShopCategoryDT;

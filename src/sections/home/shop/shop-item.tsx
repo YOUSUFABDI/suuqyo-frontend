@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Chip, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { Iconify } from 'src/components/iconify';
@@ -100,6 +100,19 @@ export function ShopItem({ shop, detailsHref }: Props) {
           >
             {shop.shopAddress}
           </Typography>
+        </Box>
+
+        <Box>
+          {/* Verified Badge */}
+          {shop.isVerified && (
+            <Chip
+              label="Verified"
+              color="success"
+              size="small"
+              icon={<Iconify icon="mdi:check-decagram" width={14} />}
+              sx={{ fontWeight: 'medium', pl: 0.5 }}
+            />
+          )}
         </Box>
       </Box>
     </Link>
