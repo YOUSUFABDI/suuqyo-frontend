@@ -6,7 +6,15 @@ import { isSuccessResponse } from 'src/utils/is-success-res';
 import { OrderResDT } from '../types/types';
 
 export const UseOrders = () => {
-  const { data, error, isLoading, refetch: refetchOrders } = useGetOrdersQuery();
+  const {
+    data,
+    error,
+    isLoading,
+    refetch: refetchOrders,
+  } = useGetOrdersQuery(undefined, {
+    pollingInterval: 2000, // Refresh every 2 seconds
+    refetchOnMountOrArgChange: true,
+  });
 
   const orders = isSuccessResponse<OrderResDT[]>(data) ? data.payload.data : [];
   const errorMessage = error ? getErrorMessage(error) : null;

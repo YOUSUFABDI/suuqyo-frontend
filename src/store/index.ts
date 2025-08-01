@@ -13,6 +13,7 @@ import { shopApi } from './shop-owner/shop';
 import { OrderApi } from './shop-owner/order';
 import { deliveryUserApi } from './shop-owner/delivery-user';
 import { shopOwnerAnalyticApi } from './shop-owner/shop-owner-analytics';
+import { shopSubscriptionApi } from './shop-owner/subscription';
 
 import { deliveryUserApi as deliveryUserManagementApi } from './delivery-user/delivery-user';
 import { deliveryUserAnalyticApi } from './delivery-user/delivery-user-analytic';
@@ -42,6 +43,7 @@ export const store = configureStore({
     [OrderApi.reducerPath]: OrderApi.reducer,
     [deliveryUserApi.reducerPath]: deliveryUserApi.reducer,
     [shopOwnerAnalyticApi.reducerPath]: shopOwnerAnalyticApi.reducer,
+    [shopSubscriptionApi.reducerPath]: shopSubscriptionApi.reducer,
     // shop-owner
 
     // delivery-user
@@ -78,6 +80,7 @@ export const store = configureStore({
       OrderApi.middleware,
       deliveryUserApi.middleware,
       shopOwnerAnalyticApi.middleware,
+      shopSubscriptionApi.middleware,
       // shop-owner
 
       // delivery-user
