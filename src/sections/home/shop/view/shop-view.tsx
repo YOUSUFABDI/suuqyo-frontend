@@ -1,9 +1,9 @@
 'use client';
 
-import type { IProductFilters } from 'src/types/product';
 import { orderBy } from 'es-toolkit';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 import { useState } from 'react';
+import type { IProductFilters } from 'src/types/product';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -14,24 +14,16 @@ import { paths } from 'src/routes/paths';
 
 import { EmptyContent } from 'src/components/empty-content';
 
+import { Button } from '@mui/material';
+import { PRODUCT_COLOR_OPTIONS, PRODUCT_GENDER_OPTIONS, PRODUCT_RATING_OPTIONS } from 'src/_mock';
+import { slugify } from 'src/utils/slugify';
 import { useSearchShops, useShopCategories, UseShops } from '../hooks';
+import { ShopFiltersDrawer } from '../shop-filters-drawer';
 import { ShopFiltersResult } from '../shop-filters-result';
 import { ShopList } from '../shop-list';
 import { ShopSearch } from '../shop-search';
-import { slugify } from 'src/utils/slugify';
-import { ProductFiltersDrawer } from '../../product/product-filters-drawer';
-import { ProductSort } from '../../product/product-sort';
-import {
-  PRODUCT_COLOR_OPTIONS,
-  PRODUCT_GENDER_OPTIONS,
-  PRODUCT_RATING_OPTIONS,
-  PRODUCT_SORT_OPTIONS,
-} from 'src/_mock';
-import { PRODUCT_CATEGORY_OPTIONS } from '../../product/types/types';
-import { ShopFiltersDrawer } from '../shop-filters-drawer';
 import { ShopSort } from '../shop-sort';
 import { SHOP_SORT_OPTIONS, ShopInfoDT } from '../types/types';
-import { Button } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
