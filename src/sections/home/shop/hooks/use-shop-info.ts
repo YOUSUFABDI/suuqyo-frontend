@@ -6,7 +6,11 @@ import { ShopInfoDT } from '../types/types';
 import { getErrorMessage } from 'src/utils/error.message';
 
 export const useShopInfo = (shopName: string) => {
-  const { data, error, isLoading } = useGetShopInfoQuery(shopName);
+  const { data, error, isLoading } = useGetShopInfoQuery(shopName, {
+    // skip: user?.role !== 'SHOP_OWNER',
+    pollingInterval: 3000, // Refresh every 3 seconds
+    refetchOnMountOrArgChange: true,
+  });
   // console.log('data', data);
 
   const shop = isSuccessResponse<ShopInfoDT>(data) ? data.payload.data : null;
