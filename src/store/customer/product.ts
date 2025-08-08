@@ -33,7 +33,17 @@ export const customerProductApi = createApi({
       }),
       providesTags: ['customerProduct'],
     }),
+    getAllProductCategories: builder.query<ApiResponseDT<string[]>, void>({
+      query: () => ({
+        url: '/customer-product/product-categories',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useGetOneProductByIdQuery, useGetAllProductsQuery } = customerProductApi;
+export const {
+  useGetOneProductByIdQuery,
+  useGetAllProductsQuery,
+  useGetAllProductCategoriesQuery,
+} = customerProductApi;

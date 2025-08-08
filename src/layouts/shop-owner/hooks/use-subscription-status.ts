@@ -15,13 +15,13 @@ export const useSubscriptionStatus = () => {
     }
   );
   const res = isSuccessResponse<SubscriptionStatusResDT>(data) ? data.payload.data : null;
-  console.log('res', res);
+  // console.log('res', res);
 
   const isExpired = res?.isExpired;
-  // const isExpired = false;
-  const remainingDays = res?.remainingDays || 0;
+  // const isExpired = true;
+  const remainingDays = res?.remainingDays;
   // const remainingDays = 1;
-  const showWarning = remainingDays <= 10;
+  const showWarning = remainingDays && remainingDays <= 10;
 
   return {
     loading: isLoading || isFetching,

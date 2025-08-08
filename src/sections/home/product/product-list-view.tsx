@@ -25,12 +25,12 @@ import { EmptyContent } from 'src/components/empty-content';
 import { useCheckoutContext } from '../checkout/context';
 import { CartIcon } from '../components/cart-icon';
 import { ProductList } from '../components/product-list';
-import { useAllProduct } from './hooks';
+import { useAllProduct, useCategories } from './hooks';
 import { ProductFiltersDrawer } from './product-filters-drawer';
 import { ProductFiltersResult } from './product-filters-result';
 import { ProductSearch } from './product-search';
 import { ProductSort } from './product-sort';
-import { Product, PRODUCT_CATEGORY_OPTIONS } from './types/types';
+import { Product } from './types/types';
 import { Button } from '@mui/material';
 
 // ----------------------------------------------------------------------
@@ -38,7 +38,8 @@ import { Button } from '@mui/material';
 export function ProductListView() {
   const { state: checkoutState } = useCheckoutContext();
   const { products } = useAllProduct();
-  console.log('products', products);
+  const { productCategories } = useCategories();
+  // console.log('products', products);
 
   const openFilters = useBoolean();
 
@@ -104,7 +105,7 @@ export function ProductListView() {
             colors: PRODUCT_COLOR_OPTIONS,
             ratings: PRODUCT_RATING_OPTIONS,
             genders: PRODUCT_GENDER_OPTIONS,
-            categories: ['all', ...PRODUCT_CATEGORY_OPTIONS],
+            categories: ['all', ...productCategories],
           }}
         />
 
@@ -143,7 +144,7 @@ export function ProductListView() {
         All
       </Button>
       {/* Map through product categories and create a button for each */}
-      {PRODUCT_CATEGORY_OPTIONS.map((category) => (
+      {productCategories.map((category) => (
         <Button
           key={category}
           variant={currentFilters.category === category ? 'contained' : 'outlined'}

@@ -29,15 +29,15 @@ export type ShopInfoDT = {
   products: Product[];
 };
 
-export const SHOP_CATEGORY_OPTIONS = [
-  'Furniture',
-  'Resturant',
-  'Electronic',
-  'Coffee',
-  'Pizza',
-  'Clothes',
-  'Shoe Stores',
-];
+// export const SHOP_CATEGORY_OPTIONS = [
+//   'Furniture',
+//   'Resturant',
+//   'Electronic',
+//   'Coffee',
+//   'Pizza',
+//   'Clothes',
+//   'Shoe Stores',
+// ];
 
 export const SHOP_SORT_OPTIONS = [
   { value: 'featured', label: 'Featured' },

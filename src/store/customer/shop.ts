@@ -32,7 +32,14 @@ export const shopsManagementApi = createApi({
         method: 'GET',
       }),
     }),
+    getAllShopCategories: builder.query<ApiResponseDT<string[]>, void>({
+      query: () => ({
+        url: '/shop/shop-categories',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useShopsQuery, useGetShopInfoQuery } = shopsManagementApi;
+export const { useShopsQuery, useGetShopInfoQuery, useGetAllShopCategoriesQuery } =
+  shopsManagementApi;

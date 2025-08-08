@@ -76,12 +76,12 @@ export interface ProductResponse {
   product: Product;
 }
 
-export const PRODUCT_CATEGORY_OPTIONS = [
-  'Shoes',
-  'Electronic',
-  'Food',
-  'Clothes',
-  'Drinks',
-  'Coffee',
-  'Pizza',
-];
+// export const PRODUCT_CATEGORY_OPTIONS = [
+//   'Shoes',
+//   'Electronic',
+//   'Food',
+//   'Clothes',
+//   'Drinks',
+//   'Coffee',
+//   'Pizza',
+// ];

@@ -14,7 +14,7 @@ import { paths } from 'src/routes/paths';
 
 import { EmptyContent } from 'src/components/empty-content';
 
-import { useSearchShops, UseShops } from '../hooks';
+import { useSearchShops, useShopCategories, UseShops } from '../hooks';
 import { ShopFiltersResult } from '../shop-filters-result';
 import { ShopList } from '../shop-list';
 import { ShopSearch } from '../shop-search';
@@ -30,13 +30,14 @@ import {
 import { PRODUCT_CATEGORY_OPTIONS } from '../../product/types/types';
 import { ShopFiltersDrawer } from '../shop-filters-drawer';
 import { ShopSort } from '../shop-sort';
-import { SHOP_CATEGORY_OPTIONS, SHOP_SORT_OPTIONS, ShopInfoDT } from '../types/types';
+import { SHOP_SORT_OPTIONS, ShopInfoDT } from '../types/types';
 import { Button } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
 export function ShopView() {
   const { shops } = UseShops();
+  const { shopCategories } = useShopCategories();
   const [searchQuery, setSearchQuery] = useState('');
   const { searchResults } = useSearchShops(searchQuery);
 
@@ -96,7 +97,7 @@ export function ShopView() {
             colors: PRODUCT_COLOR_OPTIONS,
             ratings: PRODUCT_RATING_OPTIONS,
             genders: PRODUCT_GENDER_OPTIONS,
-            categories: ['all', ...SHOP_CATEGORY_OPTIONS],
+            categories: ['all', ...shopCategories],
           }}
         />
 
@@ -135,7 +136,7 @@ export function ShopView() {
         All
       </Button>
       {/* Map through product categories and create a button for each */}
-      {SHOP_CATEGORY_OPTIONS.map((category) => (
+      {shopCategories.map((category) => (
         <Button
           key={category}
           variant={currentFilters.category === category ? 'contained' : 'outlined'}

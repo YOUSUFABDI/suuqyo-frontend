@@ -131,7 +131,7 @@ export function MyShop() {
             >
               <Field.Text name="shopName" label="Shop name" />
               <Field.Text name="shopDescription" label="Shop description" />
-              <Field.Text name="shopAddress" label="Shop address" />
+              <Field.Text sx={{ pointerEvents: 'none' }} name="shopAddress" label="Shop address" />
               <Field.Text
                 sx={{ pointerEvents: 'none' }}
                 name=""
