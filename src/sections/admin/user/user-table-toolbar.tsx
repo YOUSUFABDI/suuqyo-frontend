@@ -1,6 +1,6 @@
 import type { SelectChangeEvent } from '@mui/material/Select';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
-import type { IShopOwnerTableFilters } from './types/types';
+import type { IUserTableFilters } from './types/types';
 
 import { usePopover } from 'minimal-shared/hooks';
 import { useCallback } from 'react';
@@ -19,7 +19,7 @@ import { Iconify } from 'src/components/iconify';
 
 type Props = {
   onResetPage: () => void;
-  filters: UseSetStateReturn<IShopOwnerTableFilters>;
+  filters: UseSetStateReturn<IUserTableFilters>;
   options: {
     status: string[];
   };
@@ -41,7 +41,7 @@ export function UserTableToolbar({ filters, options, onResetPage }: Props) {
   const handleFilterStatus = useCallback(
     (event: SelectChangeEvent) => {
       onResetPage();
-      updateFilters({ status: event.target.value as IShopOwnerTableFilters['status'] });
+      updateFilters({ status: event.target.value as IUserTableFilters['status'] });
     },
     [onResetPage, updateFilters]
   );
