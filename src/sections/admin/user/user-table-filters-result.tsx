@@ -1,4 +1,4 @@
-import type { IShopOwnerTableFilters } from './types/types';
+import type { IUserTableFilters } from './types/types';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 import type { FiltersResultProps } from 'src/components/filters-result';
 
@@ -12,7 +12,7 @@ import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-r
 
 type Props = FiltersResultProps & {
   onResetPage: () => void;
-  filters: UseSetStateReturn<IShopOwnerTableFilters>;
+  filters: UseSetStateReturn<IUserTableFilters>;
 };
 
 export function UserTableFiltersResult({ filters, onResetPage, totalResults, sx }: Props) {
