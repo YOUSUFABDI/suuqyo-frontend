@@ -16,13 +16,20 @@ type Props = {
 };
 
 export function SubscriptionEditView({ subscription: currentSubscription }: Props) {
+  const role = localStorage.getItem('role');
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
         heading="Edit"
-        backHref={paths.dashboard.subscription.root}
+        backHref={
+          role === 'ADMIN' ? paths.dashboard.subscription.root : paths.staff.subscription.root
+        }
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
+          {
+            name: role === 'ADMIN' ? 'Dashboard' : 'Staff',
+            href: role === 'ADMIN' ? paths.dashboard.root : paths.staff.shopOwner.root,
+          },
           { name: 'Subscription', href: paths.dashboard.subscription.root },
           { name: currentSubscription?.id },
         ]}

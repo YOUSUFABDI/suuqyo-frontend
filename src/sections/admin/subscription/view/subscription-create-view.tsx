@@ -11,13 +11,22 @@ import { SubscriptionNewForm } from '../subscription-new-form';
 // ----------------------------------------------------------------------
 
 export function SubscriptionCreateView() {
+  const role = localStorage.getItem('role');
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
         heading="Create a new subscription"
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Subscriptions', href: paths.dashboard.subscription.root },
+          {
+            name: role === 'ADMIN' ? 'Dashboard' : 'Staff',
+            href: role === 'ADMIN' ? paths.dashboard.root : paths.staff.shopOwner.root,
+          },
+          {
+            name: 'Subscriptions',
+            href:
+              role === 'ADMIN' ? paths.dashboard.subscription.root : paths.staff.subscription.root,
+          },
           { name: 'New subscription' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

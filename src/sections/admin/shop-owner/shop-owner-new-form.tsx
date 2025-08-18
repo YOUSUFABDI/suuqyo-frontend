@@ -26,6 +26,8 @@ import { Iconify } from 'src/components/iconify';
 import { MultiFilePreview } from 'src/components/upload';
 import { getErrorMessage } from 'src/utils/error.message';
 import { UseShopCategories } from './hooks';
+import { useUser } from 'src/sections/auth/hooks';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -58,6 +60,7 @@ export const NewUserSchema = zod.object({
   shopDescription: zod.string().min(1, { message: 'Shop description is required!' }),
   shopAddress: zod.string().min(1, { message: 'Shop address is required!' }),
   shopCategoryId: zod.number({ coerce: true }).nullable(),
+  createdBy: zod.string(),
   paymentMethods: zod
     .array(
       zod.object({
@@ -72,8 +75,10 @@ export const NewUserSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export function ShopOwnerNewForm() {
+  const role = localStorage.getItem('role');
   const router = useRouter();
   const { shopCategories } = UseShopCategories();
+  const { user } = useUser();
 
   const [registerShopOwner, { isLoading }] = useRegisterShopOwnerMutation();
 
@@ -98,6 +103,7 @@ export function ShopOwnerNewForm() {
     shopAddress: '',
     shopCategoryId: null,
     paymentMethods: [{ paymentName: 'EVC_PLUS', paymentPhone: '' }],
+    createdBy: '',
   };
 
   const methods = useForm<NewUserSchemaType>({
@@ -154,12 +160,14 @@ export function ShopOwnerNewForm() {
         shopCategoryId: data.shopCategoryId,
 
         paymentMethods: data.paymentMethods,
+
+        createdBy: user?.username ?? '',
       };
-      console.log('---------', createShopOwnerDto);
+      // console.log('---------', createShopOwnerDto);
       const profileImage = data.profileImage;
       const shopLogo = data.shopLogo;
       const businessProof = data.businessProof;
-      console.log('businessProof', businessProof);
+      // console.log('businessProof', businessProof);
 
       const formData = new FormData();
       formData.append('createShopOwnerDto', JSON.stringify(createShopOwnerDto));
@@ -176,7 +184,11 @@ export function ShopOwnerNewForm() {
       await registerShopOwner(formData).unwrap();
       toast.success('Create success!');
       reset();
-      router.push(paths.dashboard.shopOwner.root);
+      if (role === 'ADMIN') {
+        router.push(paths.dashboard.shopOwner.root);
+      } else if (role === 'STAFF') {
+        router.push(paths.staff.shopOwner.root);
+      }
     } catch (error: any) {
       console.error(error);
       const errorMessage = getErrorMessage(error);
@@ -187,6 +199,16 @@ export function ShopOwnerNewForm() {
   const handleRemove = () => {
     setValue('businessProof', null, { shouldValidate: true });
   };
+
+  useEffect(() => {
+    if (user) {
+      const mapped = {
+        ...defaultValues,
+        createdBy: user.username,
+      };
+      reset(mapped);
+    }
+  }, [user, reset]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -483,6 +505,11 @@ export function ShopOwnerNewForm() {
           </Grid>
         </Card>
         {/* shop detail */}
+
+        <Divider />
+        <Box>
+          <Field.Text sx={{ pointerEvents: 'none' }} name="createdBy" label="Created by" />
+        </Box>
 
         <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>

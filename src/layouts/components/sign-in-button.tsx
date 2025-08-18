@@ -27,6 +27,8 @@ export function SignInButton({ sx, ...other }: ButtonProps) {
           return paths.shopOwner.root;
         case 'DELIVERY_USER':
           return paths.deliveryUser.root;
+        case 'STAFF':
+          return '/staff/shop-owner';
         default:
           return '/';
       }

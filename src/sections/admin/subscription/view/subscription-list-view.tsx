@@ -72,6 +72,7 @@ export type SUBSTableFilters = {
 export function SubscriptionListView() {
   const { subscriptions } = useSubscriptions();
   const table = useTable();
+  const role = localStorage.getItem('role');
 
   const [tableData, setTableData] = useState<SubscriptionResDT[]>(subscriptions);
 
@@ -118,14 +119,25 @@ export function SubscriptionListView() {
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Subscriptions', href: paths.dashboard.subscription.root },
+            {
+              name: role === 'ADMIN' ? 'Dashboard' : 'Staff',
+              href: role === 'ADMIN' ? paths.dashboard.root : paths.staff.shopOwner.root,
+            },
+            {
+              name: 'Subscriptions',
+              href:
+                role === 'ADMIN'
+                  ? paths.dashboard.subscription.root
+                  : paths.staff.subscription.root,
+            },
             { name: 'List' },
           ]}
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.subscription.new}
+              href={
+                role === 'ADMIN' ? paths.dashboard.subscription.new : paths.staff.subscription.new
+              }
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
@@ -231,7 +243,11 @@ export function SubscriptionListView() {
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
-                        editHref={paths.dashboard.subscription.edit(row.id)}
+                        editHref={
+                          role === 'ADMIN'
+                            ? paths.dashboard.subscription.edit(row.id)
+                            : paths.staff.subscription.edit(row.id)
+                        }
                       />
                     ))}
 

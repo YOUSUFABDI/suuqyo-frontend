@@ -16,14 +16,22 @@ type Props = {
 };
 
 export function ShopOwnerEditView({ user: currentUser }: Props) {
+  const role = localStorage.getItem('role');
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
         heading="Edit"
-        backHref={paths.dashboard.shopOwner.root}
+        backHref={paths.staff.shopOwner.root}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Shop owner', href: paths.dashboard.shopOwner.root },
+          {
+            name: role === 'ADMIN' ? 'Dashbaord' : 'Staff',
+            href: role === 'ADMIN' ? paths.dashboard.root : paths.staff.shopOwner.root,
+          },
+          {
+            name: 'Shop owner',
+            href: role === 'ADMIN' ? paths.dashboard.shopOwner.root : paths.staff.shopOwner.root,
+          },
           { name: currentUser?.fullName },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

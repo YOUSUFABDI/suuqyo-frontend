@@ -69,6 +69,7 @@ const TABLE_HEAD: TableHeadCellProps[] = [
 // ----------------------------------------------------------------------
 
 export function ShopwOwnerListView() {
+  const role = localStorage.getItem('role');
   const { shopOwners } = UseShopOwners();
   const { deleteShopOwner, isDeleting } = UseDeleteShopOwner();
   const { deleteShopOwners, areDeleting } = UseDeleteShopOwners();
@@ -192,14 +193,20 @@ export function ShopwOwnerListView() {
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Shop owner', href: paths.dashboard.shopOwner.root },
+            {
+              name: role === 'ADMIN' ? 'Dashboard' : 'Staff',
+              href: role === 'ADMIN' ? paths.dashboard.shopOwner.root : paths.staff.shopOwner.root,
+            },
+            {
+              name: 'Shop owner',
+              href: role === 'ADMIN' ? paths.dashboard.shopOwner.root : paths.staff.shopOwner.root,
+            },
             { name: 'List' },
           ]}
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.shopOwner.new}
+              href={role === 'ADMIN' ? paths.dashboard.shopOwner.new : paths.staff.shopOwner.new}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
@@ -311,7 +318,11 @@ export function ShopwOwnerListView() {
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        editHref={paths.dashboard.shopOwner.edit(row.id)}
+                        editHref={
+                          role === 'ADMIN'
+                            ? paths.dashboard.shopOwner.edit(row.id)
+                            : paths.staff.shopOwner.edit(row.id)
+                        }
                         isDeleting={isDeleting}
                       />
                     ))}

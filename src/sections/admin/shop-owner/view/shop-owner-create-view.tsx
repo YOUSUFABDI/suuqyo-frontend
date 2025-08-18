@@ -11,13 +11,18 @@ import { ShopOwnerNewForm } from '../shop-owner-new-form';
 // ----------------------------------------------------------------------
 
 export function ShopOwnerCreateView() {
+  const role = localStorage.getItem('role');
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
         heading="Create a new shop owner"
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Shop owner', href: paths.dashboard.shopOwner.root },
+          { name: 'Staff', href: role === 'ADMIN' ? paths.dashboard.root : paths.staff.root },
+          {
+            name: 'Shop owner',
+            href: role === 'ADMIN' ? paths.dashboard.shopOwner.root : paths.staff.shopOwner.root,
+          },
           { name: 'New shop owner' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

@@ -74,6 +74,8 @@ export function SignInView() {
         return '/shop-owner';
       case 'DELIVERY_USER':
         return '/delivery-user';
+      case 'STAFF':
+        return '/staff/shop-owner';
       default:
         return '/';
     }

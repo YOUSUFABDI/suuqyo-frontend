@@ -9,7 +9,7 @@ import { paths } from 'src/routes/paths';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
-type AllowedRolesDT = 'ADMIN' | 'CUSTOMER' | 'SHOP_OWNER' | 'DELIVERY_USER';
+type AllowedRolesDT = 'ADMIN' | 'CUSTOMER' | 'SHOP_OWNER' | 'DELIVERY_USER' | 'STAFF';
 
 export function RoleBasedGuard({
   children,

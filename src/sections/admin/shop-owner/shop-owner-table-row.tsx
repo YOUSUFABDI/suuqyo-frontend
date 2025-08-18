@@ -43,6 +43,8 @@ export function ShopOwnerTableRow({
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
 
+  const role = localStorage.getItem('role');
+
   const renderMenuActions = () => (
     <CustomPopover
       open={menuActions.open}
@@ -134,19 +136,21 @@ export function ShopOwnerTableRow({
           </Label>
         </TableCell>
 
-        <TableCell>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton
-              color={menuActions.open ? 'inherit' : 'default'}
-              onClick={menuActions.onOpen}
-            >
-              <Iconify icon="eva:more-vertical-fill" />
-            </IconButton>
-          </Box>
-        </TableCell>
+        {role === 'ADMIN' && (
+          <TableCell>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <IconButton
+                color={menuActions.open ? 'inherit' : 'default'}
+                onClick={menuActions.onOpen}
+              >
+                <Iconify icon="eva:more-vertical-fill" />
+              </IconButton>
+            </Box>
+          </TableCell>
+        )}
       </TableRow>
 
-      {renderMenuActions()}
+      {role === 'ADMIN' && renderMenuActions()}
       {renderConfirmDialog()}
     </>
   );

@@ -3,6 +3,7 @@
 const ROOTS = {
   AUTH: '/auth',
   DASHBOARD: '/dashboard',
+  STAFF: '/staff',
   SHOP_OWNER: '/shop-owner',
   DELIVERY_USER: '/delivery-user',
 };
@@ -40,6 +41,12 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/subscription/new`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/subscription/${id}/edit`,
     },
+    user: {
+      root: `${ROOTS.DASHBOARD}/user`,
+      new: `${ROOTS.DASHBOARD}/user/new`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/user/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
+    },
     report: {
       root: `${ROOTS.DASHBOARD}/report`,
       subscriptionRenewal: `${ROOTS.DASHBOARD}/report/subs-renewal`,
@@ -47,6 +54,25 @@ export const paths = {
     account: {
       root: `${ROOTS.DASHBOARD}/account-setting`,
       changePassword: `${ROOTS.DASHBOARD}/account-setting/change-password`,
+    },
+  },
+  // STAFF DASHBOARD
+  staff: {
+    root: ROOTS.STAFF,
+    shopOwner: {
+      root: `${ROOTS.STAFF}/shop-owner`,
+      new: `${ROOTS.STAFF}/shop-owner/new`,
+      details: (id: string) => `${ROOTS.STAFF}/shop-owner/${id}`,
+      edit: (id: string) => `${ROOTS.STAFF}/shop-owner/${id}/edit`,
+    },
+    subscription: {
+      root: `${ROOTS.STAFF}/subscription`,
+      new: `${ROOTS.STAFF}/subscription/new`,
+      edit: (id: string) => `${ROOTS.STAFF}/subscription/${id}/edit`,
+    },
+    account: {
+      root: `${ROOTS.STAFF}/account-setting`,
+      changePassword: `${ROOTS.STAFF}/account-setting/change-password`,
     },
   },
 

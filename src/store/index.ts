@@ -7,6 +7,7 @@ import { subscriptionApi } from './admin/subscription';
 import { reportApi } from './admin/report';
 import { analyticApi } from './admin/analytic';
 import { userApi } from './user/user';
+import { manageUserAsAdminApi } from './admin/user';
 
 import { productApi } from './shop-owner/product';
 import { shopApi } from './shop-owner/shop';
@@ -35,6 +36,7 @@ export const store = configureStore({
     [subscriptionApi.reducerPath]: subscriptionApi.reducer,
     [reportApi.reducerPath]: reportApi.reducer,
     [analyticApi.reducerPath]: analyticApi.reducer,
+    [manageUserAsAdminApi.reducerPath]: manageUserAsAdminApi.reducer,
     // admin
 
     // shop-owner
@@ -72,6 +74,7 @@ export const store = configureStore({
       subscriptionApi.middleware,
       reportApi.middleware,
       analyticApi.middleware,
+      manageUserAsAdminApi.middleware,
       // admin
 
       // shop-owner

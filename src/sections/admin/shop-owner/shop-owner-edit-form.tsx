@@ -35,6 +35,7 @@ import { getErrorMessage } from 'src/utils/error.message';
 import { UseDeleteShopOwner, UseShopCategories } from './hooks';
 import { ShopOwnerDT } from './types/types';
 import { useEffect } from 'react';
+import { useUser } from 'src/sections/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -70,6 +71,7 @@ export const NewUserSchema = zod.object({
   shopDescription: zod.string().min(1, { message: 'Shop description is required!' }),
   shopAddress: zod.string().min(1, { message: 'Shop address is required!' }),
   shopCategoryId: zod.number({ coerce: true }).nullable(),
+  updatedBy: zod.string(),
   // Payment methods
   paymentMethods: zod
     .array(
@@ -89,11 +91,13 @@ type Props = {
 };
 
 export function ShopOwnerEditForm({ currentUser }: Props) {
-  console.log('currentUser', currentUser);
+  // console.log('currentUser', currentUser);
+  const role = localStorage.getItem('role');
   const router = useRouter();
   const { shopCategories } = UseShopCategories();
   const showPassword = useBoolean();
   const confirmDialog = useBoolean();
+  const { user } = useUser();
 
   // Hook for RTK Query mutation
   const [updateShopOwner, { isLoading }] = useUpdateShopOwnerMutation();
@@ -123,6 +127,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
     paymentMethods: currentUser?.paymentMethods?.length
       ? currentUser.paymentMethods
       : [{ paymentName: 'EVC_PLUS', paymentPhone: '' }],
+    updatedBy: '',
   };
 
   const methods = useForm<NewUserSchemaType>({
@@ -160,6 +165,8 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
   };
 
   const onSubmit = handleSubmit(async (data) => {
+    if (role !== 'ADMIN') return;
+
     try {
       const updateShopOwnerDto: any = {
         fullName: data.fullName,
@@ -177,6 +184,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
         shopAddress: data.shopAddress,
         shopCategoryId: data.shopCategoryId,
         paymentMethods: data.paymentMethods,
+        updatedBy: user?.username,
       };
       // ✅ Only include password if it's not empty
       if (data.password?.trim()) {
@@ -205,7 +213,11 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
 
       toast.success('Saved changes');
       reset();
-      router.push(paths.dashboard.shopOwner.root);
+      if (role === 'ADMIN') {
+        router.push(paths.dashboard.shopOwner.root);
+      } else if (role === 'STAFF') {
+        router.push(paths.staff.shopOwner.root);
+      }
     } catch (error: any) {
       let errorMessage = 'An unexpected error occurred';
       if (error?.data?.error?.message) {
@@ -267,6 +279,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
         ...defaultValues,
         ...currentUser,
         password: '',
+        updatedby: currentUser.updatedBy,
         paymentMethods: currentUser.paymentMethods || defaultValues.paymentMethods,
         shopCategoryId: currentUser.ShopCategory.id,
       };
@@ -321,7 +334,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                     />
                   </Box>
 
-                  {currentUser && (
+                  {currentUser && role === 'ADMIN' && (
                     <Stack sx={{ mt: 3, alignItems: 'center', justifyContent: 'center' }}>
                       <Button
                         variant="soft"
@@ -615,11 +628,18 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
           </Card>
           {/* shop detail */}
 
-          <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-              Save changes
-            </LoadingButton>
-          </Stack>
+          <Divider />
+          <Box>
+            <Field.Text sx={{ pointerEvents: 'none' }} name="updatedBy" label="Updated by" />
+          </Box>
+
+          {role === 'ADMIN' && (
+            <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                Save changes
+              </LoadingButton>
+            </Stack>
+          )}
         </Stack>
       </Form>
 

@@ -69,6 +69,8 @@ export interface ShopOwnerDT {
   ShopCategory: ShopCategoryDT;
   businessProof: string;
   paymentMethods: PaymentMethod[];
+  createdBy: string;
+  updatedBy: string;
 }
 
 export interface ShopOwnersDataDT {
