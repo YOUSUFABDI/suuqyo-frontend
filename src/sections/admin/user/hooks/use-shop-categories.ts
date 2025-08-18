@@ -1,5 +1,6 @@
 import { isSuccessResponse } from 'src/utils/is-success-res';
-import { ShopCategoryDT } from '../types/types';
+// import { ShopCategoryDT } from '../types/types';
+import { ShopCategoryDT } from '../../shop-owner/types/types';
 import { getErrorMessage } from 'src/utils/error.message';
 import { useGetShopCategoriesQuery } from 'src/store/admin/shop-owner';
 
