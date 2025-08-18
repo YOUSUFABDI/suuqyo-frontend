@@ -19,12 +19,12 @@ import { CustomPopover } from 'src/components/custom-popover';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 
-import { ShopOwnerDT } from './types/types';
+import { UserDT } from './types/types';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ShopOwnerDT;
+  row: UserDT;
   selected: boolean;
   editHref: string;
   onSelectRow: () => void;

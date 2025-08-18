@@ -6,13 +6,13 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { ShopOwnerDT } from '../types/types';
+import { UserDT } from '../types/types';
 import { UserEditForm } from '../user-edit-form';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  user?: ShopOwnerDT;
+  user?: UserDT | null;
 };
 
 export function UserEditView({ user: currentUser }: Props) {

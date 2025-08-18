@@ -67,7 +67,7 @@ export const NewUserSchema = zod.object({
 // ----------------------------------------------------------------------
 
 type Props = {
-  currentUser?: UserDT;
+  currentUser?: UserDT | null;
 };
 
 export function UserEditForm({ currentUser }: Props) {
