@@ -22,7 +22,8 @@ export function ShopOwnerEditView({ user: currentUser }: Props) {
     <DashboardContent>
       <CustomBreadcrumbs
         heading="Edit"
-        backHref={paths.staff.shopOwner.root}
+        // backHref={paths.staff.shopOwner.root}
+        backHref={role === 'ADMIN' ? paths.dashboard.shopOwner.root : paths.staff.shopOwner.root}
         links={[
           {
             name: role === 'ADMIN' ? 'Dashbaord' : 'Staff',
