@@ -75,7 +75,7 @@ export function PrivacyPolicy({ sx, ...other }: BoxProps) {
                 your shopping experience. We do not sell or share your personal information with
                 third parties, except where necessary to complete your transaction. By using our
                 site, you agree to this notice. For questions, please contact us at{' '}
-                <Link href="mailto:info@suuqyo.com"> info@suuqyo.com </Link>.
+                <Link href="mailto:suuqyo@gmail.com"> suuqyo@gmail.com </Link>.
               </Typography>
             </m.div>
 

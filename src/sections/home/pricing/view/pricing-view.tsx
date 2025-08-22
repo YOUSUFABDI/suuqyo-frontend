@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { PricingCard } from '../pricing-card';
 import { _pricingPlans } from '../types/types';
+import { CONFIG } from 'src/global-config';
 
 // ----------------------------------------------------------------------
 
@@ -45,8 +46,8 @@ export function PricingView() {
         Flexible plans for your shop's needs
       </Typography>
       <Typography align="center" sx={{ color: 'text.secondary', mb: { xs: 5, md: 8 } }}>
-        Suuqyo connects buyers with shop owners in one vibrant marketplace. Choose your plan and
-        make modern online conversation magic.
+        {CONFIG.appName} connects buyers with shop owners in one vibrant marketplace. Choose your
+        plan and make modern online conversation magic.
       </Typography>
 
       {/* --- Monthly/Yearly Toggle --- */}

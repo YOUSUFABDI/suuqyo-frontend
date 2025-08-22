@@ -86,7 +86,7 @@ const renderDescription = () => (
       }}
     >
       Get started with
-      <br /> Suuqyo
+      <br /> {CONFIG.appName}
       <Box
         component="span"
         sx={(theme) => ({

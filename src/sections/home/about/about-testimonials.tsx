@@ -196,27 +196,27 @@ export const testimonials = [
     postedDate: '18 Jun 2025',
     ratingNumber: 4.8,
     avatarUrl: '', // Example placeholder, replace with actual paths
-    content: `Suuqyo has transformed how I shop! I found unique local crafts that I couldn't find anywhere else. The process was smooth, and the seller was incredibly responsive. Highly recommend!`,
+    content: `${CONFIG.appName} has transformed how I shop! I found unique local crafts that I couldn't find anywhere else. The process was smooth, and the seller was incredibly responsive. Highly recommend!`,
   },
   {
     name: 'Ahmed Said',
     postedDate: '15 Jun 2025',
     ratingNumber: 4.5,
     avatarUrl: '', // Example placeholder
-    content: `As a small business owner, Suuqyo has opened up a new world of customers for me. Listing my products was easy, and I've seen a significant increase in sales since joining. The platform is truly empowering for local entrepreneurs.`,
+    content: `As a small business owner, ${CONFIG.appName} has opened up a new world of customers for me. Listing my products was easy, and I've seen a significant increase in sales since joining. The platform is truly empowering for local entrepreneurs.`,
   },
   {
     name: 'Fatima Ali',
     postedDate: '10 Jun 2025',
     ratingNumber: 4.0,
     avatarUrl: '', // Example placeholder
-    content: `I appreciate the variety of products available on Suuqyo. I recently bought some electronics, and while delivery took a day longer than expected, the quality of the item was excellent. It's a convenient way to shop from home.`,
+    content: `I appreciate the variety of products available on ${CONFIG.appName}. I recently bought some electronics, and while delivery took a day longer than expected, the quality of the item was excellent. It's a convenient way to shop from home.`,
   },
   {
     name: 'Osman Jama',
     postedDate: '05 Jun 2025',
     ratingNumber: 5.0,
     avatarUrl: '', // Example placeholder
-    content: `Exceptional service! I needed specific tools for my workshop, and Suuqyo connected me with a seller who had exactly what I needed at a fair price. The communication was great, and I received my order very quickly. Fantastic platform!`,
+    content: `Exceptional service! I needed specific tools for my workshop, and ${CONFIG.appName} connected me with a seller who had exactly what I needed at a fair price. The communication was great, and I received my order very quickly. Fantastic platform!`,
   },
 ];

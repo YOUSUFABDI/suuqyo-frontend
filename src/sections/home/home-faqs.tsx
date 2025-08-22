@@ -20,13 +20,14 @@ import { varFade, MotionViewport } from 'src/components/animate';
 import { SectionTitle } from './components/section-title';
 import { FloatLine, FloatPlusIcon, FloatTriangleDownIcon } from './components/svg-elements';
 import { paths } from 'src/routes/paths';
+import { CONFIG } from 'src/global-config';
 
 // ----------------------------------------------------------------------
 
 const FAQs = [
   // General Questions about Suuqyo
   {
-    question: 'What is Suuqyo?',
+    question: `What is ${CONFIG.appName}?`,
     answer: (
       <Typography>
         <Link
@@ -35,7 +36,7 @@ const FAQs = [
           rel="noopener"
           sx={{ mx: 0.5 }}
         >
-          Suuqyo
+          {CONFIG.appName}
         </Link>
         is an online marketplace that connects buyers with shop owners. It's designed to make it
         simple and seamless for you to find quality products or sell your own.
@@ -43,7 +44,7 @@ const FAQs = [
     ),
   },
   {
-    question: 'How does Suuqyo work?',
+    question: `How does ${CONFIG.appName} work?`,
     answer: (
       <Typography>
         <Link
@@ -52,7 +53,7 @@ const FAQs = [
           rel="noopener"
           sx={{ mx: 0.5 }}
         >
-          Suuqyo
+          {CONFIG.appName}
         </Link>
         provides a platform where shop owners can list their products, and buyers can browse,
         search, and purchase items directly from these sellers. We facilitate the connection between
@@ -61,11 +62,11 @@ const FAQs = [
     ),
   },
   {
-    question: 'Is Suuqyo free to use?',
+    question: `Is ${CONFIG.appName} free to use?`,
     answer: (
       <Typography>
-        For buyers, Suuqyo is completely free to use. For sellers, we offer different plans. Please
-        see our
+        For buyers, {CONFIG.appName} is completely free to use. For sellers, we offer different
+        plans. Please see our
         <Link
           href="#"
           // target="_blank"
@@ -82,7 +83,7 @@ const FAQs = [
 
   // Questions for Buyers
   {
-    question: "What is Suuqyo's return policy?",
+    question: `What is ${CONFIG.appName}'s return policy?`,
     answer: (
       <Typography>
         Return policies are set by individual sellers. We recommend checking the seller's specific
@@ -105,7 +106,7 @@ const FAQs = [
     answer: (
       <Typography>
         First, we recommend contacting the seller directly to resolve the issue. If you're unable to
-        reach a resolution, Suuqyo has a dispute resolution process to help.
+        reach a resolution, {CONFIG.appName} has a dispute resolution process to help.
       </Typography>
     ),
   },
@@ -113,7 +114,7 @@ const FAQs = [
 
   // Questions for Sellers
   {
-    question: 'How do I become a seller on Suuqyo?',
+    question: `How do I become a seller on ${CONFIG.appName}?`,
     answer: (
       <Typography>
         To become a seller, you'll need to.
@@ -129,11 +130,11 @@ const FAQs = [
     ),
   },
   {
-    question: 'What can I sell on Suuqyo?',
+    question: `What can I sell on ${CONFIG.appName}?`,
     answer: (
       <Typography>
-        You can sell a wide range of products on Suuqyo, as long as they comply with our Prohibited
-        Items Policy. Please review.
+        You can sell a wide range of products on {CONFIG.appName}, as long as they comply with our
+        Prohibited Items Policy. Please review.
         <Link
           href="#"
           // target="_blank"
@@ -169,7 +170,7 @@ const FAQs = [
     answer: (
       <Typography>
         As a seller, you're responsible for accurately describing your products, fulfilling orders
-        promptly, providing good customer service, and adhering to Suuqyo's policies.
+        promptly, providing good customer service, and adhering to {CONFIG.appName}'s policies.
       </Typography>
     ),
   },

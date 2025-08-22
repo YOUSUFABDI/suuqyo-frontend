@@ -76,7 +76,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
 
           <Grid size={{ xs: 12, md: 6, lg: 5 }}>
             <Typography component={m.h2} variants={varFade('inRight')} variant="h2" sx={{ mb: 3 }}>
-              What is Suuqyo?
+              What is {CONFIG.appName}?
             </Typography>
 
             <Typography
@@ -91,8 +91,9 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
                 }),
               ]}
             >
-              Suuqyois an online marketplace that connects buyers with shop owners. It's designed to
-              make it simple and seamless for you to find quality products or sell your own.
+              {CONFIG.appName} is an online marketplace that connects buyers with shop owners. It's
+              designed to make it simple and seamless for you to find quality products or sell your
+              own.
             </Typography>
 
             <Button

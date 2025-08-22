@@ -158,6 +158,8 @@ export function Footer({
 // ----------------------------------------------------------------------
 
 export function HomeFooter({ sx, ...other }: FooterProps) {
+  const currentYear = new Date().getFullYear();
+
   return (
     <FooterRoot
       sx={[
@@ -172,9 +174,9 @@ export function HomeFooter({ sx, ...other }: FooterProps) {
       <Container>
         <Logo />
         <Box sx={{ mt: 1, typography: 'caption' }}>
-          © All rights reserved.
-          <br /> Made With ❤️ In Hamar
-          <Link href="https://suuqyo.com/"> suuqyo.com </Link>
+          © {currentYear} <Link href="https://suuqyo.com/"> suuqyo.com </Link>
+          All rights reserved
+          <br /> Built With ❤️ In Hamar
         </Box>
         <Box sx={{ mt: 1, typography: 'caption' }}>
           <Link href={paths.customer.privacy}> Privacy notice </Link>
