@@ -67,7 +67,7 @@ export function TransactionAnalytic({ title, total, icon, color, percent, price 
           {fShortenNumber(total)} transactions
         </Box>
 
-        <Typography variant="subtitle2">{fCurrency(price)}</Typography>
+        <Typography variant="subtitle2">{price}</Typography>
       </Stack>
     </Box>
   );

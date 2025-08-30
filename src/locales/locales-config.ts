@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------
 
-export const fallbackLng = 'en';
-export const languages = ['en', 'fr', 'vi', 'cn', 'ar'];
+export const fallbackLng = 'so'; // Default language set to Somali
+export const languages = ['so', 'en']; // Available languages, with Somali first
 export const defaultNS = 'common';
 export const cookieName = 'i18next';
 
@@ -27,29 +27,14 @@ export const changeLangMessages: Record<
   LanguageValue,
   { success: string; error: string; loading: string }
 > = {
+  so: {
+    success: 'Luuqada waa la badalay!',
+    error: 'Cilad ayaa ka dhacday bedelida luuqada!',
+    loading: 'Waa la soo shubayaa...',
+  },
   en: {
     success: 'Language has been changed!',
     error: 'Error changing language!',
     loading: 'Loading...',
-  },
-  vi: {
-    success: 'Ngôn ngữ đã được thay đổi!',
-    error: 'Lỗi khi thay đổi ngôn ngữ!',
-    loading: 'Đang tải...',
-  },
-  fr: {
-    success: 'La langue a été changée!',
-    error: 'Erreur lors du changement de langue!',
-    loading: 'Chargement...',
-  },
-  cn: {
-    success: '语言已更改！',
-    error: '更改语言时出错！',
-    loading: '加载中...',
-  },
-  ar: {
-    success: 'تم تغيير اللغة!',
-    error: 'خطأ في تغيير اللغة!',
-    loading: 'جارٍ التحميل...',
   },
 };

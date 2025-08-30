@@ -1,0 +1,134 @@
+{
+  "app_name": "Magaca Appka",
+  "welcome": "Soo dhawoow",
+
+  "pages": {
+    "home": "Boga Kowaad",
+    "about": "Nagu saabsan",
+    "products": "Badeecooyin",
+    "shops": "Dukaamo",
+    "pricing": "Qiimayaasha",
+    "contact": "Nala soo xiriir",
+    "signin": "gal"
+  },
+
+  "home": {
+    "title": "Kuso dhawoow",
+    "description": "Madal Suuqyo waxa ay isku xirtaa iibsadayaasha iyo milkiilayaasha dukaamada suuq bulsho leh oo horumarsan. \nHaddii aad halkaan u joogto inaad hesho badeecooyin tayo leh ama aad rabto inaad iibiso alaabtaada, \nMadal Suuqyo waxa ay ka dhigeysaa mid fudud oo aan xannib lahayn.",
+    "products": "Badeecooyin",
+    "shops": "Dukaamo",
+    "advertisements": {
+      "top": "Bilow",
+      "bottom": "maanta"
+    },
+    "faq": {
+      "general": {
+        "what_is_app": "Waa maxay Madal Suuqyo?",
+        "how_does_app_work": "Sidee Madal Suuqyo u shaqeysaa?",
+        "is_app_free": "Ma Madal Suuqyo waa bilaash in la isticmaalo?"
+      },
+      "buyers": {
+        "return_policy": "Maxay tahay sharciga soo celinta ee Madal Suuqyo?",
+        "contact_seller": "Sideen ula xiriiri karaa iibiyaha?",
+        "problem_with_order": "Maxaan sameeyaa haddii aan dhibaato kala kulmo dalabkeega?"
+      },
+      "sellers": {
+        "become_seller": "Sideen uga noqdaa iibiyaha Madal Suuqyo?",
+        "what_can_i_sell": "Maxaan ku iibin karaa Madal Suuqyo?",
+        "list_products": "Sideen u liis gareeyaa badeecooyinka?",
+        "manage_orders": "Sideen u maamulaa dalabyadeeda?",
+        "responsibilities_as_seller": "Maxay yihiin mas'uuliyadayda sida iibiyaha?"
+      }
+    },
+    "answers": {
+      "general": {
+        "what_is_app": "Madal Suuqyo waxa ay isku xirtaa iibsadayaasha iyo milkiilayaasha dukaamada suuq bulsho leh oo horumarsan. Haddii aad halkaan u joogto inaad hesho badeecooyin tayo leh ama aad rabto inaad iibiso alaabtaada, Madal Suuqyo waxa ay ka dhigeysaa mid fudud oo aan xannib lahayn.",
+        "how_does_app_work": "Madal Suuqyo waxay bixisaa madal ay milkiilayaasha dukaamada ku liis gareyn karaan badeecooyinkooda, halka iibsadayaashuna ay ka raadin karaan oo ka iibsan karaan alaabtooda si toos ah. Waxaan fududeyneynaa isku xirka iibsadayaasha iyo iibiyayaasha hal suuq oo hormarsan.",
+        "is_app_free": "Madal Suuqyo waa bilaash in loo isticmaalo iibsadayaasha. Iibiyayaashu waxay heli karaan qorshayaal kala duwan. Fadlan eeg qeybta Qiimayaasha si aad u hesho faahfaahin dheeraad ah."
+      },
+      "buyers": {
+        "return_policy": "Sharciga soo celinta waxaa dejinayaan iibiyayaasha gaarka ah. Waxaan ku talinaynaa inaad hubiso shariciga soo celinta ee iibiyaha ee boggiisa dukaanka ama liiska badeecada ka hor intaadan iibsan.",
+        "contact_seller": "Bog kasta oo badeecad iyo profile dukaameed waxa ka muuqda habka xiriirka iibiyaha si toos ah. Raadi 'Lambarka Taleefanka ee Iibiyaha' ama 'Emailka Iibiyaha'.",
+        "problem_with_order": "Ugu horreyntii, waxaan ku talinaynaa inaad xiriir la sameyso iibiyaha si toos ah si aad u xalliso dhibaatada. Haddii aanad xallin karin, Madal Suuqyo waxay leedahay nidaam xalinta khilaafaadka."
+      },
+      "sellers": {
+        "become_seller": "Si aad u noqoto iibiye, waxaad u baahan tahay inaad nala soo xiriirto.",
+        "what_can_i_sell": "Waxaad ku iibin kartaa badeecooyin kala duwan Madal Suuqyo, ilaa ay waafaqsan yihiin Sharciyada Alaabooyinka La Mamnuucay. Fadlan si taxaddar leh u eeg.",
+        "list_products": "Marka aad noqoto iibiye, waxaad heli doontaa dashboard-ka iibiyahaaga oo kuu oggolaanaya inaad si fudud u geliso faahfaahinta badeecada, sawirrada, iyo qiimaha.",
+        "manage_orders": "Dashboard-ka iibiyahaaga waxa uu bixiyaa agabyo kuu oggolaanaya inaad maamusho dalabyadaada soo galaya, cusbooneysiiso macluumaadka gaadiidka ama u geenta iibsadayaasha dalabkooda, iyo inaad xiriir la sameyso iibsadayaasha.",
+        "responsibilities_as_seller": "Sida iibiyaha, waxaad mas'uul ka tahay in si sax ah u sharaxdo badeecooyinkaaga, si degdeg ah u fuliso dalabyada aad heshid, bixiso adeegga macaamiisha si wanaagsan, oo raacdo sharciyada Madal Suuqyo."
+      }
+    },
+    "still": "Weli su'aalo maa qabtaa?",
+    "ans": "Fadlan faahfaahi kiiskaaga si aad u hesho talo sax ah.",
+    "contact": "Nala soo xiriir",
+    "signup": "Isdiiwaangeli",
+    "wegot": "Waxaan haynaa jawaabaha",
+    "faqs": "Su'aalaha Inta Badan La Is Weydiiyo",
+    "shoptitle": "Dukaamo",
+    "productstitle": "Badeecooyin",
+    "rights": "Xuquuqda oo dhan waa la xafiday.",
+    "build": "Waxaa lagu dhisay ❤️ Hamar",
+    "privacy": "Ogeysiiska ilaalinta xogta"
+  },
+
+  "pricing": {
+    "title": "Qorshayaal dabacsan oo loogu talagalay baahiyaha dukaankaaga",
+    "description": "waxay isku xirtaa iibsadayaasha iyo milkiilayaasha dukaamada suuq bulsho leh oo hormarsan. Dooro qorshahaaga oo samee isgaarsiin casri ah oo online ah si fudud.",
+    "monthly": "BIL AHAAN",
+    "yearly": "SANAD AHAAN",
+    "monthly_short": "bil",
+    "yearly_short": "sanad",
+    "free": "Bilaash",
+    "features": "Waxa uu ka kooban yahay",
+    "popular": "UGU CAANSAN",
+    "caption": "Wuxuu ku habboon yahay shakhsiyaadka iyo kooxaha yaryar ee bilaabaya.",
+    "plans": [
+      {
+        "name": "Aasaasi",
+        "caption": "Wuxuu ku habboon yahay shakhsiyaadka iyo kooxaha yaryar ee bilaabaya.",
+        "lists": ["Liis garee ilaa 5 badeeco", "Dashboard aasaasi ah"],
+        "labelAction": "Diyaar ma tahay? Nala soo xiriir"
+      },
+      {
+        "name": "Pro",
+        "caption": "Ganacsiyada koraya ee u baahan awood dheeraad ah.",
+        "lists": ["Liis garee ilaa 50 badeeco", "Sumad la xaqiijiyay", "Taageero mudnaan leh"],
+        "labelAction": "Diyaar ma tahay? Nala soo xiriir"
+      },
+      {
+        "name": "Premium",
+        "caption": "Ganacsiyada waaweyn ee leh iib mug leh.",
+        "lists": [
+          "Badeecooyin aan xadidnayn",
+          "Sumad la xaqiijiyay",
+          "Taageero mudnaan leh",
+          "Taageero gaar ah"
+        ],
+        "labelAction": "Diyaar ma tahay? Nala soo xiriir"
+      }
+    ]
+  },
+
+  "contact": {
+    "title": "Halkee",
+    "subtitle": "naga heli kartaa?",
+    "desc1": "Waad nala soo xiriiri kartaa.",
+    "desc2": "Waan ku farxi doonaa inaad nala soo xiriirto!",
+    "submit": "Gudbi",
+    "submiting": "Waa la gudbinayaa..."
+  },
+
+  "about": {
+    "title": "Yaa",
+    "subtitle": "nahay?",
+    "desc1": "Aan isla shaqeyno",
+    "what": "Waa maxay Madal Suuqyo?",
+    "ans": "Madal Suuqyo waxa ay isku xirtaa iibsadayaasha iyo milkiilayaasha dukaamada suuq bulsho leh oo horumarsan. Haddii aad halkaan u joogto inaad hesho badeecooyin tayo leh ama aad rabto inaad iibiso alaabtaada, Madal Suuqyo waxa ay ka dhigeysaa mid fudud oo aan xannib lahayn.",
+    "vission": "Hadafkeena waa In aan noqono suuq online ah oo hogaaminaya oo loo gu kalsooni badan yahay Soomaaliya, anagoo awood siinayna shakhsiyaadka iyo ganacsiyada, si fududna isuga xireyna iibsadayaasha iyo iibiyayaasha badeecooyin tayo leh oo kala duwan, kor u qaadna kobaca dhaqaale iyo barwaaqada bulshada.",
+    "testimonials": "Markhaatiyo",
+    "who1": "Kuwa jecel",
+    "who2": "shaqadeena",
+    "who_desc": "Hadafkeena waa in aan gaarno qiimeyn qanacsanaanta macaamiisha oo ah 90% ama ka sareeya labadaba iibsadayaasha iyo iibiyayaasha."
+  }
+}

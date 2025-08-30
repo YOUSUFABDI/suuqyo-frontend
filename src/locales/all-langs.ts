@@ -1,31 +1,30 @@
 'use client';
 
 // core (MUI)
-import {
-  frFR as frFRCore,
-  viVN as viVNCore,
-  zhCN as zhCNCore,
-  arSA as arSACore,
-} from '@mui/material/locale';
+// NOTE: MUI does not have a built-in locale for Somali (so), so we don't import one.
+// We will rely on the default English fallbacks for core components.
+
 // date pickers (MUI)
-import {
-  enUS as enUSDate,
-  frFR as frFRDate,
-  viVN as viVNDate,
-  zhCN as zhCNDate,
-} from '@mui/x-date-pickers/locales';
+import { enUS as enUSDate } from '@mui/x-date-pickers/locales';
 // data grid (MUI)
-import {
-  enUS as enUSDataGrid,
-  frFR as frFRDataGrid,
-  viVN as viVNDataGrid,
-  zhCN as zhCNDataGrid,
-  arSD as arSDDataGrid,
-} from '@mui/x-data-grid/locales';
+import { enUS as enUSDataGrid } from '@mui/x-data-grid/locales';
 
 // ----------------------------------------------------------------------
 
 export const allLangs = [
+  {
+    value: 'so',
+    label: 'Somali',
+    countryCode: 'SO',
+    adapterLocale: 'so', // Assuming you have a date-fns locale for 'so'
+    numberFormat: { code: 'so-SO', currency: 'SOS' },
+    // MUI does not have built-in Somali translations.
+    // For full translation, you would need to create a custom locale object here.
+    // The components will fall back to English by default.
+    systemValue: {
+      components: {},
+    },
+  },
   {
     value: 'en',
     label: 'English',
@@ -34,46 +33,6 @@ export const allLangs = [
     numberFormat: { code: 'en-US', currency: 'USD' },
     systemValue: {
       components: { ...enUSDate.components, ...enUSDataGrid.components },
-    },
-  },
-  {
-    value: 'fr',
-    label: 'French',
-    countryCode: 'FR',
-    adapterLocale: 'fr',
-    numberFormat: { code: 'fr-Fr', currency: 'EUR' },
-    systemValue: {
-      components: { ...frFRCore.components, ...frFRDate.components, ...frFRDataGrid.components },
-    },
-  },
-  {
-    value: 'vi',
-    label: 'Vietnamese',
-    countryCode: 'VN',
-    adapterLocale: 'vi',
-    numberFormat: { code: 'vi-VN', currency: 'VND' },
-    systemValue: {
-      components: { ...viVNCore.components, ...viVNDate.components, ...viVNDataGrid.components },
-    },
-  },
-  {
-    value: 'cn',
-    label: 'Chinese',
-    countryCode: 'CN',
-    adapterLocale: 'zh-cn',
-    numberFormat: { code: 'zh-CN', currency: 'CNY' },
-    systemValue: {
-      components: { ...zhCNCore.components, ...zhCNDate.components, ...zhCNDataGrid.components },
-    },
-  },
-  {
-    value: 'ar',
-    label: 'Arabic',
-    countryCode: 'SA',
-    adapterLocale: 'ar-sa',
-    numberFormat: { code: 'ar', currency: 'AED' },
-    systemValue: {
-      components: { ...arSACore.components, ...arSDDataGrid.components },
     },
   },
 ];

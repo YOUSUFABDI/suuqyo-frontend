@@ -10,10 +10,13 @@ import { CONFIG } from 'src/global-config';
 
 import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/components/animate';
 import { varAlpha } from 'minimal-shared/utils';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
 export function AboutHero({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate();
+
   return (
     <Box
       component="section"
@@ -49,7 +52,7 @@ export function AboutHero({ sx, ...other }: BoxProps) {
           <AnimateText
             component="h1"
             variant="h1"
-            textContent={['Who', 'we are?']}
+            textContent={[t('about.title'), t('about.subtitle')]}
             variants={varFade('inRight', { distance: 24 })}
             sx={{
               color: 'common.white',
@@ -64,7 +67,7 @@ export function AboutHero({ sx, ...other }: BoxProps) {
               variant="h4"
               sx={{ mt: 3, color: 'common.white', fontWeight: 'fontWeightSemiBold' }}
             >
-              Let&apos;s work together
+              {t('about.desc1')}
             </Typography>
           </m.div>
         </Box>

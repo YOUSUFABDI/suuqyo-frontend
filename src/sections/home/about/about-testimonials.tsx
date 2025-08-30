@@ -24,10 +24,13 @@ import { varFade, MotionViewport } from 'src/components/animate';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
 export function AboutTestimonials({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate();
+
   const renderLink = () => (
     <Button
       component={RouterLink}
@@ -35,7 +38,7 @@ export function AboutTestimonials({ sx, ...other }: BoxProps) {
       color="primary"
       endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
     >
-      Contact us
+      {t('pages.contact')}
     </Button>
   );
 
@@ -43,22 +46,19 @@ export function AboutTestimonials({ sx, ...other }: BoxProps) {
     <Box sx={{ maxWidth: { md: 360 }, textAlign: { xs: 'center', md: 'unset' } }}>
       <m.div variants={varFade('inUp')}>
         <Typography variant="overline" sx={{ color: 'common.white', opacity: 0.48 }}>
-          Testimonials
+          {t('about.testimonials')}
         </Typography>
       </m.div>
 
       <m.div variants={varFade('inUp')}>
         <Typography variant="h2" sx={{ my: 3, color: 'common.white' }}>
-          Who love <br />
-          our work
+          {t('about.who1')} <br />
+          {t('about.who2')}
         </Typography>
       </m.div>
 
       <m.div variants={varFade('inUp')}>
-        <Typography sx={{ color: 'common.white' }}>
-          Our goal is to Achieve a customer satisfaction rating of 90% or higher for both buyers and
-          sellers.
-        </Typography>
+        <Typography sx={{ color: 'common.white' }}>{t('about.who_desc')}</Typography>
       </m.div>
 
       <Box

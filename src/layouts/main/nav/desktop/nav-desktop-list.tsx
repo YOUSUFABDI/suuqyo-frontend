@@ -9,12 +9,14 @@ import { Nav, NavLi, NavUl, NavDropdown } from '../components';
 import { NavItemDashboard } from './nav-desktop-item-dashboard';
 
 import type { NavListProps, NavSubListProps } from '../types';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
 export function NavList({ data, sx, ...other }: NavListProps) {
   const pathname = usePathname();
   const navItemRef = useRef<HTMLButtonElement | null>(null);
+  const { t } = useTranslate();
 
   const isActive = isActiveLink(pathname, data.path, !!data.children);
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
@@ -37,7 +39,7 @@ export function NavList({ data, sx, ...other }: NavListProps) {
       ref={navItemRef}
       // slots
       path={data.path}
-      title={data.title}
+      title={t(data.title)}
       // state
       open={open}
       active={isActive}

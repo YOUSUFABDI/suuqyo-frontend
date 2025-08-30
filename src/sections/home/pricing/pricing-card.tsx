@@ -1,23 +1,21 @@
 'use client';
 
-import type { CardProps } from '@mui/material/Card';
-
 import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { PlanFreeIcon, PlanStarterIcon, PlanPremiumIcon } from 'src/assets/icons';
+import { PlanFreeIcon, PlanPremiumIcon, PlanStarterIcon } from 'src/assets/icons';
 
-import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-import { Plan } from './types/types';
+import { Label } from 'src/components/label';
+import { useTranslate } from 'src/locales';
 import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
+import { Plan } from './types/types'; // Make sure the Plan type includes the 'name' property
 
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
@@ -30,7 +28,8 @@ type PricingCardProps = {
 };
 
 export function PricingCard({ card, isYearly }: PricingCardProps) {
-  const { subscription, monthlyPrice, yearlyPrice, caption, lists, labelAction } = card;
+  const { t } = useTranslate();
+  const { subscription, name, monthlyPrice, yearlyPrice, caption, lists, labelAction } = card;
 
   const isBasic = subscription === 'BASIC';
   const isPro = subscription === 'PRO';
@@ -43,14 +42,14 @@ export function PricingCard({ card, isYearly }: PricingCardProps) {
       {isBasic && <PlanFreeIcon sx={{ width: 64 }} />}
       {isPro && <PlanStarterIcon sx={{ width: 64 }} />}
       {isPremium && <PlanPremiumIcon sx={{ width: 64 }} />}
-      {isPro && <Label color="info">POPULAR</Label>}
+      {isPro && <Label color="info">{t('pricing.popular')}</Label>}
     </Box>
   );
 
   const renderSubscription = () => (
     <Stack spacing={1}>
       <Typography variant="h4" sx={{ textTransform: 'capitalize' }}>
-        {subscription.toLowerCase()}
+        {name}
       </Typography>
       <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
         {caption}
@@ -60,7 +59,7 @@ export function PricingCard({ card, isYearly }: PricingCardProps) {
 
   const renderPrice = () =>
     isBasic ? (
-      <Typography variant="h2">Free</Typography>
+      <Typography variant="h2">{t('pricing.free')}</Typography>
     ) : (
       <Box sx={{ display: 'flex' }}>
         <Typography variant="h4">$</Typography>
@@ -69,7 +68,7 @@ export function PricingCard({ card, isYearly }: PricingCardProps) {
           component="span"
           sx={{ ml: 1, alignSelf: 'center', typography: 'body2', color: 'text.disabled' }}
         >
-          / {isYearly ? 'yr' : 'mo'}
+          / {isYearly ? t('pricing.yearly_short') : t('pricing.monthly_short')}
         </Typography>
       </Box>
     );
@@ -78,7 +77,7 @@ export function PricingCard({ card, isYearly }: PricingCardProps) {
     <Stack spacing={2}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box component="span" sx={{ typography: 'overline' }}>
-          Features
+          {t('pricing.features')}
         </Box>
       </Box>
       {lists.map((item) => (
@@ -127,7 +126,6 @@ export function PricingCard({ card, isYearly }: PricingCardProps) {
         fullWidth
         size="large"
         variant="contained"
-        // disabled={isBasic}
         color={isPro ? 'primary' : 'inherit'}
       >
         {labelAction}

@@ -1,6 +1,128 @@
 {
-  "demo": {
-    "lang": "English",
-    "description": "The starting point for your next project is based on MUI. Easy customization helps you build apps faster and better."
+  "app_name": "App Name",
+  "welcome": "Welcome",
+
+  "pages": {
+    "home": "Home",
+    "about": "About",
+    "products": "Products",
+    "shops": "Shops",
+    "pricing": "Pricing",
+    "contact": "Contact us",
+    "signin": "Sign in"
+  },
+
+  "home": {
+    "title": "Welcome to",
+    "description": "Madal Suuqyo connects buyers with shop owners in one vibrant marketplace. \nWhether you're here to find quality products or sell your own, \nMadal Suuqyo makes it simple and seamless.",
+    "products": "Products",
+    "shops": "Shops",
+    "advertisements": {
+      "top": "Get started with",
+      "bottom": "today"
+    },
+    "faq": {
+      "general": {
+        "what_is_app": "What is Madal Suuqyo?",
+        "how_does_app_work": "How does Madal Suuqyo work?",
+        "is_app_free": "Is Madal Suuqyo free to use?"
+      },
+      "buyers": {
+        "return_policy": "What is Madal Suuqyo's return policy?",
+        "contact_seller": "How can I contact a seller?",
+        "problem_with_order": "What should I do if I have a problem with my order?"
+      },
+      "sellers": {
+        "become_seller": "How do I become a seller on Madal Suuqyo?",
+        "what_can_i_sell": "What can I sell on Madal Suuqyo?",
+        "list_products": "How do I list my products?",
+        "manage_orders": "How do I manage my orders?",
+        "responsibilities_as_seller": "What are my responsibilities as a seller?"
+      }
+    },
+    "answers": {
+      "general": {
+        "what_is_app": "Madal Suuqyo connects buyers with shop owners in one vibrant marketplace. Whether you're here to find quality products or sell your own, Madal Suuqyo makes it simple and seamless.",
+        "how_does_app_work": "Madal Suuqyo provides a platform where shop owners can list their products, and buyers can browse, search, and purchase items directly from these sellers. We facilitate the connection between buyers and sellers in one vibrant marketplace.",
+        "is_app_free": "For buyers, Madal Suuqyo is completely free to use. For sellers, we offer different plans. Please see our Pricing section for more details."
+      },
+      "buyers": {
+        "return_policy": "Return policies are set by individual sellers. We recommend checking the seller's specific return policy on their shop page or product listing before making a purchase.",
+        "contact_seller": "Each product page and shop profile has a way to contact the seller directly. Look for a 'Seller Phone Number' or 'Seller Email'.",
+        "problem_with_order": "First, we recommend contacting the seller directly to resolve the issue. If you're unable to reach a resolution, Madal Suuqyo has a dispute resolution process to help."
+      },
+      "sellers": {
+        "become_seller": "To become a seller, you'll need to Contact us.",
+        "what_can_i_sell": "You can sell a wide range of products on Madal Suuqyo, as long as they comply with our Prohibited Items Policy. Please review the Privacy notice carefully.",
+        "list_products": "Once you have a seller account, you'll have access to your seller dashboard where you can easily upload product details, photos, and set prices.",
+        "manage_orders": "Your seller dashboard provides tools to manage incoming orders, update shipping information, and communicate with buyers.",
+        "responsibilities_as_seller": "As a seller, you're responsible for accurately describing your products, fulfilling orders promptly, providing good customer service, and adhering to Madal Suuqyo's policies."
+      }
+    },
+    "still": "Still have questions?",
+    "ans": "Please describe your case to receive the most accurate advice",
+    "contact": "Contact us",
+    "signup": "Sign up",
+    "wegot": "We’ve got the answers",
+    "faqs": "FAQs",
+    "shoptitle": "shops",
+    "productstitle": "Products",
+    "rights": "All rights reserved",
+    "build": "Built With ❤️ In Mogadishu",
+    "privacy": "Privacy notice"
+  },
+
+  "pricing": {
+    "title": "Flexible plans for your shop's needs",
+    "description": "connects buyers with shop owners in one vibrant marketplace. Choose your plan and make modern online conversation magic.",
+    "monthly": "MONTHLY",
+    "yearly": "YEARLY",
+    "monthly_short": "mo",
+    "yearly_short": "yr",
+    "free": "Free",
+    "features": "Features",
+    "popular": "POPULAR",
+    "plans": [
+      {
+        "name": "Basic",
+        "caption": "For individuals and small teams getting started.",
+        "lists": ["List up to 5 products", "Basic dashboard"],
+        "labelAction": "Ready? Contact us"
+      },
+      {
+        "name": "Pro",
+        "caption": "For growing businesses that need more power.",
+        "lists": ["List up to 50 products", "Verified badge", "Priority support"],
+        "labelAction": "Ready? Contact us"
+      },
+      {
+        "name": "Premium",
+        "caption": "For established businesses with high-volume sales.",
+        "lists": ["Unlimited products", "Verified badge", "Priority support", "Dedicated support"],
+        "labelAction": "Ready? Contact us"
+      }
+    ]
+  },
+
+  "contact": {
+    "title": "Where ",
+    "subtitle": "to find us?",
+    "desc1": "Feel free to contact us.",
+    "desc2": "We'll be glad to hear from you!",
+    "submit": "Submit",
+    "submiting": "Submiting"
+  },
+
+  "about": {
+    "title": "Who",
+    "subtitle": "we are?",
+    "desc1": "Let's work together",
+    "what": "What is Madal Suuqyo?",
+    "ans": "Madal Suuqyo is an online marketplace that connects buyers with shop owners. It's designed to make it simple and seamless for you to find quality products or sell your own.",
+    "vission": "Our vision To be the leading and most trusted online marketplace in Somalia, empowering individuals and businesses by seamlessly connecting buyers with a diverse array of quality products and sellers, fostering economic growth and community prosperity.",
+    "testimonials": "Testimonials",
+    "who1": "Who love",
+    "who2": "our work",
+    "who_desc": "Our goal is to Achieve a customer satisfaction rating of 90% or higher for both buyers and sellers."
   }
 }

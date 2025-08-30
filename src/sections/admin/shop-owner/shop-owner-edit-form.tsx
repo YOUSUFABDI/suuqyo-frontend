@@ -615,11 +615,15 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                       slotProps={{ select: { native: true }, inputLabel: { shrink: true } }}
                     >
                       <option value="" />
-                      {shopCategories.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
+                      {Array.isArray(shopCategories) && shopCategories.length > 0 ? (
+                        shopCategories.map((category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))
+                      ) : (
+                        <option disabled>No categories available</option>
+                      )}
                     </Field.Select>
                   </Box>
                 </Card>

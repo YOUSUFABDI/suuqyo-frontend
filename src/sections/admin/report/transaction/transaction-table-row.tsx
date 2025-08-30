@@ -150,7 +150,7 @@ export function TransactionTableRow({
           />
         </TableCell>
 
-        <TableCell>{fCurrency(row.amount)}</TableCell>
+        <TableCell>{row.amount}</TableCell>
 
         <TableCell>{row.paymentMethod}</TableCell>
 

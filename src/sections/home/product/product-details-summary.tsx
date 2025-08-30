@@ -640,7 +640,7 @@ export function ProductDetailsSummary({
   });
 
   // Render price
-  const renderPrice = () => <Box sx={{ typography: 'h5' }}>{fCurrency(sellingPrice)}</Box>;
+  const renderPrice = () => <Box sx={{ typography: 'h5' }}>{sellingPrice}</Box>;
 
   // Render variant selection UI
   const renderVariant = () => {

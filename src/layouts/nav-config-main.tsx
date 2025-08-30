@@ -6,30 +6,63 @@ import { paths } from 'src/routes/paths';
 // ----------------------------------------------------------------------
 
 export const navData: NavMainProps['data'] = [
-  { title: 'Home', path: '/', icon: <Iconify width={22} icon="tabler:home" /> },
+  { title: 'pages.home', path: '/', icon: <Iconify width={22} icon="tabler:home" /> },
   {
-    title: 'Products',
+    title: 'pages.products',
     path: paths.customer.product.root,
     icon: <Iconify width={22} icon="fluent:box-20-filled" />,
   },
   {
-    title: 'Shops',
+    title: 'pages.shops',
     path: paths.customer.shop.root,
     icon: <Iconify width={22} icon="material-symbols:storefront-rounded" />,
   },
   {
-    title: 'Pricing',
+    title: 'pages.pricing',
     path: paths.customer.pricing,
     icon: <Iconify width={22} icon="fluent:money-20-filled" />,
   },
   {
-    title: 'Contact us',
+    title: 'pages.contact',
     path: paths.customer.contact,
     icon: <Iconify width={22} icon="ic:round-support-agent" />,
   },
   {
-    title: 'About us',
+    title: 'pages.about',
     path: paths.customer.about,
     icon: <Iconify width={22} icon="ic:round-people" />,
   },
 ];
+
+// export const navData = () => {
+//   const { t } = useTranslate();
+
+//   return [
+//     { title: t('title'), path: '/', icon: <Iconify width={22} icon="tabler:home" /> },
+//     {
+//       title: t('products'),
+//       path: paths.customer.product.root,
+//       icon: <Iconify width={22} icon="fluent:box-20-filled" />,
+//     },
+//     {
+//       title: t('shops'),
+//       path: paths.customer.shop.root,
+//       icon: <Iconify width={22} icon="material-symbols:storefront-rounded" />,
+//     },
+//     {
+//       title: t('pricing'),
+//       path: paths.customer.pricing,
+//       icon: <Iconify width={22} icon="fluent:money-20-filled" />,
+//     },
+//     {
+//       title: t('contact'),
+//       path: paths.customer.contact,
+//       icon: <Iconify width={22} icon="ic:round-support-agent" />,
+//     },
+//     {
+//       title: t('about'),
+//       path: paths.customer.about,
+//       icon: <Iconify width={22} icon="ic:round-people" />,
+//     },
+//   ];
+// };

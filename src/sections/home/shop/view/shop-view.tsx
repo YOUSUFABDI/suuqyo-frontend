@@ -24,6 +24,7 @@ import { ShopList } from '../shop-list';
 import { ShopSearch } from '../shop-search';
 import { ShopSort } from '../shop-sort';
 import { SHOP_SORT_OPTIONS, ShopInfoDT } from '../types/types';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,7 @@ export function ShopView() {
   const { shopCategories } = useShopCategories();
   const [searchQuery, setSearchQuery] = useState('');
   const { searchResults } = useSearchShops(searchQuery);
+  const { t } = useTranslate();
 
   const openFilters = useBoolean();
 
@@ -89,7 +91,8 @@ export function ShopView() {
             colors: PRODUCT_COLOR_OPTIONS,
             ratings: PRODUCT_RATING_OPTIONS,
             genders: PRODUCT_GENDER_OPTIONS,
-            categories: ['all', ...shopCategories],
+            // categories: ['all', ...shopCategories],
+            categories: ['all', ...(Array.isArray(shopCategories) ? shopCategories : [])],
           }}
         />
 
@@ -128,18 +131,35 @@ export function ShopView() {
         All
       </Button>
       {/* Map through product categories and create a button for each */}
-      {shopCategories.map((category) => (
-        <Button
-          key={category}
-          variant={currentFilters.category === category ? 'contained' : 'outlined'}
-          onClick={() => filters.setState({ category })}
-          sx={{
-            minWidth: 'max-content', // Ensure buttons don’t stretch too much
-          }}
-        >
-          {category}
-        </Button>
-      ))}
+      {/* {shopCategories &&
+        shopCategories?.map((category) => (
+          <Button
+            key={category}
+            variant={currentFilters.category === category ? 'contained' : 'outlined'}
+            onClick={() => filters.setState({ category })}
+            sx={{
+              minWidth: 'max-content', // Ensure buttons don’t stretch too much
+            }}
+          >
+            {category}
+          </Button>
+        ))} */}
+      {Array.isArray(shopCategories) && shopCategories.length > 0 ? (
+        shopCategories.map((category) => (
+          <Button
+            key={category}
+            variant={currentFilters.category === category ? 'contained' : 'outlined'}
+            onClick={() => filters.setState({ category })}
+            sx={{
+              minWidth: 'max-content',
+            }}
+          >
+            {category}
+          </Button>
+        ))
+      ) : (
+        <Button disabled>No categories available</Button>
+      )}
     </Stack>
   );
 
@@ -152,7 +172,7 @@ export function ShopView() {
   return (
     <Container sx={{ mb: 15 }}>
       <Typography variant="h4" sx={{ my: { xs: 3, md: 5 } }}>
-        Shops
+        {t('home.shoptitle')}
       </Typography>
 
       <Stack spacing={2.5} sx={{ mb: { xs: 3, md: 5 } }}>

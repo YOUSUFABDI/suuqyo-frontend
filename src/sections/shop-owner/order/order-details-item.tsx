@@ -42,7 +42,7 @@ export function OrderDetailsItems({
     >
       <Box sx={{ display: 'flex' }}>
         <Box sx={{ color: 'text.secondary' }}>Subtotal</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{fCurrency(subtotal) || '-'}</Box>
+        <Box sx={{ width: 160, typography: 'subtitle2' }}>{subtotal || '-'}</Box>
       </Box>
 
       <Box sx={{ display: 'flex' }}>
@@ -69,7 +69,7 @@ export function OrderDetailsItems({
 
       <Box sx={{ display: 'flex', typography: 'subtitle1' }}>
         <Box>Total</Box>
-        <Box sx={{ width: 160 }}>{fCurrency(totalAmount) || '-'}</Box>
+        <Box sx={{ width: 160 }}>{totalAmount || '-'}</Box>
       </Box>
     </Box>
   );
@@ -111,9 +111,7 @@ export function OrderDetailsItems({
               <Box sx={{ typography: 'body2' }}>x{item.quantity}</Box>
             </Box>
 
-            <Box sx={{ width: 110, textAlign: 'right', typography: 'subtitle2' }}>
-              {fCurrency(item.price)}
-            </Box>
+            <Box sx={{ width: 110, textAlign: 'right', typography: 'subtitle2' }}>{item.price}</Box>
           </Box>
         ))}
       </Scrollbar>

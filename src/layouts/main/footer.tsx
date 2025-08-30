@@ -12,6 +12,7 @@ import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
 
 import { Logo } from 'src/components/logo';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +49,8 @@ export function Footer({
   layoutQuery = 'md',
   ...other
 }: FooterProps & { layoutQuery?: Breakpoint }) {
+  const { t } = useTranslate();
+
   return (
     <FooterRoot sx={sx} {...other}>
       <Divider />
@@ -148,7 +151,7 @@ export function Footer({
         </Grid>
 
         <Typography variant="body2" sx={{ mt: 10 }}>
-          © All rights reserved.
+          © {t('home.rights')}
         </Typography>
       </Container>
     </FooterRoot>
@@ -159,6 +162,7 @@ export function Footer({
 
 export function HomeFooter({ sx, ...other }: FooterProps) {
   const currentYear = new Date().getFullYear();
+  const { t } = useTranslate();
 
   return (
     <FooterRoot
@@ -175,11 +179,11 @@ export function HomeFooter({ sx, ...other }: FooterProps) {
         <Logo />
         <Box sx={{ mt: 1, typography: 'caption' }}>
           © {currentYear} <Link href="https://suuqyo.com/"> suuqyo.com </Link>
-          All rights reserved
-          <br /> Built With ❤️ In Hamar
+          {t('home.rights')}
+          <br /> {t('home.build')}
         </Box>
         <Box sx={{ mt: 1, typography: 'caption' }}>
-          <Link href={paths.customer.privacy}> Privacy notice </Link>
+          <Link href={paths.customer.privacy}> {t('home.privacy')} </Link>
         </Box>
       </Container>
     </FooterRoot>

@@ -31,6 +31,8 @@ import { _account } from '../nav-config-account-main';
 import { AccountDrawer } from '../components/account-drawer';
 import { useAuth } from 'src/sections/auth/hooks';
 import { useEffect, useState } from 'react';
+import { LanguagePopover } from '../components/language-popover';
+import { allLangs } from 'src/locales';
 // ----------------------------------------------------------------------
 
 type LayoutBaseProps = Pick<LayoutSectionProps, 'sx' | 'children' | 'cssVars'>;
@@ -104,6 +106,9 @@ export function MainLayout({
           />
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.5 } }}>
+            {/** @slot Language popover */}
+            <LanguagePopover data={allLangs} />
+
             {/** @slot Settings button */}
             <SettingsButton />
 

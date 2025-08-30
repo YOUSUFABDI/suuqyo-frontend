@@ -32,6 +32,7 @@ import { ProductSearch } from './product-search';
 import { ProductSort } from './product-sort';
 import { Product } from './types/types';
 import { Button } from '@mui/material';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,7 @@ export function ProductListView() {
   const { state: checkoutState } = useCheckoutContext();
   const { products } = useAllProduct();
   const { productCategories } = useCategories();
+  const { t } = useTranslate();
   // console.log('products', products);
 
   const openFilters = useBoolean();
@@ -171,7 +173,7 @@ export function ProductListView() {
       <CartIcon totalItems={checkoutState?.items.length} />
 
       <Typography variant="h4" sx={{ my: { xs: 3, md: 5 } }}>
-        Products
+        {t('home.productstitle')}
       </Typography>
 
       <Stack spacing={2.5} sx={{ mb: { xs: 3, md: 5 } }}>

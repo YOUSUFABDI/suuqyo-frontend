@@ -493,11 +493,15 @@ export function ShopOwnerNewForm() {
                     slotProps={{ select: { native: true }, inputLabel: { shrink: true } }}
                   >
                     <option value=""></option>
-                    {shopCategories.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    ))}
+                    {Array.isArray(shopCategories) && shopCategories.length > 0 ? (
+                      shopCategories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled>No categories available</option>
+                    )}
                   </Field.Select>
                 </Box>
               </Card>

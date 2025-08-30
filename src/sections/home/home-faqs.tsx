@@ -21,165 +21,220 @@ import { SectionTitle } from './components/section-title';
 import { FloatLine, FloatPlusIcon, FloatTriangleDownIcon } from './components/svg-elements';
 import { paths } from 'src/routes/paths';
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
-const FAQs = [
-  // General Questions about Suuqyo
-  {
-    question: `What is ${CONFIG.appName}?`,
-    answer: (
-      <Typography>
-        <Link
-          href="/"
-          // target="_blank"
-          rel="noopener"
-          sx={{ mx: 0.5 }}
-        >
-          {CONFIG.appName}
-        </Link>
-        is an online marketplace that connects buyers with shop owners. It's designed to make it
-        simple and seamless for you to find quality products or sell your own.
-      </Typography>
-    ),
-  },
-  {
-    question: `How does ${CONFIG.appName} work?`,
-    answer: (
-      <Typography>
-        <Link
-          href="/"
-          // target="_blank"
-          rel="noopener"
-          sx={{ mx: 0.5 }}
-        >
-          {CONFIG.appName}
-        </Link>
-        provides a platform where shop owners can list their products, and buyers can browse,
-        search, and purchase items directly from these sellers. We facilitate the connection between
-        buyers and sellers in one vibrant marketplace.
-      </Typography>
-    ),
-  },
-  {
-    question: `Is ${CONFIG.appName} free to use?`,
-    answer: (
-      <Typography>
-        For buyers, {CONFIG.appName} is completely free to use. For sellers, we offer different
-        plans. Please see our
-        <Link
-          href="#"
-          // target="_blank"
-          rel="noopener"
-          sx={{ mx: 0.5 }}
-        >
-          Seller Plans
-        </Link>
-        section for more details
-      </Typography>
-    ),
-  },
-  // General Questions about Suuqyo
+// const FAQs = [
+//   // General Questions about Suuqyo
+//   {
+//     question: `What is ${CONFIG.appName}?`,
+//     answer: (
+//       <Typography>
+//         <Link
+//           href="/"
+//           // target="_blank"
+//           rel="noopener"
+//           sx={{ mx: 0.5 }}
+//         >
+//           {CONFIG.appName}
+//         </Link>
+//         is an online marketplace that connects buyers with shop owners. It's designed to make it
+//         simple and seamless for you to find quality products or sell your own.
+//       </Typography>
+//     ),
+//   },
+//   {
+//     question: `How does ${CONFIG.appName} work?`,
+//     answer: (
+//       <Typography>
+//         <Link
+//           href="/"
+//           // target="_blank"
+//           rel="noopener"
+//           sx={{ mx: 0.5 }}
+//         >
+//           {CONFIG.appName}
+//         </Link>
+//         provides a platform where shop owners can list their products, and buyers can browse,
+//         search, and purchase items directly from these sellers. We facilitate the connection between
+//         buyers and sellers in one vibrant marketplace.
+//       </Typography>
+//     ),
+//   },
+//   {
+//     question: `Is ${CONFIG.appName} free to use?`,
+//     answer: (
+//       <Typography>
+//         For buyers, {CONFIG.appName} is completely free to use. For sellers, we offer different
+//         plans. Please see our
+//         <Link
+//           href={paths.customer.pricing}
+//           // target="_blank"
+//           rel="noopener"
+//           sx={{ mx: 0.5 }}
+//         >
+//           Pricing
+//         </Link>
+//         section for more details
+//       </Typography>
+//     ),
+//   },
+//   // General Questions about Suuqyo
 
-  // Questions for Buyers
-  {
-    question: `What is ${CONFIG.appName}'s return policy?`,
-    answer: (
-      <Typography>
-        Return policies are set by individual sellers. We recommend checking the seller's specific
-        return policy on their shop page or product listing before making a purchase. If you have an
-        issue, you can also contact the seller directly.
-      </Typography>
-    ),
-  },
-  {
-    question: 'How can I contact a seller?',
-    answer: (
-      <Typography>
-        Each product page and shop profile has a way to contact the seller directly. Look for a
-        "Seller Phone Number" or "Seller Email".
-      </Typography>
-    ),
-  },
-  {
-    question: 'What should I do if I have a problem with my order?',
-    answer: (
-      <Typography>
-        First, we recommend contacting the seller directly to resolve the issue. If you're unable to
-        reach a resolution, {CONFIG.appName} has a dispute resolution process to help.
-      </Typography>
-    ),
-  },
-  // Questions for Buyers
+//   // Questions for Buyers
+//   {
+//     question: `What is ${CONFIG.appName}'s return policy?`,
+//     answer: (
+//       <Typography>
+//         Return policies are set by individual sellers. We recommend checking the seller's specific
+//         return policy on their shop page or product listing before making a purchase. If you have an
+//         issue, you can also contact the seller directly.
+//       </Typography>
+//     ),
+//   },
+//   {
+//     question: 'How can I contact a seller?',
+//     answer: (
+//       <Typography>
+//         Each product page and shop profile has a way to contact the seller directly. Look for a
+//         "Seller Phone Number" or "Seller Email".
+//       </Typography>
+//     ),
+//   },
+//   {
+//     question: 'What should I do if I have a problem with my order?',
+//     answer: (
+//       <Typography>
+//         First, we recommend contacting the seller directly to resolve the issue. If you're unable to
+//         reach a resolution, {CONFIG.appName} has a dispute resolution process to help.
+//       </Typography>
+//     ),
+//   },
+//   // Questions for Buyers
 
-  // Questions for Sellers
-  {
-    question: `How do I become a seller on ${CONFIG.appName}?`,
-    answer: (
-      <Typography>
-        To become a seller, you'll need to.
-        <Link
-          href="/contact-us"
-          // target="_blank"
-          rel="noopener"
-          sx={{ mx: 0.5 }}
-        >
-          Contact us
-        </Link>
-      </Typography>
-    ),
-  },
-  {
-    question: `What can I sell on ${CONFIG.appName}?`,
-    answer: (
-      <Typography>
-        You can sell a wide range of products on {CONFIG.appName}, as long as they comply with our
-        Prohibited Items Policy. Please review.
-        <Link
-          href="#"
-          // target="_blank"
-          rel="noopener"
-          sx={{ mx: 0.5 }}
-        >
-          Privacy and policy
-        </Link>
-        carefully
-      </Typography>
-    ),
-  },
-  {
-    question: 'How do I list my products?',
-    answer: (
-      <Typography>
-        Once you have a seller account, you'll have access to your seller dashboard where you can
-        easily upload product details, photos, and set prices.
-      </Typography>
-    ),
-  },
-  {
-    question: 'How do I manage my orders?',
-    answer: (
-      <Typography>
-        Your seller dashboard provides tools to manage incoming orders, update shipping information,
-        and communicate with buyers.
-      </Typography>
-    ),
-  },
-  {
-    question: 'What are my responsibilities as a seller?',
-    answer: (
-      <Typography>
-        As a seller, you're responsible for accurately describing your products, fulfilling orders
-        promptly, providing good customer service, and adhering to {CONFIG.appName}'s policies.
-      </Typography>
-    ),
-  },
-  // Questions for Sellers
-];
+//   // Questions for Sellers
+//   {
+//     question: `How do I become a seller on ${CONFIG.appName}?`,
+//     answer: (
+//       <Typography>
+//         To become a seller, you'll need to.
+//         <Link
+//           href={paths.customer.contact}
+//           // target="_blank"
+//           rel="noopener"
+//           sx={{ mx: 0.5 }}
+//         >
+//           Contact us
+//         </Link>
+//       </Typography>
+//     ),
+//   },
+//   {
+//     question: `What can I sell on ${CONFIG.appName}?`,
+//     answer: (
+//       <Typography>
+//         You can sell a wide range of products on {CONFIG.appName}, as long as they comply with our
+//         Prohibited Items Policy. Please review.
+//         <Link
+//           href={paths.customer.privacy}
+//           // target="_blank"
+//           rel="noopener"
+//           sx={{ mx: 0.5 }}
+//         >
+//           Privacy notice
+//         </Link>
+//         carefully
+//       </Typography>
+//     ),
+//   },
+//   {
+//     question: 'How do I list my products?',
+//     answer: (
+//       <Typography>
+//         Once you have a seller account, you'll have access to your seller dashboard where you can
+//         easily upload product details, photos, and set prices.
+//       </Typography>
+//     ),
+//   },
+//   {
+//     question: 'How do I manage my orders?',
+//     answer: (
+//       <Typography>
+//         Your seller dashboard provides tools to manage incoming orders, update shipping information,
+//         and communicate with buyers.
+//       </Typography>
+//     ),
+//   },
+//   {
+//     question: 'What are my responsibilities as a seller?',
+//     answer: (
+//       <Typography>
+//         As a seller, you're responsible for accurately describing your products, fulfilling orders
+//         promptly, providing good customer service, and adhering to {CONFIG.appName}'s policies.
+//       </Typography>
+//     ),
+//   },
+//   // Questions for Sellers
+// ];
 
 // ----------------------------------------------------------------------
 
 export function HomeFAQs({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate();
+
+  const FAQs = [
+    // General Questions
+    {
+      question: t('home.faq.general.what_is_app'),
+      answer: t('home.answers.general.what_is_app'),
+    },
+    {
+      question: t('home.faq.general.how_does_app_work'),
+      answer: t('home.answers.general.how_does_app_work'),
+    },
+    {
+      question: t('home.faq.general.is_app_free'),
+      answer: t('home.answers.general.is_app_free'),
+    },
+
+    // Questions for Buyers
+    {
+      question: t('home.faq.buyers.return_policy'),
+      answer: t('home.answers.buyers.return_policy'),
+    },
+    {
+      question: t('home.faq.buyers.contact_seller'),
+      answer: t('home.answers.buyers.contact_seller'),
+    },
+    {
+      question: t('home.faq.buyers.problem_with_order'),
+      answer: t('home.answers.buyers.problem_with_order'),
+    },
+
+    // Questions for Sellers
+    {
+      question: t('home.faq.sellers.become_seller'),
+      answer: t('home.answers.sellers.become_seller'),
+    },
+    {
+      question: t('home.faq.sellers.what_can_i_sell'),
+      answer: t('home.answers.sellers.what_can_i_sell'),
+    },
+    {
+      question: t('home.faq.sellers.list_products'),
+      answer: t('home.answers.sellers.list_products'),
+    },
+    {
+      question: t('home.faq.sellers.manage_orders'),
+      answer: t('home.answers.sellers.manage_orders'),
+    },
+    {
+      question: t('home.faq.sellers.responsibilities_as_seller'),
+      answer: t('home.answers.sellers.responsibilities_as_seller'),
+    },
+  ];
+
   const [expanded, setExpanded] = useState<string | false>(FAQs[0].question);
 
   const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -188,8 +243,8 @@ export function HomeFAQs({ sx, ...other }: BoxProps) {
 
   const renderDescription = () => (
     <SectionTitle
-      caption="FAQs"
-      title="We’ve got the"
+      caption={t('home.faqs')}
+      title={t('home.wegot')}
       txtGradient="answers"
       sx={{ textAlign: 'center' }}
     />
@@ -270,13 +325,11 @@ export function HomeFAQs({ sx, ...other }: BoxProps) {
       ]}
     >
       <m.div variants={varFade('in')}>
-        <Typography variant="h4">Still have questions?</Typography>
+        <Typography variant="h4">{t('home.still')}</Typography>
       </m.div>
 
       <m.div variants={varFade('in')}>
-        <Typography sx={{ mt: 2, mb: 3, color: 'text.secondary' }}>
-          Please describe your case to receive the most accurate advice
-        </Typography>
+        <Typography sx={{ mt: 2, mb: 3, color: 'text.secondary' }}>{t('home.ans')}</Typography>
       </m.div>
 
       <m.div variants={varFade('in')}>
@@ -287,7 +340,7 @@ export function HomeFAQs({ sx, ...other }: BoxProps) {
           href={paths.customer.contact}
           startIcon={<Iconify icon="fluent:mail-24-filled" />}
         >
-          Contact us
+          {t('home.contact')}
         </Button>
       </m.div>
     </Box>

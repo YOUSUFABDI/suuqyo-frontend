@@ -7,8 +7,9 @@ import Typography from '@mui/material/Typography';
 
 import { useState } from 'react';
 import { PricingCard } from '../pricing-card';
-import { _pricingPlans } from '../types/types';
+import { Plan } from '../types/types';
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +35,39 @@ const arrowIcon = (
 
 export function PricingView() {
   const [isYearly, setIsYearly] = useState(false);
+  const { t } = useTranslate();
+
+  const translatedPlans = t('pricing.plans', { returnObjects: true }) as any[];
+
+  const _pricingPlans: Plan[] = [
+    {
+      subscription: 'BASIC',
+      monthlyPrice: 0,
+      yearlyPrice: 0,
+      name: translatedPlans[0].name,
+      caption: translatedPlans[0].caption,
+      lists: translatedPlans[0].lists,
+      labelAction: translatedPlans[0].labelAction,
+    },
+    {
+      subscription: 'PRO',
+      monthlyPrice: 30,
+      yearlyPrice: 360,
+      name: translatedPlans[1].name,
+      caption: translatedPlans[1].caption,
+      lists: translatedPlans[1].lists,
+      labelAction: translatedPlans[1].labelAction,
+    },
+    {
+      subscription: 'PREMIUM',
+      monthlyPrice: 50,
+      yearlyPrice: 600,
+      name: translatedPlans[2].name,
+      caption: translatedPlans[2].caption,
+      lists: translatedPlans[2].lists,
+      labelAction: translatedPlans[2].labelAction,
+    },
+  ];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsYearly(event.target.checked);
@@ -43,11 +77,10 @@ export function PricingView() {
     <Container sx={{ pt: { xs: 5, md: 10 }, pb: 10 }}>
       {/* --- Header --- */}
       <Typography variant="h2" align="center" sx={{ mb: 2 }}>
-        Flexible plans for your shop's needs
+        {t('pricing.title')}
       </Typography>
       <Typography align="center" sx={{ color: 'text.secondary', mb: { xs: 5, md: 8 } }}>
-        {CONFIG.appName} connects buyers with shop owners in one vibrant marketplace. Choose your
-        plan and make modern online conversation magic.
+        {CONFIG.appName} {t('pricing.description')}
       </Typography>
 
       {/* --- Monthly/Yearly Toggle --- */}
@@ -58,6 +91,7 @@ export function PricingView() {
             sx={{ color: !isYearly ? 'text.primary' : 'text.disabled' }}
           >
             MONTHLY
+            {/* {t('pricing.monthly')} */}
           </Typography>
           <Switch checked={isYearly} onChange={handleChange} sx={{ mx: 1 }} />
           <Box sx={{ position: 'relative' }}>
@@ -77,6 +111,7 @@ export function PricingView() {
               >
                 {/* SAVE UP TO 17% */}
                 YEARLY
+                {/* {t('pricing.yearly')} */}
               </Box>
             </Box>
             <Typography
@@ -84,6 +119,7 @@ export function PricingView() {
               sx={{ color: isYearly ? 'text.primary' : 'text.disabled' }}
             >
               YEARLY
+              {/* {t('pricing.yearly')} */}
             </Typography>
           </Box>
         </Box>

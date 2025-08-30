@@ -26,7 +26,7 @@ type Props = {
 export function CheckoutSummary({ onEdit, checkoutState, onApplyDiscount }: Props) {
   const { shipping, subtotal, discount, total } = checkoutState;
 
-  const displayShipping = shipping !== null ? 'Free' : '-';
+  const displayShipping = shipping !== null ? '' : '-';
 
   const rowStyles: SxProps<Theme> = {
     display: 'flex',
@@ -54,7 +54,7 @@ export function CheckoutSummary({ onEdit, checkoutState, onApplyDiscount }: Prop
             Subtotal
           </Typography>
           <Typography component="span" variant="subtitle2">
-            {fCurrency(subtotal)}
+            {subtotal}
           </Typography>
         </Box>
 
@@ -80,7 +80,7 @@ export function CheckoutSummary({ onEdit, checkoutState, onApplyDiscount }: Prop
             Shipping
           </Typography>
           <Typography component="span" variant="subtitle2">
-            {shipping ? fCurrency(shipping) : displayShipping}
+            {shipping ? shipping : displayShipping}
           </Typography>
         </Box>
 
@@ -97,7 +97,7 @@ export function CheckoutSummary({ onEdit, checkoutState, onApplyDiscount }: Prop
               variant="subtitle1"
               sx={{ display: 'block', color: 'error.main' }}
             >
-              {fCurrency(total)}
+              {total}
             </Typography>
             {/* <Typography variant="caption" sx={{ fontStyle: 'italic' }}>
               (VAT included if applicable)

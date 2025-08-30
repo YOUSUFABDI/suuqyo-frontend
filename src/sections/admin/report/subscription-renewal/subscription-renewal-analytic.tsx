@@ -67,7 +67,7 @@ export function SubscriptionRenewalAnalytic({ title, total, icon, color, percent
           {fShortenNumber(total)} subscription renewal
         </Box>
 
-        <Typography variant="subtitle2">{fCurrency(price)}</Typography>
+        <Typography variant="subtitle2">{price}</Typography>
       </Stack>
     </Box>
   );

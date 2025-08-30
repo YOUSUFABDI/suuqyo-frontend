@@ -26,6 +26,7 @@ import { Iconify } from 'src/components/iconify';
 import { varFade, MotionContainer } from 'src/components/animate';
 
 import { HeroBackground } from './components/hero-background';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,7 @@ const motionProps: MotionProps = {
 
 export function HomeHero({ sx, ...other }: BoxProps) {
   const scrollProgress = useScrollPercent();
+  const { t } = useTranslate();
 
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up(mdKey));
@@ -79,7 +81,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         ]}
       >
         <Box component="span" sx={{ width: 1, opacity: 0.24 }}>
-          Welcome to
+          {t('home.title')}
         </Box>
         {/* where shopping begins */}
         <Box
@@ -115,7 +117,8 @@ export function HomeHero({ sx, ...other }: BoxProps) {
           [theme.breakpoints.up(lgKey)]: { fontSize: 20, lineHeight: '36px' },
         }}
       >
-        {`${CONFIG.appName} connects buyers with shop owners in one vibrant marketplace. \nWhether you're here to find quality products or sell your own, \n${CONFIG.appName} makes it simple and seamless.`}
+        {/* {`${CONFIG.appName} connects buyers with shop owners in one vibrant marketplace. \nWhether you're here to find quality products or sell your own, \n${CONFIG.appName} makes it simple and seamless.`} */}
+        {t('home.description')}
       </Typography>
     </m.div>
   );
@@ -166,7 +169,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             startIcon={<Iconify width={24} icon="material-symbols:storefront-rounded" />}
           >
             <span>
-              Shops
+              {t('home.shops')}
               <Box
                 component="small"
                 sx={{
@@ -209,7 +212,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
           startIcon={<Iconify width={24} icon="fluent:box-20-filled" />}
           sx={{ borderColor: 'text.primary' }}
         >
-          Products
+          {t('home.products')}
         </Button>
       </m.div>
     </Box>

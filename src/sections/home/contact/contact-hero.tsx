@@ -10,10 +10,13 @@ import Typography from '@mui/material/Typography';
 import { CONFIG } from 'src/global-config';
 
 import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/components/animate';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
 export function ContactHero({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate();
+
   return (
     <Box
       component="section"
@@ -45,7 +48,8 @@ export function ContactHero({ sx, ...other }: BoxProps) {
           <AnimateText
             component="h1"
             variant="h1"
-            textContent={['Where', 'to find us?']}
+            // textContent={[t('contact.title'), t('contact.subtitle')]}
+            textContent={[t('contact.title'), t('contact.subtitle')]}
             variants={varFade('inUp', { distance: 24 })}
             sx={{
               color: 'common.white',

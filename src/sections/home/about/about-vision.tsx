@@ -13,10 +13,13 @@ import { CONFIG } from 'src/global-config';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 import { varFade, MotionViewport } from 'src/components/animate';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
 export function AboutVision({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate();
+
   const renderImage = () => (
     <Image
       src={`${CONFIG.assetsDir}/assets/images/about/Suuqyo Delivery Brand-03.jpg`}
@@ -110,9 +113,7 @@ export function AboutVision({ sx, ...other }: BoxProps) {
           variant="h3"
           sx={{ textAlign: 'center', maxWidth: 800, mx: 'auto' }}
         >
-          Our vision To be the leading and most trusted online marketplace in Somalia, empowering
-          individuals and businesses by seamlessly connecting buyers with a diverse array of quality
-          products and sellers, fostering economic growth and community prosperity.
+          {t('about.vission')}
         </Typography>
       </Container>
     </Box>

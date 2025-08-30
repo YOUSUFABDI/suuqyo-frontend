@@ -16,6 +16,7 @@ import { Iconify } from 'src/components/iconify';
 import { varFade, MotionViewport } from 'src/components/animate';
 
 import { FloatLine, FloatPlusIcon } from './components/svg-elements';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -74,74 +75,78 @@ const renderLines = () => (
   </>
 );
 
-const renderDescription = () => (
-  <Stack spacing={5} sx={{ zIndex: 9 }}>
-    <Box
-      component={m.h2}
-      variants={varFade('inDown', { distance: 24 })}
-      sx={{
-        m: 0,
-        color: 'common.white',
-        typography: { xs: 'h2', md: 'h1' },
-      }}
-    >
-      Get started with
-      <br /> {CONFIG.appName}
+const renderDescription = () => {
+  const { t } = useTranslate();
+
+  return (
+    <Stack spacing={5} sx={{ zIndex: 9 }}>
       <Box
-        component="span"
-        sx={(theme) => ({
-          ...theme.mixins.textGradient(
-            `to right, ${theme.vars.palette.common.white}, ${varAlpha(theme.vars.palette.common.whiteChannel, 0.4)}`
-          ),
-          ml: 1,
-        })}
+        component={m.h2}
+        variants={varFade('inDown', { distance: 24 })}
+        sx={{
+          m: 0,
+          color: 'common.white',
+          typography: { xs: 'h2', md: 'h1' },
+        }}
       >
-        today
+        {t('home.advertisements.top')}
+        <br /> {CONFIG.appName}
+        <Box
+          component="span"
+          sx={(theme) => ({
+            ...theme.mixins.textGradient(
+              `to right, ${theme.vars.palette.common.white}, ${varAlpha(theme.vars.palette.common.whiteChannel, 0.4)}`
+            ),
+            ml: 1,
+          })}
+        >
+          {t('home.advertisements.bottom')}
+        </Box>
       </Box>
-    </Box>
 
-    <Box
-      sx={{
-        gap: 2,
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: { xs: 'center', md: 'flex-start' },
-      }}
-    >
-      <m.div variants={varFade('inRight', { distance: 24 })}>
-        <Button
-          color="primary"
-          size="large"
-          variant="contained"
-          target="_blank"
-          rel="noopener"
-          href={paths.auth.jwt.signUp}
-        >
-          Sign up
-        </Button>
-      </m.div>
+      <Box
+        sx={{
+          gap: 2,
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: { xs: 'center', md: 'flex-start' },
+        }}
+      >
+        <m.div variants={varFade('inRight', { distance: 24 })}>
+          <Button
+            color="primary"
+            size="large"
+            variant="contained"
+            target="_blank"
+            rel="noopener"
+            href={paths.auth.jwt.signUp}
+          >
+            {t('home.signup')}
+          </Button>
+        </m.div>
 
-      <m.div variants={varFade('inRight', { distance: 24 })}>
-        <Button
-          color="inherit"
-          size="large"
-          variant="outlined"
-          // target="_blank"
-          // rel="noopener"
-          href={paths.customer.contact}
-          startIcon={<Iconify width={16} icon="eva:external-link-fill" sx={{ mr: 0.5 }} />}
-          sx={{
-            color: 'common.white',
-            borderColor: 'common.white',
-            '&:hover': { borderColor: 'currentColor' },
-          }}
-        >
-          Contact us
-        </Button>
-      </m.div>
-    </Box>
-  </Stack>
-);
+        <m.div variants={varFade('inRight', { distance: 24 })}>
+          <Button
+            color="inherit"
+            size="large"
+            variant="outlined"
+            // target="_blank"
+            // rel="noopener"
+            href={paths.customer.contact}
+            startIcon={<Iconify width={16} icon="eva:external-link-fill" sx={{ mr: 0.5 }} />}
+            sx={{
+              color: 'common.white',
+              borderColor: 'common.white',
+              '&:hover': { borderColor: 'currentColor' },
+            }}
+          >
+            {t('home.contact')}
+          </Button>
+        </m.div>
+      </Box>
+    </Stack>
+  );
+};
 
 const renderImage = () => (
   <m.div variants={varFade('inUp')}>

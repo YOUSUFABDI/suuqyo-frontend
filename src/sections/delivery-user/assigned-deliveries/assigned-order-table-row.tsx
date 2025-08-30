@@ -163,7 +163,7 @@ export function AssignedOrderTableRow({
 
                 <div>x{item.quantity} </div>
 
-                <Box sx={{ width: 110, textAlign: 'right' }}>{fCurrency(item.price)}</Box>
+                <Box sx={{ width: 110, textAlign: 'right' }}>{item.price}</Box>
               </Box>
             ))}
           </Paper>

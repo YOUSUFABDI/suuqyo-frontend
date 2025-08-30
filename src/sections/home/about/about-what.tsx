@@ -19,10 +19,13 @@ import { Iconify } from 'src/components/iconify';
 import { varFade, MotionViewport } from 'src/components/animate';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
 export function AboutWhat({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate();
+
   return (
     <Box
       component="section"
@@ -76,7 +79,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
 
           <Grid size={{ xs: 12, md: 6, lg: 5 }}>
             <Typography component={m.h2} variants={varFade('inRight')} variant="h2" sx={{ mb: 3 }}>
-              What is {CONFIG.appName}?
+              {t('about.what')}
             </Typography>
 
             <Typography
@@ -91,9 +94,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
                 }),
               ]}
             >
-              {CONFIG.appName} is an online marketplace that connects buyers with shop owners. It's
-              designed to make it simple and seamless for you to find quality products or sell your
-              own.
+              {t('about.ans')}
             </Typography>
 
             <Button
@@ -105,7 +106,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
               size="large"
               endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
             >
-              Contact us
+              {t('pages.contact')}
             </Button>
           </Grid>
         </Grid>

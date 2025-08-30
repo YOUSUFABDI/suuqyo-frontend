@@ -15,12 +15,14 @@ import { NavLi } from '../components';
 import { NavItem } from './nav-mobile-item';
 
 import type { NavListProps } from '../types';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
 export function NavList({ data, sx, ...other }: NavListProps) {
   const pathname = usePathname();
   const navItemRef = useRef<HTMLButtonElement | null>(null);
+  const { t } = useTranslate();
 
   const isNotRootOrDocs = !['/', '/'].includes(pathname);
   const isNotComponentsPath = !pathname.startsWith('/');
@@ -42,7 +44,7 @@ export function NavList({ data, sx, ...other }: NavListProps) {
       // slots
       path={data.path}
       icon={data.icon}
-      title={data.title}
+      title={t(data.title)}
       // state
       open={open}
       active={isActive}
