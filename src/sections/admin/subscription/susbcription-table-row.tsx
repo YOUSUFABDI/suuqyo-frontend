@@ -30,6 +30,8 @@ import { getErrorMessage } from 'src/utils/error.message';
 import { toast } from 'src/components/snackbar';
 import { UseSubscriptionRenewals } from '../report/subscription-renewal/hooks';
 
+const role = localStorage.getItem('role');
+
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -87,12 +89,14 @@ export function SubscriptionTableRow({ row, selected, editHref, onSelectRow }: P
       slotProps={{ arrow: { placement: 'right-top' } }}
     >
       <MenuList>
-        <li>
-          <MenuItem component={RouterLink} href={editHref} onClick={() => menuActions.onClose()}>
-            <Iconify icon="solar:pen-bold" />
-            Edit
-          </MenuItem>
-        </li>
+        {role === 'ADMIN' && (
+          <li>
+            <MenuItem component={RouterLink} href={editHref} onClick={() => menuActions.onClose()}>
+              <Iconify icon="solar:pen-bold" />
+              Edit
+            </MenuItem>
+          </li>
+        )}
         <li>
           <MenuItem onClick={handleSendReminder} disabled={isLoading}>
             <Iconify icon="solar:bell-bold" />
