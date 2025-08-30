@@ -14,6 +14,8 @@ import { UseShopOwners } from '../shop-owner/hooks';
 import { ShopOwnerDT } from '../shop-owner/types/types';
 import { SubscriptionPlan, SubscriptionReqDT, SubscriptionTerm } from './types/subscription';
 
+const role = localStorage.getItem('role');
+
 // ----------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------
@@ -369,7 +371,11 @@ function SubscriptionSummary({
     try {
       await createSubscription(subscriptionData).unwrap();
       toast.success('Subscription created successfully!');
-      router.push(paths.dashboard.subscription.root);
+      if (role === 'ADMIN') {
+        router.push(paths.dashboard.subscription.root);
+      } else if (role === 'STAFF') {
+        router.push(paths.staff.subscription.root);
+      }
       await refetchShopowners();
     } catch (error: any) {
       console.error(error);

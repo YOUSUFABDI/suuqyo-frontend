@@ -17,6 +17,8 @@ import {
   UpdateSubscriptionReqDT,
 } from './types/subscription';
 
+const role = localStorage.getItem('role');
+
 // ----------------------------------------------------------------------
 // Constants (Reused from the New Form)
 // ----------------------------------------------------------------------
@@ -310,6 +312,8 @@ function SubscriptionSummary({
   const [updateSubscription, { isLoading }] = useUpdateSubscriptionMutation();
 
   const handleSubmit = async () => {
+    if (role !== 'ADMIN') return;
+
     const updateData: UpdateSubscriptionReqDT = {
       shopOwnerId: Number(currentSubscription.user.id),
       newPlan: selectedPlan,
