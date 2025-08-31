@@ -153,7 +153,7 @@ export function ProductShopDetailsView({ product }: Props) {
           <ProductDetailsDescription description={product?.product.content} />
         )}
         {tabs.value === 'returnPolicy' && (
-          <ProductDetailsReturnPolicy policy={product?.product.returnPolicy} />
+          <ProductDetailsReturnPolicy policy={product?.product.returnPolicy || ''} />
         )}
 
         {/* {tabs.value === 'reviews' && (
