@@ -69,7 +69,7 @@ export const NewUserSchema = zod.object({
       })
     )
     .min(1, { message: 'At least one payment method is required!' })
-    .max(3, { message: 'You can only add up to 3 payment methods!' }),
+    .max(4, { message: 'You can only add up to 4 payment methods!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -126,7 +126,7 @@ export function ShopOwnerNewForm() {
 
   const handleAddPaymentMethod = () => {
     const currentMethods = methods.getValues('paymentMethods') || [];
-    if (currentMethods.length < 3) {
+    if (currentMethods.length < 4) {
       methods.setValue('paymentMethods', [
         ...currentMethods,
         { paymentName: '', paymentPhone: '' },
@@ -336,6 +336,7 @@ export function ShopOwnerNewForm() {
                         }}
                       >
                         <option value="EVC_PLUS">EVC Plus</option>
+                        <option value="MERCHANT_WALLET">Merchant wallet</option>
                         <option value="EDAHAB">eDahab</option>
                         <option value="PREMIER_WALLET">Premier wallet</option>
                       </Field.Select>
@@ -360,13 +361,13 @@ export function ShopOwnerNewForm() {
                       variant="outlined"
                       startIcon={<Iconify icon="mingcute:add-line" />}
                       onClick={handleAddPaymentMethod}
-                      disabled={(methods.watch('paymentMethods')?.length || 0) >= 3}
+                      disabled={(methods.watch('paymentMethods')?.length || 0) >= 4}
                     >
                       Add Payment Method
                     </Button>
-                    {(methods.watch('paymentMethods')?.length || 0) >= 3 && (
+                    {(methods.watch('paymentMethods')?.length || 0) >= 4 && (
                       <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
-                        Maximum of 3 payment methods allowed.
+                        Maximum of 4 payment methods allowed.
                       </Typography>
                     )}
                   </Box>

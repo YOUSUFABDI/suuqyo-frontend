@@ -63,6 +63,7 @@ export function CheckoutCartProduct({ row, onDeleteCartItem, onChangeItemQuantit
               value={size.quantity}
               onChange={(event, quantity: number) => onChangeItemQuantity(itemId, quantity)}
               // max={size.available}
+              min={1}
             />
             {/* <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 1 }}>
               available: {size.available}

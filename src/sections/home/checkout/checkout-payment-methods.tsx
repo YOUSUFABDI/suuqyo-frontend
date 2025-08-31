@@ -71,13 +71,24 @@ export function CheckoutPaymentMethods({ name, options, sx, ...other }: Props) {
                     />
 
                     {/* instruction */}
-                    {isSelected && (
+                    {/* {isSelected && (
                       <Box component="span" sx={{ typography: 'subtitle1' }}>
                         {['EVC_PLUS', 'EDAHAB'].includes(selectedPayment)
                           ? `*712*${option.description.replace(/\D/g, '')}*$#`
                           : selectedPayment === 'PREMIER_WALLET'
                             ? `${option.description.replace(/\D/g, '')}`
                             : null}
+                      </Box>
+                    )} */}
+                    {isSelected && (
+                      <Box component="span" sx={{ typography: 'subtitle1' }}>
+                        {['EVC_PLUS', 'EDAHAB'].includes(selectedPayment)
+                          ? `*712*${option.description.replace(/\D/g, '')}*$#`
+                          : selectedPayment === 'PREMIER_WALLET'
+                            ? `${option.description.replace(/\D/g, '')}`
+                            : selectedPayment === 'MERCHANT_WALLET'
+                              ? `*789*${option.description.replace(/\D/g, '')}*$#`
+                              : null}
                       </Box>
                     )}
                     {/* instruction */}
