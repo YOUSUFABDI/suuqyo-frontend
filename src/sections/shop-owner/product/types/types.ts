@@ -43,6 +43,7 @@ export interface ProductResDT {
   categoryId: number;
   name: string;
   description: string;
+  returnPolicy?: string;
   content: string;
   sellingPrice: number;
   purchasePrice: number;

@@ -26,6 +26,7 @@ import { ProductDetailsCarousel } from './product-details-carousel';
 import { ProductDetailsDescription } from './product-details-description';
 import { ProductResponse } from './types/types';
 import { ProductDetailsSkeleton } from '../components/product-skeleton';
+import { ProductDetailsReturnPolicy } from './product-details-return-policy';
 
 // ----------------------------------------------------------------------
 
@@ -141,6 +142,7 @@ export function ProductShopDetailsView({ product }: Props) {
         >
           {[
             { value: 'description', label: 'Description' },
+            { value: 'returnPolicy', label: 'Return policy' },
             // { value: 'reviews', label: `Reviews (${product?.reviews.length})` },
           ].map((tab) => (
             <Tab key={tab.value} value={tab.value} label={tab.label} />
@@ -149,6 +151,9 @@ export function ProductShopDetailsView({ product }: Props) {
 
         {tabs.value === 'description' && (
           <ProductDetailsDescription description={product?.product.content} />
+        )}
+        {tabs.value === 'returnPolicy' && (
+          <ProductDetailsReturnPolicy policy={product?.product.returnPolicy} />
         )}
 
         {/* {tabs.value === 'reviews' && (

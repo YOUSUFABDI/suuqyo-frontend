@@ -36,6 +36,7 @@ export const UpdateProductSchema = zod
   .object({
     name: zod.string().min(1, { message: 'Name is required!' }),
     content: schemaHelper.editor({ message: 'Content is required!' }),
+    returnPolicy: schemaHelper.editor({ message: 'Return policy is required!' }),
     images: schemaHelper.files({ message: 'Images is required!' }),
     sellingPrice: schemaHelper.nullableInput(
       zod.number({ coerce: true }).min(1, { message: 'Price is required!' }),
@@ -131,6 +132,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
     () => ({
       name: currentProduct?.name || '',
       content: currentProduct?.content || '',
+      returnPolicy: currentProduct?.returnPolicy || '',
       description: currentProduct?.description || '',
       images: currentProduct?.images.map((i) => i.image) || [],
       sellingPrice: currentProduct?.sellingPrice || null,
@@ -197,6 +199,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
         name: data.name,
         description: data.description,
         content: data.content,
+        returnPolicy: data.returnPolicy,
         sellingPrice: data.sellingPrice,
         purchasePrice: data.purchasePrice,
         isFood: data.isFood,
@@ -369,6 +372,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
         <Divider />
         <Stack spacing={3} sx={{ p: 3 }}>
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+            <Field.Text name="returnPolicy" label="Return policy" multiline rows={3} />
             <Field.Select
               name="categoryId"
               label="Category"
@@ -517,6 +521,8 @@ export function ProductNewEditForm({ currentProduct }: Props) {
               </Stack>
             </Box>
           )}
+
+          <Field.Text name="returnPolicy" label="Return policy" multiline rows={3} />
         </Stack>
       </Card>
     );

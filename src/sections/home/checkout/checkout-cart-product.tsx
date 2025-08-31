@@ -144,7 +144,7 @@ export function CheckoutCartProduct({ row, onDeleteCartItem, onChangeItemQuantit
                                 onChangeItemQuantity(`${row.id}-${color.id}-${size.id}`, quantity)
                               }
                               max={size.available}
-                              min={0}
+                              min={1}
                               sx={{
                                 width: 100,
                                 textAlign: 'right',

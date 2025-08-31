@@ -12,6 +12,7 @@ export interface Product {
   discount: number | null;
   rate: number | null;
   condition: string;
+  returnPolicy: string;
   category: {
     id: number;
     name: string;

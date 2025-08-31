@@ -37,6 +37,7 @@ export const NewProductSchema = zod
   .object({
     name: zod.string().min(1, { message: 'Name is required!' }),
     content: schemaHelper.editor({ message: 'Content is required!' }),
+    returnPolicy: schemaHelper.editor({ message: 'Return policy is required!' }),
     images: schemaHelper.files({ message: 'Images is required!' }),
     sellingPrice: schemaHelper.nullableInput(
       zod.number({ coerce: true }).min(1, { message: 'Price is required!' }),
@@ -134,6 +135,7 @@ export function ProductNewCreateForm() {
     name: '',
     content: '',
     description: '',
+    returnPolicy: '',
     images: [],
     sellingPrice: null,
     purchasePrice: null,
@@ -184,6 +186,7 @@ export function ProductNewCreateForm() {
         categoryId: data.categoryId,
         name: data.name,
         description: data.description,
+        returnPolicy: data.returnPolicy,
         content: data.content,
         sellingPrice: data.sellingPrice,
         purchasePrice: data.purchasePrice,
@@ -498,6 +501,8 @@ export function ProductNewCreateForm() {
               </Stack>
             </Box>
           )}
+
+          <Field.Text name="returnPolicy" label="Return policy" multiline rows={3} />
         </Stack>
       </Card>
     );
