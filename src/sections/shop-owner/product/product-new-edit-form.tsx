@@ -372,7 +372,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
         <Divider />
         <Stack spacing={3} sx={{ p: 3 }}>
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
-            <Field.Text name="returnPolicy" label="Return policy" multiline rows={3} />
             <Field.Select
               name="categoryId"
               label="Category"
