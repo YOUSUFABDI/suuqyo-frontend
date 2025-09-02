@@ -192,7 +192,8 @@ export function ShopOwnerNewForm() {
     } catch (error: any) {
       console.error(error);
       const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
+      // toast.error(errorMessage);
+      toast.error(error);
     }
   });
 
