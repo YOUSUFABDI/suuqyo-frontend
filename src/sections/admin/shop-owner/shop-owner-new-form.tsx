@@ -140,47 +140,108 @@ export function ShopOwnerNewForm() {
     methods.setValue('paymentMethods', newMethods);
   };
 
+  // const onSubmit = handleSubmit(async (data) => {
+  //   try {
+  //     const createShopOwnerDto = {
+  //       fullName: data.fullName,
+  //       username: data.username,
+  //       email: data.email,
+  //       phoneNumber: data.phoneNumber,
+  //       country: data.country,
+  //       state: data.state,
+  //       city: data.city,
+  //       address: data.address,
+  //       password: data.password,
+
+  //       // shop detail
+  //       shopName: data.shopName,
+  //       shopDescription: data.shopDescription,
+  //       shopAddress: data.shopAddress,
+  //       shopCategoryId: data.shopCategoryId,
+
+  //       paymentMethods: data.paymentMethods,
+
+  //       createdBy: user?.username ?? '',
+  //     };
+  //     // console.log('---------', createShopOwnerDto);
+  //     const profileImage = data.profileImage;
+  //     const shopLogo = data.shopLogo;
+  //     const businessProof = data.businessProof;
+  //     // console.log('businessProof', businessProof);
+
+  //     const formData = new FormData();
+  //     formData.append('createShopOwnerDto', JSON.stringify(createShopOwnerDto));
+  //     if (profileImage) {
+  //       formData.append('profileImage', profileImage);
+  //     }
+  //     if (shopLogo) {
+  //       formData.append('shopLogo', shopLogo);
+  //     }
+  //     if (businessProof) {
+  //       formData.append('businessProof', businessProof);
+  //     }
+
+  //     await registerShopOwner(formData).unwrap();
+  //     toast.success('Create success!');
+  //     reset();
+  //     if (role === 'ADMIN') {
+  //       router.push(paths.dashboard.shopOwner.root);
+  //     } else if (role === 'STAFF') {
+  //       router.push(paths.staff.shopOwner.root);
+  //     }
+  //   } catch (error: any) {
+  //     console.error(error);
+  //     const errorMessage = getErrorMessage(error);
+  //     toast.error(errorMessage);
+  //     // toast.error(error);
+  //   }
+  // });
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const createShopOwnerDto = {
-        fullName: data.fullName,
-        username: data.username,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        country: data.country,
-        state: data.state,
-        city: data.city,
-        address: data.address,
-        password: data.password,
+      // OLD WAY (causes errors on iOS)
+      /*
+    const createShopOwnerDto = { ... };
+    formData.append('createShopOwnerDto', JSON.stringify(createShopOwnerDto));
+    */
 
-        // shop detail
-        shopName: data.shopName,
-        shopDescription: data.shopDescription,
-        shopAddress: data.shopAddress,
-        shopCategoryId: data.shopCategoryId,
-
-        paymentMethods: data.paymentMethods,
-
-        createdBy: user?.username ?? '',
-      };
-      // console.log('---------', createShopOwnerDto);
-      const profileImage = data.profileImage;
-      const shopLogo = data.shopLogo;
-      const businessProof = data.businessProof;
-      // console.log('businessProof', businessProof);
-
+      // ✅ NEW WAY: Append each field individually
       const formData = new FormData();
-      formData.append('createShopOwnerDto', JSON.stringify(createShopOwnerDto));
-      if (profileImage) {
-        formData.append('profileImage', profileImage);
+
+      // Append all string/number fields from 'data'
+      Object.entries(data).forEach(([key, value]) => {
+        // Skip files and paymentMethods array, we'll handle them separately
+        if (
+          key === 'profileImage' ||
+          key === 'shopLogo' ||
+          key === 'businessProof' ||
+          key === 'paymentMethods'
+        ) {
+          return;
+        }
+        if (value !== null && value !== undefined) {
+          formData.append(key, value as string);
+        }
+      });
+
+      // Handle the paymentMethods array
+      data.paymentMethods.forEach((method, index) => {
+        formData.append(`paymentMethods[${index}][paymentName]`, method.paymentName);
+        formData.append(`paymentMethods[${index}][paymentPhone]`, method.paymentPhone);
+      });
+
+      // Append files if they exist
+      if (data.profileImage) {
+        formData.append('profileImage', data.profileImage);
       }
-      if (shopLogo) {
-        formData.append('shopLogo', shopLogo);
+      if (data.shopLogo) {
+        formData.append('shopLogo', data.shopLogo);
       }
-      if (businessProof) {
-        formData.append('businessProof', businessProof);
+      if (data.businessProof) {
+        formData.append('businessProof', data.businessProof);
       }
 
+      // This part remains the same
       await registerShopOwner(formData).unwrap();
       toast.success('Create success!');
       reset();
@@ -193,7 +254,6 @@ export function ShopOwnerNewForm() {
       console.error(error);
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
-      // toast.error(error);
     }
   });
 
