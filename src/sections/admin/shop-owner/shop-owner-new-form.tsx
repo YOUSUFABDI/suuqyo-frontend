@@ -228,7 +228,7 @@ export function ShopOwnerNewForm() {
                 <Box sx={{ mb: 5 }}>
                   <Field.UploadAvatar
                     name="profileImage"
-                    maxSize={3145728}
+                    // maxSize={3145728}
                     helperText={
                       <Typography
                         variant="caption"
@@ -241,7 +241,7 @@ export function ShopOwnerNewForm() {
                         }}
                       >
                         Shop owner image, allowed *.jpeg, *.jpg, *.png, *.gif
-                        <br /> max size of {fData(3145728)}
+                        {/* <br /> max size of {fData(3145728)} */}
                       </Typography>
                     }
                   />
@@ -394,7 +394,7 @@ export function ShopOwnerNewForm() {
                 <Box sx={{ mb: 5 }}>
                   <Field.UploadAvatar
                     name="shopLogo"
-                    maxSize={3145728}
+                    // maxSize={3145728}
                     helperText={
                       <Typography
                         variant="caption"
@@ -407,7 +407,7 @@ export function ShopOwnerNewForm() {
                         }}
                       >
                         Shop logo, allowed *.jpeg, *.jpg, *.png, *.gif
-                        <br /> max size of {fData(3145728)}
+                        {/* <br /> max size of {fData(3145728)} */}
                       </Typography>
                     }
                   />
@@ -424,7 +424,7 @@ export function ShopOwnerNewForm() {
                     }}
                     name="businessProof"
                     accept={{ 'application/pdf': ['.pdf'] }}
-                    maxSize={5242880}
+                    // maxSize={5242880}
                     helperText={
                       <Typography
                         variant="caption"
@@ -437,7 +437,7 @@ export function ShopOwnerNewForm() {
                         }}
                       >
                         Business proof / Shatiga Ganacsiga, allowed *.pdf
-                        <br /> Max size of {fData(5242880)}
+                        {/* <br /> Max size of {fData(5242880)} */}
                       </Typography>
                     }
                   />

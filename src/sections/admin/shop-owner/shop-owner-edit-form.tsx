@@ -315,7 +315,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                   <Box sx={{ mb: 5 }}>
                     <Field.UploadAvatar
                       name="profileImage"
-                      maxSize={3145728}
+                      // maxSize={3145728}
                       helperText={
                         <Typography
                           variant="caption"
@@ -328,7 +328,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                           }}
                         >
                           Allowed *.jpeg, *.jpg, *.png, *.gif
-                          <br /> max size of {fData(3145728)}
+                          {/* <br /> max size of {fData(3145728)} */}
                         </Typography>
                       }
                     />
@@ -501,7 +501,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                   <Box sx={{ mb: 5 }}>
                     <Field.UploadAvatar
                       name="shopLogo"
-                      maxSize={3145728}
+                      // maxSize={3145728}
                       helperText={
                         <Typography
                           variant="caption"
@@ -514,7 +514,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                           }}
                         >
                           Shop logo, allowed *.jpeg, *.jpg, *.png, *.gif
-                          <br /> max size of {fData(3145728)}
+                          {/* <br /> max size of {fData(3145728)} */}
                         </Typography>
                       }
                     />
@@ -531,7 +531,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                       }}
                       name="businessProof"
                       accept={{ 'application/pdf': ['.pdf'] }}
-                      maxSize={5242880}
+                      // maxSize={5242880}
                       helperText={
                         <Typography
                           variant="caption"
@@ -544,7 +544,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                           }}
                         >
                           Business proof / Shatiga Ganacsiga, allowed *.pdf
-                          <br /> Max size of {fData(5242880)}
+                          {/* <br /> Max size of {fData(5242880)} */}
                         </Typography>
                       }
                     />
