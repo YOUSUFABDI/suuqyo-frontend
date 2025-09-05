@@ -78,18 +78,19 @@ export function RHFUpload({ name, multiple, helperText, ...other }: RHFUploadPro
         const isImageOnly = acceptKeys.length === 1 && acceptKeys[0] === 'image/*';
         const isPDFOnly = acceptKeys.length === 1 && acceptKeys[0] === 'application/pdf';
 
-        console.log('Accept prop analysis:', {
-          acceptProp,
-          acceptKeys,
-          isImageOnly,
-          isPDFOnly,
-          fieldName: name,
-        });
+        // Debug logging (remove in production)
+        // console.log('Accept prop analysis:', {
+        //   acceptProp,
+        //   acceptKeys,
+        //   isImageOnly,
+        //   isPDFOnly,
+        //   fieldName: name,
+        // });
 
         const uploadProps = {
           multiple,
           accept: acceptProp,
-          maxSize: isPDFOnly ? 5 * 1024 * 1024 : 10 * 1024 * 1024, // 5MB for PDFs, 10MB for images
+          maxSize: 1024 * 1024 * 1024, // 1GB for all file types
           error: !!error,
           helperText: error?.message ?? helperText,
         };
@@ -98,51 +99,47 @@ export function RHFUpload({ name, multiple, helperText, ...other }: RHFUploadPro
           // Clear any previous errors
           clearErrors(name);
 
-          // Debug logging
-          console.log('RHFUpload onDrop called for field:', name);
-          console.log('Accept prop:', acceptProp);
-          console.log('Is image only:', isImageOnly);
-          console.log('Is PDF only:', isPDFOnly);
-          console.log(
-            'Files:',
-            acceptedFiles.map((f) => ({ name: f.name, type: f.type }))
-          );
+          // Debug logging (remove in production)
+          // console.log('RHFUpload onDrop called for field:', name);
+          // console.log('Accept prop:', acceptProp);
+          // console.log('Is image only:', isImageOnly);
+          // console.log('Is PDF only:', isPDFOnly);
+          // console.log(
+          //   'Files:',
+          //   acceptedFiles.map((f) => ({ name: f.name, type: f.type }))
+          // );
 
           // Validate files before setting them
           const validFiles: File[] = [];
           const errors: string[] = [];
 
           acceptedFiles.forEach((file) => {
-            // Determine max size based on file type
-            const maxSize = isPDFOnly ? 5 * 1024 * 1024 : 10 * 1024 * 1024;
+            // Support up to 1GB files
+            const maxSize = 1024 * 1024 * 1024; // 1GB
 
             // Check file size
             if (file.size > maxSize) {
-              const maxSizeMB = maxSize / (1024 * 1024);
+              const maxSizeGB = maxSize / (1024 * 1024 * 1024);
+              const fileSizeDisplay =
+                file.size > 1024 * 1024 * 1024
+                  ? `${(file.size / (1024 * 1024 * 1024)).toFixed(2)}GB`
+                  : `${(file.size / (1024 * 1024)).toFixed(2)}MB`;
               errors.push(
-                `${file.name} is too large (${(file.size / (1024 * 1024)).toFixed(2)}MB). Maximum size is ${maxSizeMB}MB.`
+                `${file.name} is too large (${fileSizeDisplay}). Maximum size is ${maxSizeGB}GB.`
               );
               return;
             }
 
             // Validate file type based on accept prop
-            console.log(`Validating file: ${file.name}, type: ${file.type}`);
-            console.log(`Field: ${name}, isImageOnly: ${isImageOnly}, isPDFOnly: ${isPDFOnly}`);
-
             if (isPDFOnly) {
               // PDF validation - check this first
-              console.log('PDF validation for:', file.name);
               if (file.type !== 'application/pdf') {
-                console.log('PDF validation failed - wrong type:', file.type);
                 errors.push(`${file.name} is not a valid PDF file. Please upload a PDF file.`);
                 return;
               }
-              console.log('PDF validation passed');
             } else if (isImageOnly) {
               // Image validation
-              console.log('Image validation for:', file.name);
               if (!file.type.startsWith('image/')) {
-                console.log('Image validation failed - not an image:', file.type);
                 errors.push(`${file.name} is not a valid image file.`);
                 return;
               }
@@ -157,16 +154,13 @@ export function RHFUpload({ name, multiple, helperText, ...other }: RHFUploadPro
                 'image/bmp',
               ];
               if (!supportedTypes.includes(file.type)) {
-                console.log('Image validation failed - unsupported type:', file.type);
                 errors.push(
                   `${file.name} format is not supported. Please use JPEG, PNG, GIF, WebP, or BMP.`
                 );
                 return;
               }
-              console.log('Image validation passed');
             } else {
               // Mixed or other file types - validate based on accept prop
-              console.log('Mixed validation for:', file.name);
               const acceptedTypes = Object.keys(acceptProp);
               const isAccepted = acceptedTypes.some((acceptedType) => {
                 if (acceptedType.endsWith('/*')) {
@@ -177,18 +171,11 @@ export function RHFUpload({ name, multiple, helperText, ...other }: RHFUploadPro
               });
 
               if (!isAccepted) {
-                console.log(
-                  'Mixed validation failed - not accepted:',
-                  file.type,
-                  'Accepted:',
-                  acceptedTypes
-                );
                 errors.push(
                   `${file.name} file type is not supported. Accepted types: ${acceptedTypes.join(', ')}`
                 );
                 return;
               }
-              console.log('Mixed validation passed');
             }
 
             validFiles.push(file);

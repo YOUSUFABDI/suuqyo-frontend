@@ -25,6 +25,12 @@ import { Button, CardHeader, Divider, IconButton, InputAdornment } from '@mui/ma
 import { Iconify } from 'src/components/iconify';
 import { MultiFilePreview } from 'src/components/upload';
 import { getErrorMessage } from 'src/utils/error.message';
+import {
+  createOptimizedFormData,
+  getMobileUploadErrorMessage,
+  isMobileDevice,
+  showUploadProgress,
+} from 'src/utils/mobile-upload';
 import { UseShopCategories } from './hooks';
 import { useUser } from 'src/sections/auth/hooks';
 import { useEffect } from 'react';
@@ -169,20 +175,43 @@ export function ShopOwnerNewForm() {
       const businessProof = data.businessProof;
       // console.log('businessProof', businessProof);
 
-      const formData = new FormData();
-      formData.append('createShopOwnerDto', JSON.stringify(createShopOwnerDto));
-      if (profileImage) {
-        formData.append('profileImage', profileImage);
-      }
-      if (shopLogo) {
-        formData.append('shopLogo', shopLogo);
-      }
-      if (businessProof) {
-        formData.append('businessProof', businessProof);
+      // Show progress message based on file sizes
+      const filesToUpload = [profileImage, shopLogo, businessProof].filter(Boolean) as File[];
+      if (filesToUpload.length > 0) {
+        const progressMessage = showUploadProgress(filesToUpload);
+        toast.info(progressMessage, {
+          duration: 10000, // Show for 10 seconds for large files
+          position: 'top-center',
+        });
+
+        // Additional warning for very large files
+        const totalSize = filesToUpload.reduce((sum, file) => sum + file.size, 0);
+        const totalSizeGB = totalSize / (1024 * 1024 * 1024);
+
+        if (totalSizeGB >= 0.5) {
+          // 500MB or larger
+          toast.warning(
+            'Large file detected! Please ensure you have a stable internet connection and keep this page open during upload. Do not close the browser or navigate away.',
+            {
+              duration: 15000, // Show for 15 seconds
+              position: 'top-center',
+            }
+          );
+        }
       }
 
+      // Use optimized FormData creation for mobile
+      const formData = await createOptimizedFormData(
+        { createShopOwnerDto: JSON.stringify(createShopOwnerDto) },
+        {
+          profileImage: profileImage instanceof File ? profileImage : null,
+          shopLogo: shopLogo instanceof File ? shopLogo : null,
+          businessProof: businessProof instanceof File ? businessProof : null,
+        }
+      );
+
       await registerShopOwner(formData).unwrap();
-      toast.success('Create success!');
+      toast.success('Shop owner created successfully!');
       reset();
       if (role === 'ADMIN') {
         router.push(paths.dashboard.shopOwner.root);
@@ -190,10 +219,14 @@ export function ShopOwnerNewForm() {
         router.push(paths.staff.shopOwner.root);
       }
     } catch (error: any) {
-      console.error(error);
-      const errorMessage = getErrorMessage(error);
+      console.error('Shop owner creation error:', error);
+
+      // Use mobile-specific error messages
+      const errorMessage = isMobileDevice()
+        ? getMobileUploadErrorMessage(error)
+        : getErrorMessage(error);
+
       toast.error(errorMessage);
-      // toast.error(error);
     }
   });
 

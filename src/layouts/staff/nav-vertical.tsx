@@ -13,6 +13,8 @@ import { NavSectionMini, NavSectionVertical } from 'src/components/nav-section';
 import { layoutClasses } from '../core/classes';
 import { NavUpgrade } from '../components/nav-upgrade';
 import { NavToggleButton } from '../components/nav-toggle-button';
+import { SignOutButton } from '../components/sign-out-button';
+import { useBoolean } from 'minimal-shared/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +42,8 @@ export function NavVertical({
   layoutQuery = 'md',
   ...other
 }: NavVerticalProps) {
+  const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
+
   const renderNavVertical = () => (
     <>
       {slots?.topArea ?? (
@@ -52,6 +56,14 @@ export function NavVertical({
         <NavSectionVertical data={data} cssVars={cssVars} sx={{ px: 2, flex: '1 1 auto' }} />
 
         {/* {slots?.bottomArea ?? <NavUpgrade />} */}
+        <Box sx={{ mx: 2, p: 2 }}>
+          <SignOutButton
+            size="medium"
+            variant="text"
+            onClose={onClose}
+            sx={{ display: 'block', textAlign: 'left' }}
+          />
+        </Box>
       </Scrollbar>
     </>
   );

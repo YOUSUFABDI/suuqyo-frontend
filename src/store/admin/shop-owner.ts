@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery, retry } from '@reduxjs/toolkit/query/react';
 import {
   GetAllShopOwnersResponseDT,
   RegisterShopOwnerResDT,
@@ -9,10 +9,11 @@ import {
 import { ApiResponseDT } from 'src/types/api-response';
 import { API } from '../api';
 
-export const shopOwnerApi = createApi({
-  reducerPath: 'shopOwnerApi',
-  baseQuery: fetchBaseQuery({
+// Custom base query with retry logic for mobile devices and large files
+const baseQueryWithRetry = retry(
+  fetchBaseQuery({
     baseUrl: `${API}`,
+    timeout: 1800000, // 30 minutes timeout for very large file uploads (1GB support)
     prepareHeaders: (headers) => {
       if (typeof window !== 'undefined') {
         const token = localStorage.getItem('auth_token');
@@ -22,18 +23,105 @@ export const shopOwnerApi = createApi({
       }
       return headers;
     },
+    fetchFn: async (input, init) => {
+      // Custom fetch with better error handling for mobile and large files
+      try {
+        const response = await fetch(input, {
+          ...init,
+          // Remove keepalive for large files as it has size limits
+          // keepalive: true,
+        });
+        return response;
+      } catch (error: any) {
+        console.error('Fetch error:', error);
+        // Don't convert to NETWORK_ERROR immediately, let retry handle it
+        throw error;
+      }
+    },
   }),
+  {
+    maxRetries: 5, // Retry up to 5 times for network errors
+    retryCondition: (error: any) => {
+      // Retry on network errors, timeouts, and server errors
+      return (
+        error?.status === 'FETCH_ERROR' ||
+        error?.status === 408 ||
+        error?.status === 502 ||
+        error?.status === 503 ||
+        error?.status === 504 ||
+        error?.name === 'TypeError' ||
+        error?.message?.includes('fetch') ||
+        error?.message?.includes('timeout') ||
+        error?.message?.includes('network')
+      );
+    },
+  }
+);
+
+export const shopOwnerApi = createApi({
+  reducerPath: 'shopOwnerApi',
+  baseQuery: baseQueryWithRetry,
   tagTypes: ['shopOwnerApi'],
   endpoints: (builder) => ({
     registerShopOwner: builder.mutation<RegisterShopOwnerResDT, FormData>({
       query: (formData) => {
+        // Log file sizes for debugging
+        const files = [];
+        for (const [key, value] of formData.entries()) {
+          if (value instanceof File) {
+            files.push(`${key}: ${value.name} (${(value.size / 1024 / 1024).toFixed(2)}MB)`);
+          }
+        }
+        console.log('Uploading files:', files);
+
         return {
           url: '/admin-shop-owner/register-shop-owner',
           method: 'POST',
           body: formData,
+          // Add headers to help with mobile uploads
+          headers: {
+            // Don't set Content-Type, let the browser set it with boundary for FormData
+          },
         };
       },
       invalidatesTags: ['shopOwnerApi'],
+      // Add transformation for better error messages
+      transformErrorResponse: (response: any) => {
+        console.error('Shop owner registration error:', response);
+
+        // Handle different types of errors
+        if (response.status === 'FETCH_ERROR') {
+          return {
+            status: response.status,
+            data: {
+              message: 'Network error. Please check your internet connection and try again.',
+              originalError: response,
+            },
+          };
+        }
+
+        if (response.status === 413) {
+          return {
+            status: response.status,
+            data: {
+              message: 'File too large. Please use smaller images (max 10MB) and PDF (max 5MB).',
+              originalError: response,
+            },
+          };
+        }
+
+        if (response.status >= 500) {
+          return {
+            status: response.status,
+            data: {
+              message: 'Server error. Please try again later.',
+              originalError: response,
+            },
+          };
+        }
+
+        return response;
+      },
     }),
     getAllShopOwners: builder.query<GetAllShopOwnersResponseDT, void>({
       query: () => ({
