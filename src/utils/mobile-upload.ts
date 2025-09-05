@@ -207,14 +207,27 @@ export const retryMobileUpload = async <T>(
   throw lastError!;
 };
 
-// Get user-friendly error message for mobile uploads
+// Get user-friendly error message for mobile uploads with debugging info
 export const getMobileUploadErrorMessage = (error: any): string => {
+  // Log detailed error for debugging
+  console.error('Upload error details:', {
+    status: error?.status,
+    message: error?.message,
+    data: error?.data,
+    originalError: error?.originalError,
+    stack: error?.stack,
+  });
+
   if (
     error?.status === 'FETCH_ERROR' ||
     error?.message?.includes('fetch') ||
     error?.message === 'NETWORK_ERROR'
   ) {
-    return 'Upload interrupted due to network issues. Large files can be challenging on mobile networks. Please try again - the system will automatically retry failed uploads up to 5 times.';
+    return 'Network connection failed. This often happens with large files on mobile networks or when the server takes too long to respond. The upload will automatically retry up to 5 times. Please ensure you have a stable internet connection.';
+  }
+
+  if (error?.status === 502 || error?.status === 504) {
+    return 'Server gateway error. This usually means the server is taking too long to process your large file. Please try again - the system will automatically retry.';
   }
 
   if (
@@ -222,22 +235,24 @@ export const getMobileUploadErrorMessage = (error: any): string => {
     error?.message?.includes('too large') ||
     error?.message?.includes('payload')
   ) {
-    return 'File size exceeds the 1GB limit. Please use a smaller file or compress your images.';
+    return 'File size exceeds the server limit. Please use a smaller file or compress your images.';
   }
 
   if (error?.status === 408 || error?.message?.includes('timeout')) {
-    return 'Upload timed out after 30 minutes. This can happen with very large files on slow connections. Please try again when you have a faster internet connection.';
+    return 'Upload timed out. This can happen with very large files on slow mobile connections. Please try again when you have a faster internet connection, or try uploading smaller files.';
+  }
+
+  if (error?.status === 0) {
+    return "Connection failed. This usually means there's a network connectivity issue or the server is unreachable. Please check your internet connection and try again.";
   }
 
   if (error?.status >= 500) {
     return 'Server error occurred during upload. Please try again in a few minutes.';
   }
 
-  return (
-    error?.data?.message ||
-    error?.message ||
-    'Upload failed. The system will automatically retry. Please wait...'
-  );
+  // Include more specific error information for debugging
+  const errorMessage = error?.data?.message || error?.message || 'Unknown upload error';
+  return `Upload failed: ${errorMessage}. The system will automatically retry. Please wait...`;
 };
 
 // Show upload progress for large files

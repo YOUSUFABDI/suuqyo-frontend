@@ -31,6 +31,8 @@ import {
   isMobileDevice,
   showUploadProgress,
 } from 'src/utils/mobile-upload';
+import { diagnoseUploadIssue, logNetworkDiagnostics } from 'src/utils/network-diagnostics';
+import { API } from 'src/store/api';
 import { UseShopCategories } from './hooks';
 import { useUser } from 'src/sections/auth/hooks';
 import { useEffect } from 'react';
@@ -175,6 +177,9 @@ export function ShopOwnerNewForm() {
       const businessProof = data.businessProof;
       // console.log('businessProof', businessProof);
 
+      // Log network diagnostics before upload
+      logNetworkDiagnostics('Before Upload');
+
       // Show progress message based on file sizes
       const filesToUpload = [profileImage, shopLogo, businessProof].filter(Boolean) as File[];
       if (filesToUpload.length > 0) {
@@ -221,12 +226,26 @@ export function ShopOwnerNewForm() {
     } catch (error: any) {
       console.error('Shop owner creation error:', error);
 
+      // Run diagnostics for upload failures
+      const filesToUpload = [data.profileImage, data.shopLogo, data.businessProof].filter(
+        Boolean
+      ) as File[];
+      const totalSize = filesToUpload.reduce((sum, file) => sum + file.size, 0);
+
+      if (filesToUpload.length > 0) {
+        // Run detailed diagnostics in background
+        diagnoseUploadIssue(error, totalSize, API).catch(console.error);
+      }
+
       // Use mobile-specific error messages
       const errorMessage = isMobileDevice()
         ? getMobileUploadErrorMessage(error)
         : getErrorMessage(error);
 
-      toast.error(errorMessage);
+      toast.error(errorMessage, {
+        duration: 8000, // Show error longer for debugging
+        position: 'top-center',
+      });
     }
   });
 
