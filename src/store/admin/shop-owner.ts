@@ -41,20 +41,6 @@ const baseQueryWithRetry = retry(
   }),
   {
     maxRetries: 5, // Retry up to 5 times for network errors
-    retryCondition: (error: any) => {
-      // Retry on network errors, timeouts, and server errors
-      return (
-        error?.status === 'FETCH_ERROR' ||
-        error?.status === 408 ||
-        error?.status === 502 ||
-        error?.status === 503 ||
-        error?.status === 504 ||
-        error?.name === 'TypeError' ||
-        error?.message?.includes('fetch') ||
-        error?.message?.includes('timeout') ||
-        error?.message?.includes('network')
-      );
-    },
   }
 );
 
