@@ -19,11 +19,11 @@ type ParamsProps = {
 };
 
 export function RenderCellPrice({ params }: ParamsProps) {
-  return params.row.sellingPrice;
+  return `$${params.row.sellingPrice}`;
 }
 
 export function RenderCellPurchasePrice({ params }: ParamsProps) {
-  return params.row.purchasePrice;
+  return `$${params.row.purchasePrice}`;
 }
 
 export function RenderCellCondition({ params }: ParamsProps) {

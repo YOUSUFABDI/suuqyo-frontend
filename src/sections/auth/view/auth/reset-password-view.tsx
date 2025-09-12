@@ -19,6 +19,7 @@ import { useForgotPasswordMutation } from 'src/store/auth/auth';
 import { getErrorMessage } from 'src/utils/error.message';
 import { FormHead } from '../../components/form-head';
 import { FormReturnLink } from '../../components/form-return-link';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ export const ResetPasswordSchema = zod.object({
 export function ResetPasswordView() {
   const router = useRouter();
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+  const { t } = useTranslate();
 
   const defaultValues: ResetPasswordSchemaType = {
     email: '',
@@ -82,7 +84,7 @@ export function ResetPasswordView() {
         loading={isSubmitting || isLoading}
         loadingIndicator="Send request..."
       >
-        Send request
+        {t('forgot_pass.send_req')}
       </LoadingButton>
     </Box>
   );
@@ -91,15 +93,15 @@ export function ResetPasswordView() {
     <>
       <FormHead
         icon={<PasswordIcon />}
-        title="Forgot your password?"
-        description={`Please enter the email address associated with your account and we'll email you a link to reset your password.`}
+        title={t('forgot_pass.title')}
+        description={`${t('forgot_pass.desc')}`}
       />
 
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm()}
       </Form>
 
-      <FormReturnLink href={paths.auth.jwt.signIn} />
+      <FormReturnLink href={paths.auth.jwt.signIn} label={t('forgot_pass.return_to_signin')} />
     </>
   );
 }

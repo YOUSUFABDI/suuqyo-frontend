@@ -54,7 +54,7 @@ export function CheckoutSummary({ onEdit, checkoutState, onApplyDiscount }: Prop
             Subtotal
           </Typography>
           <Typography component="span" variant="subtitle2">
-            {subtotal}
+            ${subtotal}
           </Typography>
         </Box>
 
@@ -97,7 +97,7 @@ export function CheckoutSummary({ onEdit, checkoutState, onApplyDiscount }: Prop
               variant="subtitle1"
               sx={{ display: 'block', color: 'error.main' }}
             >
-              {total}
+              ${total}
             </Typography>
             {/* <Typography variant="caption" sx={{ fontStyle: 'italic' }}>
               (VAT included if applicable)

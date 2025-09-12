@@ -54,7 +54,7 @@ export function CheckoutCartProduct({ row, onDeleteCartItem, onChangeItemQuantit
           </Box>
         </TableCell>
 
-        <TableCell>{row.price}</TableCell>
+        <TableCell>${row.price}</TableCell>
 
         <TableCell>
           <Box sx={{ width: 100, textAlign: 'right' }}>
@@ -71,7 +71,7 @@ export function CheckoutCartProduct({ row, onDeleteCartItem, onChangeItemQuantit
           </Box>
         </TableCell>
 
-        <TableCell align="right">{row.price * size.quantity}</TableCell>
+        <TableCell align="right">${row.price * size.quantity}</TableCell>
 
         <TableCell align="right" sx={{ px: 1 }}>
           <IconButton onClick={() => onDeleteCartItem(row.id)}>
@@ -170,7 +170,7 @@ export function CheckoutCartProduct({ row, onDeleteCartItem, onChangeItemQuantit
 
       <TableCell sx={{ py: 3, verticalAlign: 'top' }}>
         <Typography variant="body2" fontWeight={600}>
-          {row.price}
+          ${row.price}
         </Typography>
       </TableCell>
 
@@ -182,7 +182,7 @@ export function CheckoutCartProduct({ row, onDeleteCartItem, onChangeItemQuantit
 
       <TableCell sx={{ py: 3, verticalAlign: 'top' }}>
         <Typography variant="subtitle2" fontWeight={600}>
-          {totalPrice}
+          ${totalPrice}
         </Typography>
       </TableCell>
 

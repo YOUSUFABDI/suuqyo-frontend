@@ -198,13 +198,13 @@ export function ProductItem({ product, detailsHref }: Props) {
           {product.discount && product.discount > 0 ? (
             <>
               <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                {product.sellingPrice}
+                ${product.sellingPrice}
               </Box>
-              <Box component="span">{product.sellingPrice * (1 - product.discount / 100)}</Box>
+              <Box component="span">${product.sellingPrice * (1 - product.discount / 100)}</Box>
             </>
           ) : (
             // Show regular price if no discount
-            <Box component="span">{product.sellingPrice}</Box>
+            <Box component="span">${product.sellingPrice}</Box>
           )}
         </Box>
       </Box>

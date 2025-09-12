@@ -29,6 +29,7 @@ import { API } from 'src/store/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { setLoading as setAuthLoading, setCredentials } from 'src/store/auth/authSlice';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +48,7 @@ export function SignInView() {
   const searchParams = useSearchParams();
   const showPassword = useBoolean();
   const returnTo = searchParams.get('returnTo');
+  const { t } = useTranslate();
 
   // Local error state
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -116,12 +118,14 @@ export function SignInView() {
       <AnimateLogoRotate sx={{ mb: 3, mx: 'auto' }} />
 
       <FormHead
-        title="Sign in to your account"
+        title={t('signin.title')}
         description={
           <>
-            Don’t have an account?{' '}
+            {/* Don’t have an account?{' '} */}
+            {t('signin.desc')}{' '}
             <Link component={RouterLink} href={paths.auth.jwt.signUp} variant="subtitle2">
-              Get started
+              {/* Get started */}
+              {t('signin.btn_start')}
             </Link>
           </>
         }
@@ -149,7 +153,8 @@ export function SignInView() {
               color="inherit"
               sx={{ alignSelf: 'flex-end' }}
             >
-              Forgot password?
+              {/* Forgot password? */}
+              {t('signin.forgot_pass')}
             </Link>
 
             <Field.Text
@@ -183,7 +188,8 @@ export function SignInView() {
             loading={loading || isSubmitting}
             disabled={loading || isSubmitting}
           >
-            {loading || isSubmitting ? 'Signing in…' : 'Sign in'}
+            {/* {loading || isSubmitting ? 'Signing in…' : 'Sign in'} */}
+            {loading || isSubmitting ? t('signin.signing_in') : t('pages.signin')}
           </LoadingButton>
         </Box>
       </Form>

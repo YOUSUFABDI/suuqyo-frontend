@@ -12,6 +12,41 @@
     "signin": "gal"
   },
 
+  "signin": {
+    "title": "Soo gal akoonkaaga",
+    "desc": "Ma haysatid akoon?",
+    "btn_start": "Bilow",
+    "forgot_pass": "Ma hilmaamtay erayga sirta ah?",
+    "signing_in": "Soo galayaa..."
+  },
+
+  "signup": {
+    "title": "Hadda bilow",
+    "desc": "Horay u leedahay akoon?",
+    "btn_create": "Samee akoon"
+  },
+
+  "forgot_pass": {
+    "title": "Ma hilmaantay eraygaaga sirta ah?",
+    "desc": "Fadlan geli cinwaanka emailka ee la xiriira akoonkaaga, waxaana kuu soo diraynaa xiriir si aad u cusboonaysiiso eraygaaga sirta ah.",
+    "send_req": "Dir Codsi",
+    "return_to_signin": "Ku noqo soo galida"
+  },
+
+  "update_pass": {
+    "title": "Codsiga si guul leh ayaa loo diray!",
+    "desc": "Waxaan kuu soo dirnay email xaqiijin ah oo leh 6 lambar oo cinwaankaaga emailka. Fadlan geli koodhka sanduuqa hoose si aad u xaqiijiso emailkaaga.",
+    "btn_update_pass": "Cusboonaysii erayga sirta ah",
+    "return_to_signin": "Ku noqo soo galida"
+  },
+
+  "verify": {
+    "title": "Fadlan hubi emailkaaga!",
+    "desc": "Waxaan kuu soo dirnay koodh xaqiijin ah oo 6 lambar ah. \nFadlan geli koodhka sanduuqa hoose si aad u xaqiijiso emailkaaga.",
+    "btn_verify": "Xaqiiji",
+    "return_to_signin": "Ku noqo soo galida"
+  },
+
   "home": {
     "title": "Kuso dhawoow",
     "description": "Madal Suuqyo waxa ay isku xirtaa iibsadayaasha iyo milkiilayaasha dukaamada suuq bulsho leh oo horumarsan. \nHaddii aad halkaan u joogto inaad hesho badeecooyin tayo leh ama aad rabto inaad iibiso alaabtaada, \nMadal Suuqyo waxa ay ka dhigeysaa mid fudud oo aan xannib lahayn.",

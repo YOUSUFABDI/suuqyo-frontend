@@ -19,6 +19,7 @@ import { useVerifyOTPMutation } from 'src/store/auth/auth';
 import { getErrorMessage } from 'src/utils/error.message';
 import { FormHead } from '../../components/form-head';
 import { FormReturnLink } from '../../components/form-return-link';
+import { useTranslate } from 'src/locales';
 // ----------------------------------------------------------------------
 
 export type VerifySchemaType = zod.infer<typeof VerifySchema>;
@@ -40,6 +41,7 @@ export function VerifyView() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [verifyOTP, { isLoading }] = useVerifyOTPMutation();
+  const { t } = useTranslate();
 
   const emailParam = searchParams.get('email');
   const defaultEmail = emailParam ? emailParam : '';
@@ -97,7 +99,7 @@ export function VerifyView() {
         loading={isSubmitting || isLoading}
         loadingIndicator="Verify..."
       >
-        Verify
+        {t('verify.btn_verify')}
       </LoadingButton>
     </Box>
   );
@@ -106,8 +108,8 @@ export function VerifyView() {
     <>
       <FormHead
         icon={<EmailInboxIcon />}
-        title="Please check your email!"
-        description={`We've emailed a 6-digit confirmation code. \nPlease enter the code in the box below to verify your email.`}
+        title={t('verify.title')}
+        description={`${t('verify.desc')}`}
       />
 
       <Form methods={methods} onSubmit={onSubmit}>
@@ -116,7 +118,7 @@ export function VerifyView() {
 
       {/* <FormResendCode onResendCode={() => {}} value={0} disabled={false} /> */}
 
-      <FormReturnLink href={paths.auth.jwt.signIn} />
+      <FormReturnLink href={paths.auth.jwt.signIn} label={t('verify.return_to_signin')} />
     </>
   );
 }

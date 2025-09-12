@@ -2,6 +2,7 @@ import type { ButtonProps } from '@mui/material/Button';
 
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
+import { useTranslate } from 'src/locales';
 
 import { RouterLink } from 'src/routes/components';
 
@@ -13,6 +14,7 @@ import { useAuth } from 'src/sections/auth/hooks';
 export function SignInButton({ sx, ...other }: ButtonProps) {
   const { authenticated } = useAuth();
   const [role, setRole] = useState<string | null>(null);
+  const { t } = useTranslate();
 
   useEffect(() => {
     setRole(localStorage.getItem('role'));
@@ -38,7 +40,7 @@ export function SignInButton({ sx, ...other }: ButtonProps) {
 
   return (
     <Button component={RouterLink} href={getRedirectPath()} variant="outlined" sx={sx} {...other}>
-      Sign in
+      {/* Sign in */} {t('pages.signin')}
     </Button>
   );
 }

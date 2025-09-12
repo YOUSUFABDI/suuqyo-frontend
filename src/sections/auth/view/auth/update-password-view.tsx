@@ -24,6 +24,7 @@ import { getErrorMessage } from 'src/utils/error.message';
 import { FormHead } from '../../components/form-head';
 import { FormResendCode } from '../../components/form-resend-code';
 import { FormReturnLink } from '../../components/form-return-link';
+import { useTranslate } from 'src/locales';
 // ----------------------------------------------------------------------
 
 export type UpdatePasswordSchemaType = zod.infer<typeof UpdatePasswordSchema>;
@@ -56,6 +57,7 @@ export function UpdatePasswordView() {
   const searchParams = useSearchParams();
   const showPassword = useBoolean();
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
+  const { t } = useTranslate();
 
   const emailParam = searchParams.get('email');
   const defaultEmail = emailParam ? emailParam : '';
@@ -150,7 +152,7 @@ export function UpdatePasswordView() {
         loading={isSubmitting || isLoading}
         loadingIndicator="Update password..."
       >
-        Update password
+        {t('update_pass.btn_update_pass')}
       </LoadingButton>
     </Box>
   );
@@ -159,17 +161,17 @@ export function UpdatePasswordView() {
     <>
       <FormHead
         icon={<SentIcon />}
-        title="Request sent successfully!"
-        description={`We've sent a 6-digit confirmation email to your email. \nPlease enter the code in below box to verify your email.`}
+        title={t('update_pass.title')}
+        description={`${t('update_pass.desc')}`}
       />
 
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm()}
       </Form>
 
-      <FormResendCode onResendCode={() => {}} value={0} disabled={false} />
+      {/* <FormResendCode onResendCode={() => {}} value={0} disabled={false} /> */}
 
-      <FormReturnLink href={paths.auth.jwt.signIn} />
+      <FormReturnLink href={paths.auth.jwt.signIn} label={t('update_pass.return_to_signin')} />
     </>
   );
 }

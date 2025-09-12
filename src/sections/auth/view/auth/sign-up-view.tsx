@@ -24,6 +24,7 @@ import { FormHead } from '../../components/form-head';
 import { useSignupMutation } from 'src/store/auth/auth';
 import { getErrorMessage } from 'src/utils/error.message';
 import { useRouter } from 'next/navigation';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -49,6 +50,7 @@ export function SignUpView() {
   const showPassword = useBoolean();
   const router = useRouter();
   const [signup, { isLoading }] = useSignupMutation();
+  const { t } = useTranslate();
 
   const defaultValues: SignUpSchemaType = {
     fullName: '',
@@ -130,7 +132,7 @@ export function SignUpView() {
         loading={isSubmitting || isLoading}
         loadingIndicator="Create account..."
       >
-        Create account
+        {t('signup.btn_create')}
       </LoadingButton>
     </Box>
   );
@@ -140,12 +142,12 @@ export function SignUpView() {
       <AnimateLogoRotate sx={{ mb: 3, mx: 'auto' }} />
 
       <FormHead
-        title="Get start now"
+        title={t('signup.title')}
         description={
           <>
-            {`Already have an account? `}
+            {`${t('signup.desc')} `}
             <Link component={RouterLink} href={paths.auth.jwt.signIn} variant="subtitle2">
-              Sign in
+              {t('pages.signin')}
             </Link>
           </>
         }

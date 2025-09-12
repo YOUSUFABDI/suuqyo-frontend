@@ -12,6 +12,41 @@
     "signin": "Sign in"
   },
 
+  "signin": {
+    "title": "Sign in to your account",
+    "desc": "Don’t have an account?",
+    "btn_start": "Get started",
+    "forgot_pass": "Forgot password?",
+    "signing_in": "Signing in…"
+  },
+
+  "signup": {
+    "title": "Get start now",
+    "desc": "Already have an account?",
+    "btn_create": "Create account"
+  },
+
+  "forgot_pass": {
+    "title": "Forgot your password?",
+    "desc": "Please enter the email address associated with your account and we'll email you a link to reset your password.",
+    "send_req": "Send Request",
+    "return_to_signin": "Return to sign in"
+  },
+
+  "update_pass": {
+    "title": "Request sent successfully!",
+    "desc": "We've sent a 6-digit confirmation email to your email. Please enter the code in below box to verify your email.",
+    "btn_update_pass": "Update password",
+    "return_to_signin": "Return to sign in"
+  },
+
+  "verify": {
+    "title": "Please check your email!",
+    "desc": "We've emailed a 6-digit confirmation code. \nPlease enter the code in the box below to verify your email.",
+    "btn_verify": "Verify",
+    "return_to_signin": "Return to sign in"
+  },
+
   "home": {
     "title": "Welcome to",
     "description": "Madal Suuqyo connects buyers with shop owners in one vibrant marketplace. \nWhether you're here to find quality products or sell your own, \nMadal Suuqyo makes it simple and seamless.",
