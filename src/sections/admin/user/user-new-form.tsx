@@ -110,7 +110,7 @@ export function UserNewForm() {
         address: data.address,
         password: data.password,
       };
-      console.log('---------', registerUserDto);
+      // console.log('---------', registerUserDto);
       const profileImage = data.profileImage;
 
       const formData = new FormData();

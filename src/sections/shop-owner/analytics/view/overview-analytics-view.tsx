@@ -25,7 +25,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 export function OverviewAnalyticsView() {
   const { user } = useUser();
   const { analyticsData, isLoading } = UseAnalytics();
-  console.log('analyticsData', analyticsData);
+  // console.log('analyticsData', analyticsData);
   const theme = useTheme();
 
   if (isLoading) {

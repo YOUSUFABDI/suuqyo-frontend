@@ -2,8 +2,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
 
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
-import { useDebounce } from 'minimal-shared/hooks';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 
 import Autocomplete, { autocompleteClasses, createFilterOptions } from '@mui/material/Autocomplete';
 import Avatar from '@mui/material/Avatar';
@@ -17,7 +16,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { Iconify } from 'src/components/iconify';
 import { SearchNotFound } from 'src/components/search-not-found';
-import { useSearchShops } from './hooks';
+import { useSearchShopsInfinite } from './hooks';
 import { ShopInfoDT } from './types/types';
 import { slugify } from 'src/utils/slugify';
 
@@ -26,16 +25,29 @@ import { slugify } from 'src/utils/slugify';
 type Props = {
   sx?: SxProps<Theme>;
   redirectPath: (id: string) => string;
+  onSearch?: (query: string) => void;
 };
 
-export function ShopSearch({ redirectPath, sx }: Props) {
+export function ShopSearch({ redirectPath, sx, onSearch }: Props) {
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState<ShopInfoDT['shop'] | null>(null);
 
-  const debouncedQuery = useDebounce(searchQuery);
-  const { searchResults: options, searchLoading: loading } = useSearchShops(debouncedQuery);
+  // Only trigger search when query is not empty
+  const effectiveSearchQuery = searchQuery.trim();
+  const shouldSearch = effectiveSearchQuery.length > 0;
+  
+  const { shops: searchResults, isLoading: loading } = useSearchShopsInfinite(
+    effectiveSearchQuery, 
+    { limit: 10 }
+  );
+
+  // Only show loading state when we're actually searching
+  const showLoading = shouldSearch && loading;
+
+  // Only show search results when we're actually searching
+  const displayResults = shouldSearch ? searchResults : [];
 
   const handleChange = useCallback(
     (item: ShopInfoDT['shop'] | null) => {
@@ -45,6 +57,16 @@ export function ShopSearch({ redirectPath, sx }: Props) {
       }
     },
     [redirectPath, router]
+  );
+
+  const handleInputChange = useCallback(
+    (event: any, newValue: string) => {
+      setSearchQuery(newValue);
+      if (onSearch) {
+        onSearch(newValue);
+      }
+    },
+    [onSearch]
   );
 
   const filterOptions = createFilterOptions({
@@ -72,14 +94,14 @@ export function ShopSearch({ redirectPath, sx }: Props) {
     <Autocomplete
       autoHighlight
       popupIcon={null}
-      loading={loading}
-      options={options}
+      loading={showLoading}
+      options={displayResults}
       value={selectedItem}
       filterOptions={filterOptions}
       onChange={(event, newValue) => handleChange(newValue)}
-      onInputChange={(event, newValue) => setSearchQuery(newValue)}
+      onInputChange={handleInputChange}
       getOptionLabel={(option) => option.shopName}
-      noOptionsText={<SearchNotFound query={debouncedQuery} />}
+      noOptionsText={<SearchNotFound query={effectiveSearchQuery} />}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       slotProps={{ paper: { sx: paperStyles } }}
       sx={[{ flex: 1, width: { xs: 1, sm: 260 } }, ...(Array.isArray(sx) ? sx : [sx])]}
@@ -97,7 +119,7 @@ export function ShopSearch({ redirectPath, sx }: Props) {
               ),
               endAdornment: (
                 <>
-                  {loading ? <Iconify icon="svg-spinners:8-dots-rotate" sx={{ mr: -3 }} /> : null}
+                  {showLoading ? <Iconify icon="svg-spinners:8-dots-rotate" sx={{ mr: -3 }} /> : null}
                   {params.InputProps.endAdornment}
                 </>
               ),

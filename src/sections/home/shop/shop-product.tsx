@@ -1,42 +1,46 @@
 'use client';
 
-import type { IProductFilters } from 'src/types/product';
-import { PRODUCT_CATEGORY_OPTIONS, type ShopInfoDT } from './types/types';
-import { Product } from '../product/types/types';
 import { orderBy } from 'es-toolkit';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import { alpha } from '@mui/material/styles';
 
-import { paths } from 'src/routes/paths';
 import {
   PRODUCT_COLOR_OPTIONS,
   PRODUCT_GENDER_OPTIONS,
   PRODUCT_RATING_OPTIONS,
   PRODUCT_SORT_OPTIONS,
-  // Ensure this is imported
 } from 'src/_mock';
+import { paths } from 'src/routes/paths';
+import { useShopProductsInfinite } from './hooks/product/use-shop-products-infinite';
+
+import type { IProductFilters } from 'src/types/product';
+import { type Product } from '../product/types/types';
+import { type ShopInfoDT } from './types/types';
 
 import { EmptyContent } from 'src/components/empty-content';
+import { ProductList } from '../components/product-list';
+import { useCategories } from '../product/hooks';
 import { ProductFiltersDrawer } from '../product/product-filters-drawer';
 import { ProductFiltersResult } from '../product/product-filters-result';
-import { ProductList } from '../components/product-list';
 import { ProductSearch } from '../product/product-search';
 import { ProductSort } from '../product/product-sort';
+import { LoadingScreen } from 'src/components/loading-screen';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   shop: ShopInfoDT['shop'];
-  products: Product[];
+  products: Product[]; // This will be replaced by infinite scroll
 };
 
-export function ShopProduct({ products, shop }: Props) {
+export function ShopProduct({ shop }: Props) {
   const openFilters = useBoolean();
-
+  const { productCategories } = useCategories();
   const [sortBy, setSortBy] = useState('featured');
 
   const filters = useSetState<IProductFilters>({
@@ -48,14 +52,62 @@ export function ShopProduct({ products, shop }: Props) {
   });
   const { state: currentFilters } = filters;
 
-  // Use the static PRODUCT_CATEGORY_OPTIONS for filtering, including 'All'
-  const productCategories = ['All', ...PRODUCT_CATEGORY_OPTIONS];
-
-  const dataFiltered = applyFilter({
-    inputData: products,
-    filters: currentFilters,
+  // Use the new infinite scroll hook
+  const {
+    products: shopProducts,
+    isLoading,
+    isFetchingMore,
+    hasMore,
+    loadMore,
+    changeCategory,
+    refresh,
+  } = useShopProductsInfinite({
+    shopId: parseInt(shop.id, 10),
+    category: currentFilters.category,
     sortBy,
+    minPrice: currentFilters.priceRange[0],
+    maxPrice: currentFilters.priceRange[1],
   });
+
+  // Handle category change
+  const handleCategoryChange = useCallback((category: string) => {
+    changeCategory(category);
+    filters.setState({ category });
+  }, [changeCategory, filters]);
+
+  // Handle price range change
+  const handlePriceRangeChange = useCallback((priceRange: [number, number]) => {
+    filters.setState({ priceRange });
+  }, [filters]);
+
+  // Handle sort change
+  const handleSortChange = useCallback((newValue: string) => {
+    setSortBy(newValue);
+  }, []);
+
+  // Handle reset filters
+  const handleResetFilters = useCallback(() => {
+    filters.setState({
+      gender: [],
+      colors: [],
+      rating: '',
+      category: 'all',
+      priceRange: [0, 200],
+    });
+    setSortBy('featured');
+  }, [filters]);
+
+  // Handle scroll for infinite loading
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000 && hasMore && !isFetchingMore) {
+        loadMore();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasMore, isFetchingMore, loadMore]);
 
   const canReset =
     currentFilters.gender.length > 0 ||
@@ -65,8 +117,8 @@ export function ShopProduct({ products, shop }: Props) {
     currentFilters.priceRange[0] !== 0 ||
     currentFilters.priceRange[1] !== 200;
 
-  const notFound = !dataFiltered.length && canReset;
-  const productsEmpty = !products.length;
+  const notFound = !shopProducts.length && canReset;
+  const productsEmpty = !shopProducts.length && !isLoading;
 
   const renderShopCover = () => (
     <Box
@@ -83,22 +135,73 @@ export function ShopProduct({ products, shop }: Props) {
     />
   );
 
-  const renderFilters = () => (
+  const renderCategoryButtons = () => (
     <Box
-      sx={{
+      // sx={{
+      //   width: '770px',
+      //   overflowX: 'auto',
+      //   '&::-webkit-scrollbar': {
+      //     display: 'none',
+      //   },
+      //   scrollbarWidth: 'none',
+      // }}
+       sx={{
+        overflowX: 'auto',
+        flexWrap: 'nowrap',
         gap: 1,
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexDirection: { xs: 'column', sm: 'row' },
-        alignItems: { sm: 'center' },
+         width: '770px',
+        whiteSpace: 'nowrap',
       }}
+    >
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          flexWrap: 'nowrap',
+        }}
+      >
+        {/* "All" button */}
+        <Button
+          variant={currentFilters.category === 'all' ? 'contained' : 'outlined'}
+          onClick={() => handleCategoryChange('all')}
+          sx={{ flexShrink: 0 }}
+        >
+          All
+        </Button>
+        {/* Category buttons */}
+        {Array.isArray(productCategories) && productCategories.length > 0 ? (
+          productCategories.map((category) => (
+            <Button
+              key={category}
+              variant={currentFilters.category === category ? 'contained' : 'outlined'}
+              onClick={() => handleCategoryChange(category)}
+              sx={{ flexShrink: 0 }}
+            >
+              {category}
+            </Button>
+          ))
+        ) : (
+          <Button disabled sx={{ flexShrink: 0 }}>
+            No categories
+          </Button>
+        )}
+      </Stack>
+    </Box>
+  );
+
+  const renderFilters = () => (
+    <Stack
+      spacing={1.5}
+      direction={{ xs: 'column', sm: 'row' }}
+      alignItems={{ sm: 'center' }}
+      justifyContent="space-between"
     >
       <ProductSearch
         redirectPath={(id: string) => paths.customer.product.details(id)}
         sx={{ width: { xs: 1, sm: 260 } }}
       />
 
-      <Box sx={{ gap: 1, flexShrink: 0, display: 'flex' }}>
+      <Stack direction="row" spacing={1} flexShrink={0}>
         <ProductFiltersDrawer
           filters={filters}
           canReset={canReset}
@@ -109,54 +212,34 @@ export function ShopProduct({ products, shop }: Props) {
             colors: PRODUCT_COLOR_OPTIONS,
             ratings: PRODUCT_RATING_OPTIONS,
             genders: PRODUCT_GENDER_OPTIONS,
-            categories: PRODUCT_CATEGORY_OPTIONS, // Pass the static list
+            categories: ['all', ...(Array.isArray(productCategories) ? productCategories : [])],
           }}
+          onPriceRangeChange={handlePriceRangeChange}
         />
         <ProductSort
           sort={sortBy}
-          onSort={(newValue: string) => setSortBy(newValue)}
+          onSort={handleSortChange}
           sortOptions={PRODUCT_SORT_OPTIONS}
         />
-      </Box>
-    </Box>
-  );
-
-  const renderCategoryButtons = () => (
-    <Stack
-      direction="row"
-      spacing={1}
-      sx={{
-        overflowX: 'auto',
-        flexWrap: 'nowrap',
-        '&::-webkit-scrollbar': { display: 'none' },
-      }}
-    >
-      {productCategories.map((category) => (
-        <Button
-          key={category}
-          variant={
-            currentFilters.category.toLowerCase() === category.toLowerCase()
-              ? 'contained'
-              : 'outlined'
-          }
-          onClick={() => filters.setState({ category })}
-          sx={{
-            flexShrink: 0,
-            minWidth: 'max-content',
-            textTransform: 'capitalize',
-          }}
-        >
-          {category}
-        </Button>
-      ))}
+      </Stack>
     </Stack>
   );
 
   const renderResults = () => (
-    <ProductFiltersResult filters={filters} totalResults={dataFiltered.length} />
+    <ProductFiltersResult 
+      filters={filters} 
+      totalResults={shopProducts.length}
+      onReset={handleResetFilters}
+    />
   );
 
   const renderNotFound = () => <EmptyContent filled title="No Products Found" sx={{ py: 10 }} />;
+
+  const renderLoading = () => (
+    <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+      <LoadingScreen />
+    </Box>
+  );
 
   return (
     <Stack spacing={3}>
@@ -168,54 +251,17 @@ export function ShopProduct({ products, shop }: Props) {
         {canReset && renderResults()}
       </Stack>
 
+      {isLoading && renderLoading()}
+
       {(notFound || productsEmpty) && renderNotFound()}
 
-      {!notFound && <ProductList products={dataFiltered} />}
+      {!notFound && !isLoading && <ProductList products={shopProducts} />}
+
+      {isFetchingMore && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+          <LoadingScreen />
+        </Box>
+      )}
     </Stack>
   );
-}
-
-// ----------------------------------------------------------------------
-
-type ApplyFilterProps = {
-  sortBy: string;
-  filters: IProductFilters;
-  inputData: Product[];
-};
-
-function applyFilter({ inputData, filters, sortBy }: ApplyFilterProps): Product[] {
-  const { category, priceRange } = filters;
-  const minPrice = priceRange[0];
-  const maxPrice = priceRange[1];
-
-  let filteredData = [...inputData];
-
-  // **SORTING**
-  if (sortBy === 'featured') {
-    filteredData = orderBy(filteredData, ['createdAt'], ['desc']);
-  }
-  if (sortBy === 'newest') {
-    filteredData = orderBy(filteredData, ['createdAt'], ['desc']);
-  }
-  if (sortBy === 'priceDesc') {
-    filteredData = orderBy(filteredData, ['sellingPrice'], ['desc']);
-  }
-  if (sortBy === 'priceAsc') {
-    filteredData = orderBy(filteredData, ['sellingPrice'], ['asc']);
-  }
-
-  // **FILTERING**
-  if (category.toLowerCase() !== 'all') {
-    filteredData = filteredData.filter(
-      (product) => product.category?.name.toLowerCase() === category.toLowerCase()
-    );
-  }
-
-  if (minPrice > 0 || maxPrice < 200) {
-    filteredData = filteredData.filter(
-      (product) => product.sellingPrice >= minPrice && product.sellingPrice <= maxPrice
-    );
-  }
-
-  return filteredData;
 }

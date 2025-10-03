@@ -99,8 +99,11 @@
     "contact": "Contact us",
     "signup": "Sign up",
     "wegot": "We’ve got the answers",
+    "wegot_answ": "answers",
     "faqs": "FAQs",
     "shoptitle": "shops",
+    "featured_shops": "Featured Shops",
+    "see_all": "See all",
     "productstitle": "Products",
     "rights": "All rights reserved",
     "build": "Built With ❤️ In Mogadishu",
@@ -121,7 +124,7 @@
       {
         "name": "Basic",
         "caption": "For individuals and small teams getting started.",
-        "lists": ["List up to 5 products", "Basic dashboard"],
+        "lists": ["List up to 5 products", "Basic dashboard", "One month free"],
         "labelAction": "Ready? Contact us"
       },
       {

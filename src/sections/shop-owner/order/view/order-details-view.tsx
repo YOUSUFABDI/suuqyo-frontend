@@ -33,7 +33,7 @@ type Props = {
 };
 
 export function OrderDetailsView({ order }: Props) {
-  console.log('order', order);
+  // console.log('order', order);
   const [updateOrderStatus, { isLoading }] = useUpdateOrderStatusMutation();
   const { refetchAnalytics } = UseAnalytics();
   const [status, setStatus] = useState(order?.status);

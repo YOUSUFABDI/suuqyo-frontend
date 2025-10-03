@@ -204,7 +204,7 @@ export function CheckoutPayment() {
         shippingFee: data.delivery,
         ...(data.payment !== 'cash' && { senderPhone: data.phoneNumber }),
       };
-      console.log('reqData', reqData);
+      // console.log('reqData', reqData);
       // console.log('checkoutState', checkoutState);
 
       await createOrder(reqData).unwrap();
@@ -234,7 +234,7 @@ export function CheckoutPayment() {
 
         const distance = calculateDistanceInKm(deliveryCoords, shopCoords);
         setDistanceKm(distance);
-        console.log(`Distance between addresses: ${distance.toFixed(2)} km`);
+        // console.log(`Distance between addresses: ${distance.toFixed(2)} km`);
       } catch (error) {
         console.error('Error calculating distance:', error);
       }

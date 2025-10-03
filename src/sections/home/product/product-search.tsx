@@ -3,14 +3,13 @@ import type { Theme, SxProps } from '@mui/material/styles';
 import { useState, useCallback } from 'react';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
-import { useDebounce } from 'minimal-shared/hooks';
 
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Link, { linkClasses } from '@mui/material/Link';
 import InputAdornment from '@mui/material/InputAdornment';
-import Autocomplete, { autocompleteClasses, createFilterOptions } from '@mui/material/Autocomplete';
+import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
@@ -33,23 +32,17 @@ export function ProductSearch({ redirectPath, sx }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState<ProductResponse | null>(null);
 
-  const debouncedQuery = useDebounce(searchQuery);
-  const { searchResults: options, searchLoading: loading } = useSearchProduct(debouncedQuery);
+  const { searchResults, searchLoading: loading } = useSearchProduct(searchQuery);
 
   const handleChange = useCallback(
     (item: ProductResponse | null) => {
       setSelectedItem(item);
       if (item) {
-        router.push(redirectPath(item?.product?.id));
+        router.push(redirectPath(String(item.product.id)));
       }
     },
     [redirectPath, router]
   );
-
-  const filterOptions = createFilterOptions({
-    matchFrom: 'any',
-    stringify: (option: ProductResponse) => `${option.product.name} ${option.product.description}`,
-  });
 
   const paperStyles: SxProps<Theme> = {
     width: 320,
@@ -72,14 +65,13 @@ export function ProductSearch({ redirectPath, sx }: Props) {
       autoHighlight
       popupIcon={null}
       loading={loading}
-      options={options}
+      options={searchResults}
       value={selectedItem}
-      filterOptions={filterOptions}
       onChange={(event, newValue) => handleChange(newValue)}
       onInputChange={(event, newValue) => setSearchQuery(newValue)}
       getOptionLabel={(option) => option.product.name}
-      noOptionsText={<SearchNotFound query={debouncedQuery} />}
-      isOptionEqualToValue={(option, value) => option?.product?.id === value?.product?.id}
+      noOptionsText={<SearchNotFound query={searchQuery} />}
+      isOptionEqualToValue={(option, value) => option.product.id === value.product.id}
       slotProps={{ paper: { sx: paperStyles } }}
       sx={[{ flex: 1, width: { xs: 1, sm: 260 } }, ...(Array.isArray(sx) ? sx : [sx])]}
       renderInput={(params) => (
@@ -105,21 +97,21 @@ export function ProductSearch({ redirectPath, sx }: Props) {
         />
       )}
       renderOption={(props, product, { inputValue }) => {
-        const matches = match(product?.product?.name, inputValue);
-        const parts = parse(product?.product?.name, matches);
+        const matches = match(product.product.name, inputValue);
+        const parts = parse(product.product.name, matches);
 
         return (
-          <li {...props} key={product?.product?.id}>
+          <li {...props} key={product.product.id}>
             <Link
               component={RouterLink}
-              href={redirectPath(product?.product?.id)}
+              href={redirectPath(String(product.product.id))}
               color="inherit"
               underline="none"
             >
               <Avatar
-                key={product?.product?.id}
-                alt={product?.product?.name}
-                src={product?.product?.images[0]?.image}
+                key={product.product.id}
+                alt={product.product.name}
+                src={product.product.images[0]?.image}
                 variant="rounded"
                 sx={{
                   width: 48,

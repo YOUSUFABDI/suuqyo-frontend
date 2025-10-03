@@ -4,12 +4,13 @@ import type { IProductFilters } from 'src/types/product';
 
 import { orderBy } from 'es-toolkit';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
-import { useState } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { Button } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
@@ -21,62 +22,115 @@ import {
 } from 'src/_mock';
 
 import { EmptyContent } from 'src/components/empty-content';
-
-import { useCheckoutContext } from '../checkout/context';
 import { CartIcon } from '../components/cart-icon';
 import { ProductList } from '../components/product-list';
-import { useAllProduct, useCategories } from './hooks';
 import { ProductFiltersDrawer } from './product-filters-drawer';
 import { ProductFiltersResult } from './product-filters-result';
 import { ProductSearch } from './product-search';
 import { ProductSort } from './product-sort';
-import { Product } from './types/types';
-import { Button } from '@mui/material';
+import { Product, ProductResponse } from './types/types';
 import { useTranslate } from 'src/locales';
+import { useGetAllProductCategoriesQuery } from 'src/store/customer/product';
+import { isSuccessResponse } from 'src/utils/is-success-res';
+import { useInfiniteProducts } from './hooks/use-infinite-products';
 
-// ----------------------------------------------------------------------
+// --- CONSTANTS ---
+const DEFAULT_LIMIT = 8;
+const MAX_PRICE = 200;
+const MIN_PRICE = 0;
+// -------------------
 
 export function ProductListView() {
-  const { state: checkoutState } = useCheckoutContext();
-  const { products } = useAllProduct();
-  const { productCategories } = useCategories();
   const { t } = useTranslate();
-  // console.log('products', products);
+  const filters = useSetState<IProductFilters>({
+    rating: '',
+    gender: [],
+    category: 'all',
+    colors: [],
+    priceRange: [MIN_PRICE, MAX_PRICE],
+  });
 
   const openFilters = useBoolean();
 
-  const [sortBy, setSortBy] = useState('featured');
+  const [sortBy, setSortBy] = useState('newest');
 
-  const filters = useSetState<IProductFilters>({
-    gender: [],
-    colors: [],
-    rating: '',
-    category: 'all',
-    priceRange: [0, 200],
+  // Fetch product categories
+  const { data: categoriesData } = useGetAllProductCategoriesQuery();
+
+  const [productCategories, setProductCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (categoriesData && isSuccessResponse<string[]>(categoriesData)) {
+      setProductCategories(categoriesData.payload.data);
+    }
+  }, [categoriesData]);
+
+  // Create memoized filter values for the API
+  const apiFilters = useMemo(() => ({
+    category: filters.state.category !== 'all' ? filters.state.category : undefined,
+    sortBy: sortBy !== 'newest' ? sortBy : undefined,
+    minPrice: filters.state.priceRange[0] !== MIN_PRICE ? filters.state.priceRange[0] : undefined,
+    maxPrice: filters.state.priceRange[1] !== MAX_PRICE ? filters.state.priceRange[1] : undefined,
+  }), [filters.state, sortBy]);
+
+  // Use infinite scroll hook
+  const {
+    products: allProducts,
+    hasMore,
+    isLoading,
+    isFetchingMore,
+    loadMore,
+    changeCategory,
+    refresh,
+  } = useInfiniteProducts({
+    category: apiFilters.category,
+    sortBy: apiFilters.sortBy,
+    minPrice: apiFilters.minPrice,
+    maxPrice: apiFilters.maxPrice,
+    limit: DEFAULT_LIMIT,
   });
-  const { state: currentFilters } = filters;
 
-  const rawProducts: Product[] = products
-    .map((pro) => pro.product)
-    .filter((product) => product.images?.length > 0);
+  // Handle scroll event for infinite loading
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!hasMore || isFetchingMore || isLoading) return;
 
-  const dataFiltered = applyFilter({
-    inputData: rawProducts,
-    filters: currentFilters,
-    sortBy,
-  });
-  console.log('dataFiltered', dataFiltered);
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // When user is near the bottom (within 100px)
+      if (scrollTop + windowHeight >= documentHeight - 100) {
+        loadMore();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasMore, isFetchingMore, isLoading, loadMore]);
+
+  // Handle category change from buttons
+  const handleCategoryChange = (category: string) => {
+    // Update filter state
+    filters.setState({ category });
+
+    // Immediately trigger category change in the hook
+    changeCategory(category !== 'all' ? category : undefined);
+  };
 
   const canReset =
-    currentFilters.gender.length > 0 ||
-    currentFilters.colors.length > 0 ||
-    currentFilters.rating !== '' ||
-    currentFilters.category !== 'all' ||
-    currentFilters.priceRange[0] !== 0 ||
-    currentFilters.priceRange[1] !== 200;
+    filters.state.gender.length > 0 ||
+    filters.state.colors.length > 0 ||
+    filters.state.rating !== '' ||
+    filters.state.category !== 'all' ||
+    filters.state.priceRange[0] !== MIN_PRICE ||
+    filters.state.priceRange[1] !== MAX_PRICE;
 
-  const notFound = !dataFiltered.length && canReset;
-  const productsEmpty = !products?.length;
+  // Extract products from ProductResponse
+  const rawProducts: Product[] = allProducts.map((item: ProductResponse) => item.product);
+
+  const notFound = rawProducts.length === 0 && !isLoading && !canReset;
+  const productsEmpty = !isLoading && rawProducts.length === 0 && !canReset;
 
   const renderFilters = () => (
     <Box
@@ -102,7 +156,11 @@ export function ProductListView() {
           canReset={canReset}
           open={openFilters.value}
           onOpen={openFilters.onTrue}
-          onClose={openFilters.onFalse}
+          onClose={() => {
+            openFilters.onFalse();
+          }}
+          onCategoryChange={changeCategory}
+          onFilterChange={refresh} // Add callback to refresh when filters change
           options={{
             colors: PRODUCT_COLOR_OPTIONS,
             ratings: PRODUCT_RATING_OPTIONS,
@@ -113,7 +171,9 @@ export function ProductListView() {
 
         <ProductSort
           sort={sortBy}
-          onSort={(newValue: string) => setSortBy(newValue)}
+          onSort={(newValue: string) => {
+            setSortBy(newValue);
+          }}
           sortOptions={PRODUCT_SORT_OPTIONS}
         />
       </Box>
@@ -125,35 +185,26 @@ export function ProductListView() {
       direction="row"
       spacing={1}
       sx={{
-        overflowX: 'auto', // Enable horizontal scrolling if the content overflows
-        flexWrap: 'nowrap', // Prevent buttons from wrapping to the next line
-        gap: 1, // Adjust gap between buttons
-        maxWidth: '100%', // Ensure that the stack doesn't exceed the width of its container
-        whiteSpace: 'nowrap', // Prevent the buttons from wrapping even on large screens
-        // '&::-webkit-scrollbar': {
-        //   display: 'none', // Hides the scrollbar
-        // },
+        overflowX: 'auto',
+        flexWrap: 'nowrap',
+        gap: 1,
+        maxWidth: '100%',
+        whiteSpace: 'nowrap',
       }}
     >
-      {/* Button for "All" categories */}
       <Button
-        variant={currentFilters.category === 'all' ? 'contained' : 'outlined'}
-        onClick={() => filters.setState({ category: 'all' })}
-        sx={{
-          minWidth: 'max-content', // Ensure buttons don’t stretch too much
-        }}
+        variant={filters.state.category === 'all' ? 'contained' : 'outlined'}
+        onClick={() => handleCategoryChange('all')}
+        sx={{ minWidth: 'max-content' }}
       >
         All
       </Button>
-      {/* Map through product categories and create a button for each */}
       {productCategories.map((category) => (
         <Button
           key={category}
-          variant={currentFilters.category === category ? 'contained' : 'outlined'}
-          onClick={() => filters.setState({ category })}
-          sx={{
-            minWidth: 'max-content', // Ensure buttons don’t stretch too much
-          }}
+          variant={filters.state.category === category ? 'contained' : 'outlined'}
+          onClick={() => handleCategoryChange(category)}
+          sx={{ minWidth: 'max-content' }}
         >
           {category}
         </Button>
@@ -162,15 +213,24 @@ export function ProductListView() {
   );
 
   const renderResults = () => (
-    <ProductFiltersResult filters={filters} totalResults={dataFiltered.length} />
+    <ProductFiltersResult
+      filters={filters}
+      totalResults={rawProducts.length}
+      onReset={() => {
+        filters.resetState();
+        // Reset category to 'all'
+        changeCategory(undefined);
+        // Force a refresh after reset to ensure products reload
+        refresh();
+      }}
+    />
   );
 
   const renderNotFound = () => <EmptyContent filled sx={{ py: 10 }} />;
 
   return (
-    // sx={{ mt: 5, mb: 10 }}
     <Container sx={{ mb: 15 }}>
-      <CartIcon totalItems={checkoutState?.items.length} />
+      <CartIcon totalItems={0} />
 
       <Typography variant="h4" sx={{ my: { xs: 3, md: 5 } }}>
         {t('home.productstitle')}
@@ -179,86 +239,17 @@ export function ProductListView() {
       <Stack spacing={2.5} sx={{ mb: { xs: 3, md: 5 } }}>
         {renderCatorgyButtons()}
         {renderFilters()}
-
         {canReset && renderResults()}
       </Stack>
 
       {(notFound || productsEmpty) && renderNotFound()}
 
       <ProductList
-        products={dataFiltered.map((product) => ({ ...product, id: String(product.id) }))}
+        products={rawProducts}
+        loading={isLoading}
+        hasMore={hasMore}
+        isFetchingMore={isFetchingMore}
       />
     </Container>
   );
-}
-
-// ----------------------------------------------------------------------
-
-type ApplyFilterProps = {
-  sortBy: string;
-  filters: IProductFilters;
-  // inputData: IProductItem[];
-  // inputData: ProductResponse[];
-  inputData: Product[];
-};
-
-function applyFilter({ inputData, filters, sortBy }: ApplyFilterProps) {
-  const { gender, category, colors, priceRange, rating } = filters;
-
-  const min = priceRange[0];
-  const max = priceRange[1];
-
-  // Sort by
-  // if (sortBy === 'featured') {
-  //   inputData = orderBy(inputData, ['totalSold'], ['desc']);
-  // }
-
-  if (sortBy === 'newest') {
-    inputData = orderBy(inputData, ['createdAt'], ['desc']);
-  }
-
-  if (sortBy === 'priceDesc') {
-    inputData = orderBy(inputData, ['sellingPrice'], ['desc']);
-  }
-
-  if (sortBy === 'priceAsc') {
-    inputData = orderBy(inputData, ['sellingPrice'], ['asc']);
-  }
-
-  if (min !== 0 || max !== 200) {
-    inputData = inputData.filter(
-      (product) => product.sellingPrice >= min && product.sellingPrice <= max
-    );
-  }
-
-  if (category !== 'all') {
-    inputData = inputData.filter(
-      (product) => product?.category?.name.toLowerCase() === category.toLowerCase()
-    );
-  }
-
-  // filters
-  // if (gender.length) {
-  //   inputData = inputData.filter((product) => product.gender.some((i) => gender.includes(i)));
-  // }
-
-  // if (colors.length) {
-  //   inputData = inputData.filter((product) =>
-  //     product.colors.some((color) => colors.includes(color))
-  //   );
-  // }
-
-  // if (rating) {
-  //   inputData = inputData.filter((product) => {
-  //     const convertRating = (value: string) => {
-  //       if (value === 'up4Star') return 4;
-  //       if (value === 'up3Star') return 3;
-  //       if (value === 'up2Star') return 2;
-  //       return 1;
-  //     };
-  //     return product.totalRatings > convertRating(rating);
-  //   });
-  // }
-
-  return inputData;
 }

@@ -2,6 +2,7 @@ import type { IProductReview } from 'src/types/product';
 
 import { sumBy } from 'es-toolkit';
 import { useBoolean } from 'minimal-shared/hooks';
+import { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -12,44 +13,93 @@ import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import { fShortenNumber } from 'src/utils/format-number';
+import { isSuccessResponse } from 'src/utils/is-success-res';
 
 import { Iconify } from 'src/components/iconify';
 
 import { ProductReviewList } from './product-review-list';
 import { ProductReviewNewForm } from './product-review-new-form';
+import { useGetProductReviewsQuery, useGetReviewStatsQuery } from 'src/store/customer/review';
+import type { Review, PaginatedReviews, ReviewStats } from 'src/store/customer/review';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  totalRatings?: number;
-  totalReviews?: number;
-  reviews?: IProductReview[];
-  ratings?: { name: string; starCount: number; reviewCount: number }[];
+  productId: number;
 };
 
-export function ProductDetailsReview({
-  totalRatings,
-  totalReviews,
-  ratings = [],
-  reviews = [],
-}: Props) {
+export function ProductDetailsReview({ productId }: Props) {
   const review = useBoolean();
+  const [reviews, setReviews] = useState<IProductReview[]>([]);
+  const [stats, setStats] = useState<{
+    totalRatings: number;
+    totalReviews: number;
+    ratings: { name: string; starCount: number; reviewCount: number }[];
+  }>({
+    totalRatings: 0,
+    totalReviews: 0,
+    ratings: [],
+  });
 
-  const total = sumBy(ratings, (star) => star.starCount);
+  // Fetch reviews and stats
+  const { data: reviewsData, refetch: refetchReviews } = useGetProductReviewsQuery({
+    productId,
+    page: 1,
+    limit: 10,
+  });
+  
+  const { data: statsData, refetch: refetchStats } = useGetReviewStatsQuery(productId);
+
+  // Update reviews when data changes
+  useEffect(() => {
+    if (reviewsData && isSuccessResponse<PaginatedReviews>(reviewsData)) {
+      const transformedReviews = reviewsData.payload.data.data.map((reviewData: Review) => ({
+        id: reviewData.id.toString(),
+        name: reviewData.user.fullName,
+        rating: reviewData.rating,
+        comment: reviewData.comment,
+        helpful: reviewData.helpful,
+        avatarUrl: reviewData.user.profileImage || '/placeholder.jpg',
+        postedAt: reviewData.createdAt,
+        isPurchased: reviewData.isPurchased,
+      }));
+      setReviews(transformedReviews);
+    }
+  }, [reviewsData]);
+
+  // Update stats when data changes
+  useEffect(() => {
+    if (statsData && isSuccessResponse<ReviewStats>(statsData)) {
+      setStats({
+        totalRatings: statsData.payload.data.totalRatings,
+        totalReviews: statsData.payload.data.totalReviews,
+        ratings: statsData.payload.data.ratings,
+      });
+    }
+  }, [statsData]);
+
+  const total = sumBy(stats.ratings, (star) => star.starCount);
+
+  const handleReviewSubmitted = () => {
+    review.onFalse();
+    // Refetch reviews and stats after submitting a new review
+    refetchReviews();
+    refetchStats();
+  };
 
   const renderSummary = () => (
     <Stack spacing={1} sx={{ alignItems: 'center', justifyContent: 'center' }}>
       <Typography variant="subtitle2">Average rating</Typography>
 
       <Typography variant="h2">
-        {totalRatings}
+        {stats.totalRatings.toFixed(1)}
         /5
       </Typography>
 
-      <Rating readOnly value={totalRatings} precision={0.1} />
+      <Rating readOnly value={stats.totalRatings} precision={0.1} />
 
       <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-        ({fShortenNumber(totalReviews)} reviews)
+        ({fShortenNumber(stats.totalReviews)} reviews)
       </Typography>
     </Stack>
   );
@@ -66,7 +116,7 @@ export function ProductDetailsReview({
         }),
       ]}
     >
-      {ratings
+      {stats.ratings
         .slice(0)
         .reverse()
         .map((rating) => (
@@ -78,7 +128,7 @@ export function ProductDetailsReview({
             <LinearProgress
               color="inherit"
               variant="determinate"
-              value={(rating.starCount / total) * 100}
+              value={total > 0 ? (rating.starCount / total) * 100 : 0}
               sx={{ mx: 2, flexGrow: 1 }}
             />
 
@@ -124,7 +174,12 @@ export function ProductDetailsReview({
 
       <Divider sx={{ borderStyle: 'dashed' }} />
       <ProductReviewList reviews={reviews} />
-      <ProductReviewNewForm open={review.value} onClose={review.onFalse} />
+      <ProductReviewNewForm 
+        open={review.value} 
+        onClose={review.onFalse} 
+        productId={productId}
+        onReviewSubmitted={handleReviewSubmitted}
+      />
     </>
   );
 }

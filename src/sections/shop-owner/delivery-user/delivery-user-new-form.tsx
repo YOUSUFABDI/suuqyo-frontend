@@ -98,7 +98,7 @@ export function DeliveryUserNewForm() {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('data', data);
+    // console.log('data', data);
     try {
       const createDeliveryUserDto = {
         fullName: data.fullName,

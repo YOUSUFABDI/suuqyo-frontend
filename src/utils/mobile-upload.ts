@@ -83,9 +83,9 @@ export const compressImageForMobile = async (file: File, maxSizeMB: number = 5):
               lastModified: Date.now(),
             });
 
-            console.log(
-              `Image compressed: ${file.name} from ${(file.size / 1024 / 1024).toFixed(2)}MB to ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`
-            );
+            // console.log(
+            //   `Image compressed: ${file.name} from ${(file.size / 1024 / 1024).toFixed(2)}MB to ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`
+            // );
             resolve(compressedFile);
           } else {
             resolve(file); // Return original if compression fails
@@ -117,12 +117,12 @@ export const optimizeFilesForMobile = async (files: File[]): Promise<File[]> => 
         const shouldCompress = networkQuality === 'slow' && fileSizeMB > 100;
 
         if (shouldCompress) {
-          console.log(
-            `Compressing very large image for slow network: ${file.name} (${fileSizeMB.toFixed(2)}MB)`
-          );
+          // console.log(
+          //   `Compressing very large image for slow network: ${file.name} (${fileSizeMB.toFixed(2)}MB)`
+          // );
           return await compressImageForMobile(file);
         } else {
-          console.log(`Keeping original image: ${file.name} (${fileSizeMB.toFixed(2)}MB)`);
+          // console.log(`Keeping original image: ${file.name} (${fileSizeMB.toFixed(2)}MB)`);
         }
       }
 
@@ -132,7 +132,7 @@ export const optimizeFilesForMobile = async (files: File[]): Promise<File[]> => 
           file.size > 1024 * 1024 * 1024
             ? `${(file.size / (1024 * 1024 * 1024)).toFixed(2)}GB`
             : `${(file.size / (1024 * 1024)).toFixed(2)}MB`;
-        console.log(`PDF file: ${file.name} (${fileSizeDisplay}) - keeping original`);
+        // console.log(`PDF file: ${file.name} (${fileSizeDisplay}) - keeping original`);
       }
 
       return file;
@@ -184,7 +184,7 @@ export const retryMobileUpload = async <T>(
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      console.log(`Upload attempt ${attempt}/${maxRetries}`);
+      // console.log(`Upload attempt ${attempt}/${maxRetries}`);
       return await uploadFn();
     } catch (error: any) {
       lastError = error;
@@ -198,7 +198,7 @@ export const retryMobileUpload = async <T>(
       // Wait before retrying (exponential backoff)
       if (attempt < maxRetries) {
         const waitTime = delay * Math.pow(2, attempt - 1);
-        console.log(`Waiting ${waitTime}ms before retry...`);
+        // console.log(`Waiting ${waitTime}ms before retry...`);
         await new Promise((resolve) => setTimeout(resolve, waitTime));
       }
     }

@@ -22,6 +22,7 @@ import { deliveryUserAnalyticApi } from './delivery-user/delivery-user-analytic'
 import { shopsManagementApi } from './customer/shop';
 import { orderApi } from './customer/order';
 import { customerProductApi } from './customer/product';
+import { customerReviewApi } from './customer/review';
 
 import { contactApi } from './public/public';
 
@@ -57,6 +58,7 @@ export const store = configureStore({
     [shopsManagementApi.reducerPath]: shopsManagementApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [customerProductApi.reducerPath]: customerProductApi.reducer,
+    [customerReviewApi.reducerPath]: customerReviewApi.reducer,
     // customer
 
     // public
@@ -95,6 +97,7 @@ export const store = configureStore({
       shopsManagementApi.middleware,
       orderApi.middleware,
       customerProductApi.middleware,
+      customerReviewApi.middleware,
       // customer
 
       // public

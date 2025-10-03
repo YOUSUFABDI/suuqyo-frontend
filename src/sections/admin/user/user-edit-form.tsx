@@ -71,7 +71,7 @@ type Props = {
 };
 
 export function UserEditForm({ currentUser }: Props) {
-  console.log('currentUser', currentUser);
+  // console.log('currentUser', currentUser);
   const router = useRouter();
   const showPassword = useBoolean();
   const confirmDialog = useBoolean();
@@ -261,7 +261,7 @@ export function UserEditForm({ currentUser }: Props) {
                         variant="soft"
                         color="error"
                         onClick={() => {
-                          console.log('Opening delete confirmation dialog');
+                          // console.log('Opening delete confirmation dialog');
                           confirmDialog.onTrue();
                         }}
                       >

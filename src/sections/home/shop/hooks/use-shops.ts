@@ -6,13 +6,16 @@ import { isSuccessResponse } from 'src/utils/is-success-res';
 import { ShopInfoDT } from '../types/types';
 
 export const UseShops = () => {
-  const { data, error, isLoading } = useShopsQuery(undefined, {
+  const { data, error, isLoading } = useShopsQuery({
+    page: 1,
+    limit: 12,
+  }, {
     // skip: user?.role !== 'SHOP_OWNER',
     pollingInterval: 3000, // Refresh every 3 seconds
     refetchOnMountOrArgChange: true,
   });
 
-  const shops = isSuccessResponse<ShopInfoDT['shop'][]>(data) ? data.payload.data : [];
+  const shops = isSuccessResponse(data) && data.payload && 'data' in data.payload && data.payload.data ? data.payload.data.data : [];
   const errorMessage = error ? getErrorMessage(error) : null;
 
   return { shops, isLoading, errorMessage };

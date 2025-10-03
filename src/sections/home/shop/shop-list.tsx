@@ -1,12 +1,11 @@
 import type { BoxProps } from '@mui/material/Box';
 
 import Box from '@mui/material/Box';
-import Pagination, { paginationClasses } from '@mui/material/Pagination';
-
-import { paths } from 'src/routes/paths';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 
 import { ShopItem } from './shop-item';
-import { ShopItemSkeleton } from './shop-skeleton';
+import { ShopListSkeleton } from './shop-skeleton';
 import { ShopInfoDT } from './types/types';
 import { slugify } from 'src/utils/slugify';
 
@@ -15,11 +14,11 @@ import { slugify } from 'src/utils/slugify';
 type Props = BoxProps & {
   loading?: boolean;
   shops: ShopInfoDT['shop'][];
+  hasMore?: boolean;
+  isFetchingMore?: boolean;
 };
 
-export function ShopList({ shops, loading, sx, ...other }: Props) {
-  const renderLoading = () => <ShopItemSkeleton />;
-
+export function ShopList({ shops, loading, sx, hasMore, isFetchingMore, ...other }: Props) {
   const renderList = () =>
     shops.map((shop) => (
       <ShopItem key={shop.id} shop={shop} detailsHref={`/shop/${slugify(shop.shopName)}`} />
@@ -43,17 +42,26 @@ export function ShopList({ shops, loading, sx, ...other }: Props) {
         ]}
         {...other}
       >
-        {loading ? renderLoading() : renderList()}
+        {loading ? <ShopListSkeleton /> : renderList()}
       </Box>
 
-      {shops.length > 8 && (
-        <Pagination
-          count={8}
-          sx={{
-            mt: { xs: 5, md: 8 },
-            [`& .${paginationClasses.ul}`]: { justifyContent: 'center' },
-          }}
-        />
+      {/* Loading more indicator */}
+      {isFetchingMore && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 3 }}>
+          <CircularProgress size={24} />
+          <Typography variant="body2" sx={{ ml: 2, alignSelf: 'center' }}>
+            Loading more shops...
+          </Typography>
+        </Box>
+      )}
+
+      {/* End of shops indicator */}
+      {!hasMore && !isFetchingMore && shops.length > 0 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            You've reached the end of the shops
+          </Typography>
+        </Box>
       )}
     </>
   );

@@ -32,7 +32,7 @@ export function CheckoutCart() {
   } = useCheckoutContext();
 
   const isCartEmpty = !checkoutState.items.length;
-  console.log('checkoutState::', checkoutState);
+  // console.log('checkoutState::', checkoutState);
 
   const renderLoading = () => (
     <Box

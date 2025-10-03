@@ -75,7 +75,7 @@ const TABLE_HEAD: TableHeadCellProps[] = [
 export function OrderListView() {
   const table = useTable({ defaultOrderBy: 'orderNumber' });
   const { orders } = UseOrders();
-  console.log('orders', orders);
+  // console.log('orders', orders);
 
   const confirmDialog = useBoolean();
 

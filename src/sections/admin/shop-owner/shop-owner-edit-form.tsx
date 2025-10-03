@@ -340,7 +340,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                         variant="soft"
                         color="error"
                         onClick={() => {
-                          console.log('Opening delete confirmation dialog');
+                          // console.log('Opening delete confirmation dialog');
                           confirmDialog.onTrue();
                         }}
                       >
@@ -565,7 +565,7 @@ export function ShopOwnerEditForm({ currentUser }: Props) {
                           sx={{ my: 1, cursor: 'pointer' }}
                           onClick={() => {
                             const file = businessProof;
-                            console.log('file', file);
+                            // console.log('file', file);
 
                             const a = document.createElement('a');
 

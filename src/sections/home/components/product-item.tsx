@@ -15,11 +15,9 @@ import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 import { ColorPreview } from 'src/components/color-utils';
-// import { Product } from '../shop/types/types';
 
 import { useCheckoutContext } from '../checkout/context';
 import { Product } from '../product/types/types';
-import { useEffect } from 'react';
 import { paths } from 'src/routes/paths';
 import { Typography } from '@mui/material';
 
@@ -40,65 +38,9 @@ export function ProductItem({ product, detailsHref }: Props) {
   const available = product.quantity > 0 ? true : false;
 
   // Extract unique colors from variants
-  const uniqueColors = Array.from(
-    new Set(product?.variants?.map((variant) => variant?.color?.name))
-  );
-
-  // console.log('shop info:----', product.shop);
-
-  // const { id, name,  price, colors,  } =
-  //   product;
-
-  // const handleAddCart = async () => {
-  //   const newProduct = {
-  //     id: product.id,
-  //     name: product.name,
-  //     price: product.sellingPrice,
-  //     coverUrl: product.images[0]?.image,
-  //     quantity: 1,
-  //     available: product.quantity,
-  //   };
-  //   try {
-  //     // Set related checkout context data when adding to cart
-  //     if (product?.user?.paymentMethods) {
-  //       onSetPaymentMethods(product.user.paymentMethods);
-  //     }
-
-  //     if (product?.shop?.shopAddress) {
-  //       onSetShopAddress(product.shop.shopAddress);
-  //     }
-
-  //     onAddToCart(newProduct);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // const renderLabels = () =>
-  //   (newLabel.enabled || saleLabel.enabled) && (
-  //     <Box
-  //       sx={{
-  //         gap: 1,
-  //         top: 16,
-  //         zIndex: 9,
-  //         right: 16,
-  //         display: 'flex',
-  //         position: 'absolute',
-  //         alignItems: 'center',
-  //       }}
-  //     >
-  //       {newLabel.enabled && (
-  //         <Label variant="filled" color="info">
-  //           {newLabel.content}
-  //         </Label>
-  //       )}
-  //       {saleLabel.enabled && (
-  //         <Label variant="filled" color="error">
-  //           {saleLabel.content}
-  //         </Label>
-  //       )}
-  //     </Box>
-  //   );
+  const uniqueColors = product?.variants 
+    ? Array.from(new Set(product.variants.map((variant) => variant?.color?.name).filter(Boolean)))
+    : [];
 
   const renderLabels = () => {
     const labels = [];
@@ -131,39 +73,12 @@ export function ProductItem({ product, detailsHref }: Props) {
 
   const renderImage = () => (
     <Box sx={{ position: 'relative', p: 1 }}>
-      {/* {!!available && (
-        <Fab
-          size="medium"
-          color="warning"
-          onClick={handleAddCart}
-          sx={[
-            (theme) => ({
-              right: 16,
-              zIndex: 9,
-              bottom: 16,
-              opacity: 0,
-              position: 'absolute',
-              transform: 'scale(0)',
-              transition: theme.transitions.create(['opacity', 'transform'], {
-                easing: theme.transitions.easing.easeInOut,
-                duration: theme.transitions.duration.shorter,
-              }),
-            }),
-          ]}
-        >
-          <Iconify icon="solar:cart-plus-bold" width={24} />
-        </Fab>
-      )} */}
-
-      {/* <Tooltip title={!available && 'Out of stock'} placement="bottom-end"> */}
       <Image
-        alt="Img"
-        src={product?.images[0].image}
+        alt={product.name}
+        src={product?.images && product.images.length > 0 ? product.images[0].image : '/placeholder.jpg'}
         ratio="1/1"
-        // sx={{ borderRadius: 1.5, ...(!available && { opacity: 0.48, filter: 'grayscale(1)' }) }}
         sx={{ borderRadius: 1.5 }}
       />
-      {/* </Tooltip> */}
     </Box>
   );
 
@@ -174,25 +89,13 @@ export function ProductItem({ product, detailsHref }: Props) {
       </Link>
 
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        {/* <Tooltip title="Color">
-          <ColorPreview colors={} />
-        </Tooltip> */}
         {uniqueColors?.length > 0 && (
           <Tooltip title={`Available colors: ${uniqueColors?.join(', ')}`}>
             <ColorPreview colors={uniqueColors} />
           </Tooltip>
         )}
-        <Box>{product?.shop?.shopName}</Box>
+        <Box>{product?.shop?.shopName || 'Unknown Shop'}</Box>
 
-        {/* <Box sx={{ gap: 0.5, display: 'flex', typography: 'subtitle1' }}>
-          {product.sellingPrice && (
-            <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-              {fCurrency(product.sellingPrice)}
-            </Box>
-          )}
-
-          <Box component="span">{fCurrency(product.sellingPrice)}</Box>
-        </Box> */}
         <Box sx={{ gap: 0.5, display: 'flex', typography: 'subtitle1' }}>
           {/* Show original price with strikethrough if discount exists */}
           {product.discount && product.discount > 0 ? (
@@ -200,7 +103,7 @@ export function ProductItem({ product, detailsHref }: Props) {
               <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
                 ${product.sellingPrice}
               </Box>
-              <Box component="span">${product.sellingPrice * (1 - product.discount / 100)}</Box>
+              <Box component="span">${(product.sellingPrice * (1 - product.discount / 100)).toFixed(2)}</Box>
             </>
           ) : (
             // Show regular price if no discount

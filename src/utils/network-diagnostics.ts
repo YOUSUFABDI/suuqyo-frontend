@@ -33,7 +33,7 @@ export const getNetworkDiagnostics = (): NetworkDiagnostics => {
 
 export const logNetworkDiagnostics = (context: string) => {
   const diagnostics = getNetworkDiagnostics();
-  console.log(`[Network Diagnostics - ${context}]`, diagnostics);
+  // console.log(`[Network Diagnostics - ${context}]`, diagnostics);
   return diagnostics;
 };
 
@@ -128,14 +128,14 @@ export const diagnoseUploadIssue = async (
   fileSizeBytes: number,
   apiUrl: string
 ): Promise<string> => {
-  console.log('🔍 Diagnosing upload issue...');
+  // console.log('🔍 Diagnosing upload issue...');
 
   // Get network diagnostics
   const networkDiag = logNetworkDiagnostics('Upload Error');
 
   // Test server connectivity
   const connectivityTest = await testServerConnectivity(apiUrl);
-  console.log('🌐 Server connectivity test:', connectivityTest);
+  // console.log('🌐 Server connectivity test:', connectivityTest);
 
   // Analyze the issue
   let diagnosis = 'Upload Issue Diagnosis:\n\n';
@@ -195,6 +195,6 @@ export const diagnoseUploadIssue = async (
     diagnosis += '• Ensure stable internet connection for large files\n';
   }
 
-  console.log(diagnosis);
+  // console.log(diagnosis);
   return diagnosis;
 };

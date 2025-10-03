@@ -98,9 +98,12 @@
     "ans": "Fadlan faahfaahi kiiskaaga si aad u hesho talo sax ah.",
     "contact": "Nala soo xiriir",
     "signup": "Isdiiwaangeli",
-    "wegot": "Waxaan haynaa jawaabaha",
+    "wegot": "Waxaan haynaa",
+    "wegot_answ": "jawaabaha",
     "faqs": "Su'aalaha Inta Badan La Is Weydiiyo",
     "shoptitle": "Dukaamo",
+    "featured_shops": "Dukaamo",
+    "see_all": "Arag dhammaan",
     "productstitle": "Badeecooyin",
     "rights": "Xuquuqda oo dhan waa la xafiday.",
     "build": "Waxaa lagu dhisay ❤️ Hamar",
@@ -120,9 +123,9 @@
     "caption": "Wuxuu ku habboon yahay shakhsiyaadka iyo kooxaha yaryar ee bilaabaya.",
     "plans": [
       {
-        "name": "Aasaasi",
+        "name": "Basic",
         "caption": "Wuxuu ku habboon yahay shakhsiyaadka iyo kooxaha yaryar ee bilaabaya.",
-        "lists": ["Liis garee ilaa 5 badeeco", "Dashboard aasaasi ah"],
+        "lists": ["Liis garee ilaa 5 badeeco", "Dashboard aasaasi ah", "Hal bil bilaash ah"],
         "labelAction": "Diyaar ma tahay? Nala soo xiriir"
       },
       {

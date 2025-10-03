@@ -101,7 +101,7 @@ export function DeliveryUserListView() {
 
   const handleDeleteRow = useCallback(
     async (id: string) => {
-      console.log(id);
+      // console.log(id);
       try {
         await deleteDeliveryUser(parseInt(id)).unwrap();
         toast.success('Deleted successfully!');
@@ -111,7 +111,7 @@ export function DeliveryUserListView() {
 
         table.onUpdatePageDeleteRow(dataInPage.length);
       } catch (error: any) {
-        console.log(error);
+        // console.log(error);
         let errorMessage = 'An unexpected error occurred';
         if (error?.data?.error?.message) {
           errorMessage = error.data.error.message;
@@ -192,7 +192,7 @@ export function DeliveryUserListView() {
     if (JSON.stringify(deliveryUsers) !== JSON.stringify(tableData)) {
       setTableData(deliveryUsers);
     }
-    console.log('tableData', tableData);
+    // console.log('tableData', tableData);
   }, [deliveryUsers, tableData]);
 
   return (

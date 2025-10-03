@@ -23,7 +23,7 @@ import { HomeAdvertisement } from '../home-advertisement';
 import { HomeHugePackElements } from '../home-hugepack-elements';
 import { HomeHighlightFeatures } from '../home-highlight-features';
 import { ProductListView } from '../product/product-list-view';
-import { ShopView } from '../shop/view';
+import { ShopFeaturedView } from '../shop/view';
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ export function HomeView() {
 
       <Stack sx={{ position: 'relative', bgcolor: 'background.default' }}>
         {/* <HomeMinimal /> */}
-        <ShopView />
+        <ShopFeaturedView />
 
         {/* <HomeHugePackElements /> */}
         {/* <ProductListView /> */}
@@ -97,7 +97,7 @@ function BackToTopButton({ isVisible, sx, ...other }: BackToTopProps) {
       {...other}
     >
       <SvgIcon>
-        {/* https://icon-sets.iconify.design/solar/double-alt-arrow-up-bold-duotone/ */}
+        {/* https://icon-sets.iconify.design/solar/double-alt-arrow-up-bold-duotone/ */ }
         <path
           fill="currentColor"
           d="M5 17.75a.75.75 0 0 1-.488-1.32l7-6a.75.75 0 0 1 .976 0l7 6A.75.75 0 0 1 19 17.75z"

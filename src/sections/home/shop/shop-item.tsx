@@ -26,6 +26,7 @@ export function ShopItem({ shop, detailsHref }: Props) {
         alignItems: 'center',
         gap: 2,
         backgroundColor: 'background.paper',
+        width: '100%',
       }}
     >
       {/* Shop Logo */}

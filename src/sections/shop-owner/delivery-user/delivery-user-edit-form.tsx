@@ -133,7 +133,7 @@ export function DeliveryUserEditForm({ currentUser }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      console.log('data', data);
+      // console.log('data', data);
       const updateDeliveryUserDto = {
         fullName: data.fullName,
         username: data.username,
@@ -303,7 +303,7 @@ export function DeliveryUserEditForm({ currentUser }: Props) {
                         variant="soft"
                         color="error"
                         onClick={() => {
-                          console.log('Opening delete confirmation dialog');
+                          // console.log('Opening delete confirmation dialog');
                           confirmDialog.onTrue();
                         }}
                       >

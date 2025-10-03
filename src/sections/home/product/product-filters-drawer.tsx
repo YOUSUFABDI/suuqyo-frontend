@@ -3,6 +3,19 @@ import type { UseSetStateReturn } from 'minimal-shared/hooks';
 
 import { useCallback } from 'react';
 
+// Add debounce utility function
+function debounce(func: Function, wait: number) {
+  let timeout: NodeJS.Timeout;
+  return function executedFunction(...args: any[]) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
 import Box from '@mui/material/Box';
 import Radio from '@mui/material/Radio';
 import Stack from '@mui/material/Stack';
@@ -38,6 +51,9 @@ type Props = {
     categories: string[];
     genders: { value: string; label: string }[];
   };
+  onCategoryChange?: (category?: string) => void;
+  onFilterChange?: () => void; // Add callback for filter changes
+  onPriceRangeChange?: (priceRange: [number, number]) => void; // Add price range change callback
 };
 
 const MAX_AMOUNT = 200;
@@ -52,7 +68,17 @@ const marksLabel = Array.from({ length: 21 }, (_, index) => {
   };
 });
 
-export function ProductFiltersDrawer({ open, onOpen, onClose, canReset, filters, options }: Props) {
+export function ProductFiltersDrawer({
+  open,
+  onOpen,
+  onClose,
+  canReset,
+  filters,
+  options,
+  onCategoryChange,
+  onFilterChange,
+  onPriceRangeChange,
+}: Props) {
   const { state: currentFilters, setState: updateFilters, resetState: resetFilters } = filters;
 
   const handleFilterGender = useCallback(
@@ -62,36 +88,64 @@ export function ProductFiltersDrawer({ open, onOpen, onClose, canReset, filters,
         : [...currentFilters.gender, newValue];
 
       updateFilters({ gender: checked });
+      if (onFilterChange) onFilterChange();
     },
-    [updateFilters, currentFilters.gender]
+    [updateFilters, currentFilters.gender, onFilterChange]
   );
 
   const handleFilterCategory = useCallback(
     (newValue: string) => {
+      // Update filters immediately
       updateFilters({ category: newValue });
+
+      // Trigger category change callback if provided
+      if (onCategoryChange) {
+        onCategoryChange(newValue !== 'all' ? newValue : undefined);
+      }
+
+      // Close the drawer
+      if (onClose) onClose();
     },
-    [updateFilters]
+    [updateFilters, onClose, onCategoryChange]
   );
 
   const handleFilterColors = useCallback(
     (newValue: string[]) => {
       updateFilters({ colors: newValue });
+      if (onFilterChange) onFilterChange();
     },
-    [updateFilters]
+    [updateFilters, onFilterChange]
   );
 
   const handleFilterPriceRange = useCallback(
     (event: Event, newValue: number | number[]) => {
-      updateFilters({ priceRange: newValue as number[] });
+      const newPriceRange = newValue as number[];
+      updateFilters({ priceRange: newPriceRange });
+      
+      // Call the new callback if provided
+      if (onPriceRangeChange && newPriceRange.length >= 2) {
+        onPriceRangeChange([newPriceRange[0], newPriceRange[1]] as [number, number]);
+      }
+      
+      if (onFilterChange) onFilterChange();
     },
-    [updateFilters]
+    [updateFilters, onFilterChange, onPriceRangeChange]
+  );
+
+  // Add a debounced version of the price range handler
+  const debouncedHandleFilterPriceRange = useCallback(
+    debounce((event: Event, newValue: number | number[]) => {
+      handleFilterPriceRange(event, newValue);
+    }, 300),
+    [handleFilterPriceRange]
   );
 
   const handleFilterRating = useCallback(
     (newValue: string) => {
       updateFilters({ rating: newValue });
+      if (onFilterChange) onFilterChange();
     },
-    [updateFilters]
+    [updateFilters, onFilterChange]
   );
 
   const renderHead = () => (
@@ -189,13 +243,25 @@ export function ProductFiltersDrawer({ open, onOpen, onClose, canReset, filters,
       <Typography variant="subtitle2">Price</Typography>
 
       <Box sx={{ my: 2, gap: 5, display: 'flex' }}>
-        <InputRange type="min" value={currentFilters.priceRange} onChange={updateFilters} />
-        <InputRange type="max" value={currentFilters.priceRange} onChange={updateFilters} />
+        <InputRange
+          type="min"
+          value={currentFilters.priceRange}
+          onChange={updateFilters}
+          onFilterChange={onFilterChange}
+          onPriceRangeChange={onPriceRangeChange} // Pass the new callback
+        />
+        <InputRange
+          type="max"
+          value={currentFilters.priceRange}
+          onChange={updateFilters}
+          onFilterChange={onFilterChange}
+          onPriceRangeChange={onPriceRangeChange} // Pass the new callback
+        />
       </Box>
 
       <Slider
         value={currentFilters.priceRange}
-        onChange={handleFilterPriceRange}
+        onChange={debouncedHandleFilterPriceRange}
         step={10}
         min={0}
         max={MAX_AMOUNT}
@@ -281,9 +347,11 @@ type InputRangeProps = {
   value: number[];
   type: 'min' | 'max';
   onChange: UseSetStateReturn<IProductFilters>['setState'];
+  onFilterChange?: () => void; // Add callback for filter changes
+  onPriceRangeChange?: (priceRange: [number, number]) => void; // Add price range change callback
 };
 
-function InputRange({ type, value, onChange: onFilters }: InputRangeProps) {
+function InputRange({ type, value, onChange: onFilters, onFilterChange, onPriceRangeChange }: InputRangeProps) {
   const minValue = value[0];
   const maxValue = value[1];
 
@@ -292,9 +360,17 @@ function InputRange({ type, value, onChange: onFilters }: InputRangeProps) {
     const newMax = Math.max(0, Math.min(maxValue, MAX_AMOUNT));
 
     if (newMin !== minValue || newMax !== maxValue) {
-      onFilters({ priceRange: [newMin, newMax] });
+      const newPriceRange = [newMin, newMax] as [number, number];
+      onFilters({ priceRange: newPriceRange });
+      
+      // Call the new callback if provided
+      if (onPriceRangeChange) {
+        onPriceRangeChange(newPriceRange);
+      }
+      
+      if (onFilterChange) onFilterChange();
     }
-  }, [minValue, maxValue, onFilters]);
+  }, [minValue, maxValue, onFilters, onPriceRangeChange, onFilterChange]);
 
   return (
     <Box sx={{ width: 1, display: 'flex', alignItems: 'center' }}>

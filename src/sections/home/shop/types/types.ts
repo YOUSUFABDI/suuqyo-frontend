@@ -29,21 +29,12 @@ export type ShopInfoDT = {
   products: Product[];
 };
 
-// export const SHOP_CATEGORY_OPTIONS = [
-//   'Furniture',
-//   'Resturant',
-//   'Electronic',
-//   'Coffee',
-//   'Pizza',
-//   'Clothes',
-//   'Shoe Stores',
-// ];
-
 export const SHOP_SORT_OPTIONS = [
   { value: 'featured', label: 'Featured' },
   { value: 'newest', label: 'Newest' },
-  // { value: 'priceDesc', label: 'Price: High - Low' },
-  // { value: 'priceAsc', label: 'Price: Low - High' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'nameAsc', label: 'Name: A to Z' },
+  { value: 'nameDesc', label: 'Name: Z to A' },
 ];
 
 export interface ShopCategoryDT {
@@ -52,13 +43,3 @@ export interface ShopCategoryDT {
   createdAt: string;
   updatedAt: string;
 }
-
-export const PRODUCT_CATEGORY_OPTIONS = [
-  'Shoes',
-  'Electronic',
-  'Food',
-  'Clothes',
-  'Drinks',
-  'Coffee',
-  'Pizza',
-];

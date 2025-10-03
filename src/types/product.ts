@@ -1,3 +1,4 @@
+import { ProductResponse } from 'src/sections/home/product/types/types';
 import type { IDateValue } from './common';
 
 // ----------------------------------------------------------------------
@@ -66,4 +67,23 @@ export type IProductItem = {
     starCount: number;
     reviewCount: number;
   }[];
+};
+
+export type PaginatedProductsPayload = {
+  result: number;
+  data: ProductResponse[];
+  total: number;
+  page: number;
+  limit: number;
+};
+
+// Define the query arguments
+export type GetAllProductsArgs = {
+  page: number;
+  limit: number;
+};
+
+export type UseAllProductParams = {
+  page: number;
+  limit: number;
 };

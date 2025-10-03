@@ -14,9 +14,10 @@ import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-r
 
 type Props = FiltersResultProps & {
   filters: UseSetStateReturn<IProductFilters>;
+  onReset?: () => void; // Add custom onReset handler
 };
 
-export function ProductFiltersResult({ filters, totalResults, sx }: Props) {
+export function ProductFiltersResult({ filters, totalResults, onReset, sx }: Props) {
   const { state: currentFilters, setState: updateFilters, resetState: resetFilters } = filters;
 
   const handleRemoveGender = useCallback(
@@ -49,8 +50,17 @@ export function ProductFiltersResult({ filters, totalResults, sx }: Props) {
     updateFilters({ rating: '' });
   }, [updateFilters]);
 
+  // Use custom onReset handler if provided, otherwise use default resetFilters
+  const handleReset = useCallback(() => {
+    if (onReset) {
+      onReset();
+    } else {
+      resetFilters();
+    }
+  }, [onReset, resetFilters]);
+
   return (
-    <FiltersResult totalResults={totalResults} onReset={() => resetFilters()} sx={sx}>
+    <FiltersResult totalResults={totalResults} onReset={handleReset} sx={sx}>
       <FiltersBlock label="Gender:" isShow={!!currentFilters.gender.length}>
         {currentFilters.gender.map((item) => (
           <Chip {...chipProps} key={item} label={item} onDelete={() => handleRemoveGender(item)} />

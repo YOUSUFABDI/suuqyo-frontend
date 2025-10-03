@@ -73,6 +73,9 @@ export function ProductShopDetailsView({ product }: Props) {
     return <ProductDetailsSkeleton />;
   }
 
+  // Convert string ID to number for the review component
+  const productId = parseInt(product.product.id, 10);
+
   return (
     <Container sx={{ mt: 5, mb: 10 }}>
       <CartIcon totalItems={checkoutState?.items.length} />
@@ -143,7 +146,7 @@ export function ProductShopDetailsView({ product }: Props) {
           {[
             { value: 'description', label: 'Description' },
             { value: 'returnPolicy', label: 'Return policy' },
-            // { value: 'reviews', label: `Reviews (${product?.reviews.length})` },
+            { value: 'reviews', label: 'Reviews' },
           ].map((tab) => (
             <Tab key={tab.value} value={tab.value} label={tab.label} />
           ))}
@@ -156,14 +159,9 @@ export function ProductShopDetailsView({ product }: Props) {
           <ProductDetailsReturnPolicy policy={product?.product.returnPolicy || ''} />
         )}
 
-        {/* {tabs.value === 'reviews' && (
-          <ProductDetailsReview
-            ratings={product?.ratings}
-            reviews={product?.reviews}
-            totalRatings={product?.totalRatings}
-            totalReviews={product?.totalReviews}
-          />
-        )} */}
+        {tabs.value === 'reviews' && (
+          <ProductDetailsReview productId={productId} />
+        )}
       </Card>
     </Container>
   );

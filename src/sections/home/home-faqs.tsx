@@ -245,7 +245,7 @@ export function HomeFAQs({ sx, ...other }: BoxProps) {
     <SectionTitle
       caption={t('home.faqs')}
       title={t('home.wegot')}
-      txtGradient="answers"
+      txtGradient={t("home.wegot_answ")}
       sx={{ textAlign: 'center' }}
     />
   );

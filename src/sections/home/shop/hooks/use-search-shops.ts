@@ -1,21 +1,26 @@
-import { useDebounce } from 'minimal-shared/hooks';
-import { UseShops } from './use-shops';
-import { useMemo } from 'react';
+import { useSearchShopsQuery } from 'src/store/customer/shop';
+import { isSuccessResponse } from 'src/utils/is-success-res';
+import { ShopInfoDT } from '../types/types';
 
 export function useSearchShops(query: string) {
-  const { shops } = UseShops();
+  // Use the backend search API instead of client-side filtering
+  const { data, error, isLoading } = useSearchShopsQuery(
+    { query, page: 1, limit: 10 },
+    { skip: !query || query.trim().length === 0 }
+  );
 
-  const debouncedQuery = useDebounce(query, 500);
+  // Extract shops from the API response
+  let searchResults: ShopInfoDT['shop'][] = [];
 
-  const searchResults = useMemo(() => {
-    if (!debouncedQuery.trim()) return shops;
+  if (data) {
+    const isSuccess = isSuccessResponse(data);
 
-    return shops.filter(
-      (shop) =>
-        shop.shopName.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
-        shop.shopDescription.toLowerCase().includes(debouncedQuery.toLowerCase())
-    );
-  }, [shops, debouncedQuery]);
+    if (isSuccess && data.payload && 'data' in data.payload) {
+      if (Array.isArray(data.payload.data.data)) {
+        searchResults = data.payload.data.data;
+      }
+    }
+  }
 
-  return { searchResults, searchLoading: false };
+  return { searchResults, searchLoading: isLoading };
 }

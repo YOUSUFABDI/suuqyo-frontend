@@ -58,7 +58,7 @@ export const shopOwnerApi = createApi({
             files.push(`${key}: ${value.name} (${(value.size / 1024 / 1024).toFixed(2)}MB)`);
           }
         }
-        console.log('Uploading files:', files);
+        // console.log('Uploading files:', files);
 
         return {
           url: '/admin-shop-owner/register-shop-owner',

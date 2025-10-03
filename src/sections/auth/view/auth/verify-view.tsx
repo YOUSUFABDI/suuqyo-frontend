@@ -74,7 +74,7 @@ export function VerifyView() {
         router.push(paths.auth.jwt.signIn);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     }

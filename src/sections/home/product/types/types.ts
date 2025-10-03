@@ -4,7 +4,35 @@ export interface ProductImage {
 }
 
 export interface Product {
-  id: string;
+  id: string; // This is the converted ID (string) used in the frontend
+  name: string;
+  description: string;
+  content: string;
+  sellingPrice: number;
+  discount: number | null;
+  rate: number | null;
+  condition: string;
+  returnPolicy: string;
+  category: {
+    id: number;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  variants: ProductVariant[];
+  quantity: number;
+  isFood: boolean;
+  isAvailiable: boolean;
+  createdAt: string;
+  updatedAt: string;
+  images: ProductImage[];
+  shop: Shop;
+  user: User;
+}
+
+// This interface represents the raw product data from the backend (with numeric ID)
+export interface RawProduct {
+  id: number; // This is the raw ID from the backend (number)
   name: string;
   description: string;
   content: string;
@@ -39,6 +67,14 @@ export interface Shop {
   businessProof: string;
   shopCreatedAt: string;
   shopUpdatedAt: string;
+  ShopCategory: ShopCategoryDT;
+}
+
+export interface ShopCategoryDT {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface PaymentMethod {
@@ -76,13 +112,3 @@ export interface ProductVariant {
 export interface ProductResponse {
   product: Product;
 }
-
-// export const PRODUCT_CATEGORY_OPTIONS = [
-//   'Shoes',
-//   'Electronic',
-//   'Food',
-//   'Clothes',
-//   'Drinks',
-//   'Coffee',
-//   'Pizza',
-// ];

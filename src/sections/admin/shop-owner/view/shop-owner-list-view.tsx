@@ -111,7 +111,7 @@ export function ShopwOwnerListView() {
 
         table.onUpdatePageDeleteRow(dataInPage.length);
       } catch (error: any) {
-        console.log(error);
+        // console.log(error);
         let errorMessage = 'An unexpected error occurred';
         if (error?.data?.error?.message) {
           errorMessage = error.data.error.message;

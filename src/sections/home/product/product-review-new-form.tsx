@@ -14,6 +14,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
 import { Form, Field } from 'src/components/hook-form';
+import { useCreateReviewMutation } from 'src/store/customer/review';
+import { useUser } from '../../auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -33,14 +35,19 @@ export const ReviewSchema = zod.object({
 
 type Props = DialogProps & {
   onClose: () => void;
+  productId: number;
+  onReviewSubmitted?: () => void;
 };
 
-export function ProductReviewNewForm({ onClose, ...other }: Props) {
+export function ProductReviewNewForm({ onClose, productId, onReviewSubmitted, ...other }: Props) {
+  const { user, isLoading: isUserLoading } = useUser();
+  const [createReview, { isLoading }] = useCreateReviewMutation();
+
   const defaultValues: ReviewSchemaType = {
     rating: 0,
     review: '',
-    name: '',
-    email: '',
+    name: user?.fullName || '',
+    email: user?.email || '',
   };
 
   const methods = useForm<ReviewSchemaType>({
@@ -57,12 +64,26 @@ export function ProductReviewNewForm({ onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      if (!user) {
+        throw new Error('You must be logged in to submit a review');
+      }
+
+      await createReview({
+        productId,
+        userId: user.id,
+        rating: data.rating,
+        comment: data.review,
+        isPurchased: true, // For now, we'll assume the user purchased the product
+      }).unwrap();
+
       reset();
       onClose();
-      console.info('DATA', data);
+      if (onReviewSubmitted) {
+        onReviewSubmitted();
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error submitting review:', error);
+      // TODO: Show error message to user
     }
   });
 
@@ -96,7 +117,7 @@ export function ProductReviewNewForm({ onClose, ...other }: Props) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting || isLoading}>
             Post
           </LoadingButton>
         </DialogActions>
