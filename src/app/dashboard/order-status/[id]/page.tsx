@@ -1,7 +1,7 @@
 'use client';
 
 import { CONFIG } from 'src/global-config';
-import { OrderStatusDetailsView } from 'src/sections/admin/order-status/view';
+// import { OrderStatusDetailsView } from 'src/sections/admin/order-status/view';
 
 import { UseOrders } from 'src/sections/shop-owner/order/hooks';
 
@@ -17,7 +17,8 @@ export default function Page({ params }: Props) {
 
   const currentOrder = orders.find((order) => Number(order.id) === Number(id));
 
-  return <OrderStatusDetailsView order={currentOrder} />;
+  return <div></div>;
+  // return <OrderStatusDetailsView order={currentOrder} />;
 }
 
 // Static export settings (if required)

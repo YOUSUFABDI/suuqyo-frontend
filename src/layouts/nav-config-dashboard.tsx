@@ -85,17 +85,17 @@ export const navData: NavSectionProps['data'] = [
         ],
       },
       { title: 'Order status', path: paths.dashboard.orderStatus.root, icon: ICONS.order },
-      // {
-      //   title: 'Variant',
-      //   path: paths.dashboard.variant.root,
-      //   icon: ICONS.blank,
-      //   children: [
-      //     { title: 'Size', path: paths.dashboard.variant.root },
-      //     { title: 'Color', path: paths.dashboard.variant.color },
-      //     { title: 'Product Category', path: paths.dashboard.variant.productCategory },
-      //     { title: 'Shop Category', path: paths.dashboard.variant.shopCategory },
-      //   ],
-      // },
+      {
+        title: 'Variant',
+        path: paths.dashboard.variant.root,
+        icon: ICONS.blank,
+        children: [
+          { title: 'Size', path: paths.dashboard.variant.root },
+          { title: 'Color', path: paths.dashboard.variant.color },
+          { title: 'Product Category', path: paths.dashboard.variant.productCategory },
+          { title: 'Shop Category', path: paths.dashboard.variant.shopCategory },
+        ],
+      },
     ],
   },
 
