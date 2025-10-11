@@ -47,6 +47,35 @@ export const paths = {
       details: (id: string) => `${ROOTS.DASHBOARD}/user/${id}`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
     },
+    orderStatus: {
+      root: `${ROOTS.DASHBOARD}/order-status`,
+      details: (id: string) => `${ROOTS.SHOP_OWNER}/order-status/${id}`,
+    },
+    variant: {
+      // size
+      root: `${ROOTS.DASHBOARD}/variant/size`,
+      createSize: `${ROOTS.DASHBOARD}/variant/size/new`,
+      editSize: (id: string) => `${ROOTS.DASHBOARD}/variant/size/${id}/edit`,
+      // size
+
+      // color
+      color: `${ROOTS.DASHBOARD}/variant/color`,
+      createColor: `${ROOTS.DASHBOARD}/variant/color-new`,
+      editColor: (id: string) => `${ROOTS.DASHBOARD}/variant/color/${id}/edit`,
+      // color
+
+      // product category
+      productCategory: `${ROOTS.DASHBOARD}/variant/product-category`,
+      createProductCategory: `${ROOTS.DASHBOARD}/variant/product-category-new`,
+      editProductCategory: (id: string) => `${ROOTS.DASHBOARD}/variant/product-category/${id}/edit`,
+      // product category
+
+      // product category
+      shopCategory: `${ROOTS.DASHBOARD}/variant/shop-category`,
+      createShopCategory: `${ROOTS.DASHBOARD}/variant/shop-category-new`,
+      editShopCategory: (id: string) => `${ROOTS.DASHBOARD}/variant/shop-category/${id}/edit`,
+      // product category
+    },
     report: {
       root: `${ROOTS.DASHBOARD}/report`,
       subscriptionRenewal: `${ROOTS.DASHBOARD}/report/subs-renewal`,
