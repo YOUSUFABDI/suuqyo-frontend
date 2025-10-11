@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API } from '../api';
 import {
   DeleteManySizesReqDT,
-  GetAllSizesResponseDT,
   SizeDT,
   SizeReqDT,
 } from 'src/sections/admin/variant/size/types/types';
