@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Container } from '@mui/material';
+import { Alert, Box, Container } from '@mui/material';
 import React, { useEffect } from 'react';
 import { ShopInfoDT } from '../types/types';
 import { ShopDetail } from '../shop-detail';
@@ -9,6 +9,7 @@ import { CartIcon } from '../../components/cart-icon';
 import { useCheckoutContext } from '../../checkout/context';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { toast } from 'src/components/snackbar';
+import { AlertCustomers } from '../../components/alert-customers';
 
 type Props = {
   shop: ShopInfoDT | null;
@@ -39,6 +40,7 @@ export const ShopDetailsView = ({ shop }: Props) => {
 
         {/* here */}
         <Box sx={{ flex: 1 }}>
+          <AlertCustomers shopName={shopDetails.shopName} shopPhone={user.phoneNumber} />
           <ShopProduct products={products} shop={shopDetails} />
         </Box>
         {/* here */}

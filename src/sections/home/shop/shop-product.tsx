@@ -70,15 +70,21 @@ export function ShopProduct({ shop }: Props) {
   });
 
   // Handle category change
-  const handleCategoryChange = useCallback((category: string) => {
-    changeCategory(category);
-    filters.setState({ category });
-  }, [changeCategory, filters]);
+  const handleCategoryChange = useCallback(
+    (category: string) => {
+      changeCategory(category);
+      filters.setState({ category });
+    },
+    [changeCategory, filters]
+  );
 
   // Handle price range change
-  const handlePriceRangeChange = useCallback((priceRange: [number, number]) => {
-    filters.setState({ priceRange });
-  }, [filters]);
+  const handlePriceRangeChange = useCallback(
+    (priceRange: [number, number]) => {
+      filters.setState({ priceRange });
+    },
+    [filters]
+  );
 
   // Handle sort change
   const handleSortChange = useCallback((newValue: string) => {
@@ -100,7 +106,11 @@ export function ShopProduct({ shop }: Props) {
   // Handle scroll for infinite loading
   useEffect(() => {
     const handleScroll = () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000 && hasMore && !isFetchingMore) {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000 &&
+        hasMore &&
+        !isFetchingMore
+      ) {
         loadMore();
       }
     };
@@ -145,11 +155,11 @@ export function ShopProduct({ shop }: Props) {
       //   },
       //   scrollbarWidth: 'none',
       // }}
-       sx={{
+      sx={{
         overflowX: 'auto',
         flexWrap: 'nowrap',
         gap: 1,
-         width: '770px',
+        width: '770px',
         whiteSpace: 'nowrap',
       }}
     >
@@ -216,18 +226,14 @@ export function ShopProduct({ shop }: Props) {
           }}
           onPriceRangeChange={handlePriceRangeChange}
         />
-        <ProductSort
-          sort={sortBy}
-          onSort={handleSortChange}
-          sortOptions={PRODUCT_SORT_OPTIONS}
-        />
+        <ProductSort sort={sortBy} onSort={handleSortChange} sortOptions={PRODUCT_SORT_OPTIONS} />
       </Stack>
     </Stack>
   );
 
   const renderResults = () => (
-    <ProductFiltersResult 
-      filters={filters} 
+    <ProductFiltersResult
+      filters={filters}
       totalResults={shopProducts.length}
       onReset={handleResetFilters}
     />

@@ -24,6 +24,8 @@ import { Product } from './types/types';
 // Import the custom review hook and types
 import { useGetReviewStats } from './hooks/useGetReviewStats';
 import type { ReviewStats } from 'src/store/customer/review';
+import { AlertCustomers } from '../components/alert-customers';
+import { isStorageCapacity } from 'src/utils/is-storage-capacity';
 
 // ----------------------------------------------------------------------
 
@@ -55,7 +57,7 @@ export function ProductDetailsSummary({
     const id = Number(product.id);
     return isNaN(id) ? null : id;
   }, [product.id]);
-  
+
   const reviewStatsData = useGetReviewStats(productIdNum);
 
   // Extract unique colors and sizes
@@ -87,6 +89,11 @@ export function ProductDetailsSummary({
     if (!selectedColorId) return [];
     return variants.filter((v) => v.color.id === selectedColorId);
   }, [selectedColorId, variants]);
+
+  const storageMode = useMemo(
+    () => (filteredVariants ?? []).some((v) => isStorageCapacity(v?.size?.name)),
+    [filteredVariants]
+  );
 
   const { id, name, sellingPrice, description } = product;
 
@@ -272,7 +279,7 @@ export function ProductDetailsSummary({
         </Box>
 
         <Box sx={{ mt: 4 }}>
-          <Typography variant="subtitle2">Size</Typography>
+          <Typography variant="subtitle2">{storageMode ? 'Storage' : 'Size'}</Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
             {filteredVariants.map((variant) => {
@@ -407,13 +414,13 @@ export function ProductDetailsSummary({
     // Use the product's rate property for average rating
     // If rate is null, default to 0
     const averageRating = product.rate ?? 0;
-    
+
     // Get review count from the stats data if available
     let reviewCount = 0;
     if (reviewStatsData && isSuccessResponse<ReviewStats>(reviewStatsData)) {
       reviewCount = reviewStatsData.payload.data.totalReviews;
     }
-    
+
     return (
       <Box
         sx={{
@@ -433,6 +440,7 @@ export function ProductDetailsSummary({
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ pt: 3 }} {...other}>
         <Stack spacing={2} alignItems="flex-start">
+          <AlertCustomers shopName={product.shop.shopName} shopPhone={product.user.phoneNumber} />
           <Typography variant="h5">{name}</Typography>
           {renderRating()}
           {renderPrice()}
