@@ -15,13 +15,13 @@ import { CustomPopover } from 'src/components/custom-popover';
 import { Iconify } from 'src/components/iconify';
 
 import { Typography } from '@mui/material';
-import { SizeDT } from './types/types';
-import { SizeQuickEditForm } from './size-quick-edit-form';
+import { ColorDT } from './types/types';
+import { ColorQuickEditForm } from './color-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: SizeDT;
+  row: ColorDT;
   selected: boolean;
   editHref: string;
   onSelectRow: () => void;
@@ -29,7 +29,7 @@ type Props = {
   isDeleting: boolean;
 };
 
-export function SizeTableRow({
+export function ColorTableRow({
   row,
   selected,
   editHref,
@@ -87,8 +87,8 @@ export function SizeTableRow({
   );
 
   const renderQuickEditForm = () => (
-    <SizeQuickEditForm
-      currentSize={row}
+    <ColorQuickEditForm
+      currentColor={row}
       open={quickEditForm.value}
       onClose={quickEditForm.onFalse}
     />

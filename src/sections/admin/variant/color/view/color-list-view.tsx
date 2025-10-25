@@ -1,7 +1,7 @@
 'use client';
 
 import type { TableHeadCellProps } from 'src/components/table';
-import type { ISizesTableFilters } from '../types/types';
+import type { IColorsTableFilters } from '../types/types';
 
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 import { useCallback, useEffect, useState } from 'react';
@@ -35,13 +35,13 @@ import {
   useTable,
 } from 'src/components/table';
 
-import { UseDeleteSize, UseSizes } from '../hooks';
-import { UseDeleteSizes } from '../hooks/use-delete-sizes';
-import { SizeTableFiltersResult } from '../size-table-filters-result';
-import { SizeTableRow } from '../size-table-row';
-import { SizeTableToolbar } from '../size-table-toolbar';
-import { SizeDT } from '../types/types';
-import { SizeQuickCreateForm } from '../size-quick-create-form';
+import { UseDeleteColor, UseColors } from '../hooks';
+import { UseDeleteColors } from '../hooks/use-delete-colors';
+import { ColorTableFiltersResult } from '../color-table-filters-result';
+import { ColorTableRow } from '../color-table-row';
+import { ColorTableToolbar } from '../color-table-toolbar';
+import { ColorDT } from '../types/types';
+import { ColorQuickCreateForm } from '../color-quick-create-form';
 
 // ----------------------------------------------------------------------
 
@@ -52,19 +52,19 @@ const TABLE_HEAD: TableHeadCellProps[] = [
 
 // ----------------------------------------------------------------------
 
-export function SizeListView() {
+export function ColorListView() {
   const role = localStorage.getItem('role');
-  const { sizes } = UseSizes();
-  const { deleteOneSize, isDeleting } = UseDeleteSize();
-  const { deleteManySizes, areDeleting } = UseDeleteSizes();
+  const { colors } = UseColors();
+  const { deleteOneColor, isDeleting } = UseDeleteColor();
+  const { deleteManyColors, areDeleting } = UseDeleteColors();
   const table = useTable();
 
   const confirmDialog = useBoolean();
   const quickCreateForm = useBoolean();
 
-  const [tableData, setTableData] = useState<SizeDT[]>(sizes);
+  const [tableData, setTableData] = useState<ColorDT[]>(colors);
 
-  const filters = useSetState<ISizesTableFilters>({
+  const filters = useSetState<IColorsTableFilters>({
     name: '',
     role: [],
     status: 'All',
@@ -88,8 +88,8 @@ export function SizeListView() {
   const handleDeleteRow = useCallback(
     async (id: string) => {
       try {
-        await deleteOneSize({ id: parseInt(id) }).unwrap();
-        toast.success('Size deleted successfully!');
+        await deleteOneColor({ id: parseInt(id) }).unwrap();
+        toast.success('Color deleted successfully!');
 
         const deleteRow = tableData.filter((row) => row.id !== id);
         setTableData(deleteRow);
@@ -106,7 +106,7 @@ export function SizeListView() {
         toast.error(errorMessage);
       }
     },
-    [dataInPage.length, deleteOneSize, table, tableData]
+    [dataInPage.length, deleteOneColor, table, tableData]
   );
 
   const handleDeleteRows = useCallback(async () => {
@@ -114,8 +114,8 @@ export function SizeListView() {
       const selectedIds = table.selected.map((id) => Number(id));
       if (!selectedIds.length) return;
 
-      await deleteManySizes({ ids: selectedIds }).unwrap();
-      toast.success('Sizes deleted successfully!');
+      await deleteManyColors({ ids: selectedIds }).unwrap();
+      toast.success('Colors deleted successfully!');
 
       const deleteRows = tableData.filter((row) => !selectedIds.includes(Number(row.id)));
       setTableData(deleteRows);
@@ -130,7 +130,7 @@ export function SizeListView() {
       }
       toast.error(errorMessage);
     }
-  }, [deleteManySizes, table.selected, dataInPage.length, dataFiltered.length, table, tableData]);
+  }, [deleteManyColors, table.selected, dataInPage.length, dataFiltered.length, table, tableData]);
 
   const renderConfirmDialog = () => (
     <ConfirmDialog
@@ -159,14 +159,14 @@ export function SizeListView() {
   );
 
   const renderQuickCreateForm = () => (
-    <SizeQuickCreateForm open={quickCreateForm.value} onClose={quickCreateForm.onFalse} />
+    <ColorQuickCreateForm open={quickCreateForm.value} onClose={quickCreateForm.onFalse} />
   );
 
   useEffect(() => {
-    if (JSON.stringify(sizes) !== JSON.stringify(tableData)) {
-      setTableData(sizes);
+    if (JSON.stringify(colors) !== JSON.stringify(tableData)) {
+      setTableData(colors);
     }
-  }, [sizes, tableData]);
+  }, [colors, tableData]);
 
   return (
     <>
@@ -179,8 +179,8 @@ export function SizeListView() {
               href: paths.dashboard.variant.root,
             },
             {
-              name: 'Size',
-              href: paths.dashboard.variant.root,
+              name: 'Color',
+              href: paths.dashboard.variant.color,
             },
             { name: 'List' },
           ]}
@@ -190,21 +190,21 @@ export function SizeListView() {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              New size
+              New Color
             </Button>
           }
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
         <Card>
-          <SizeTableToolbar
+          <ColorTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
             options={{ status: ['All', 'Active', 'Inactive'] }}
           />
 
           {canReset && (
-            <SizeTableFiltersResult
+            <ColorTableFiltersResult
               filters={filters}
               totalResults={dataFiltered.length}
               onResetPage={table.onResetPage}
@@ -256,7 +256,7 @@ export function SizeListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <SizeTableRow
+                      <ColorTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
@@ -299,8 +299,8 @@ export function SizeListView() {
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-  inputData: SizeDT[];
-  filters: ISizesTableFilters;
+  inputData: ColorDT[];
+  filters: IColorsTableFilters;
   comparator: (a: any, b: any) => number;
 };
 

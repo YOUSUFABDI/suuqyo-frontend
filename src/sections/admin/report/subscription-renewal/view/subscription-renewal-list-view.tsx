@@ -1,7 +1,6 @@
 'use client';
 
 import type { TableHeadCellProps } from 'src/components/table';
-
 import { sumBy } from 'es-toolkit';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 import { varAlpha } from 'minimal-shared/utils';
@@ -11,24 +10,20 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import Tabs from '@mui/material/Tabs';
-import Tooltip from '@mui/material/Tooltip';
+import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
-
 import { fIsAfter, fIsBetween } from 'src/utils/format-time';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
 import { toast } from 'src/components/snackbar';
@@ -48,35 +43,33 @@ import { UseSubscriptionRenewals } from '../hooks';
 import { SubscriptionRenewalAnalytic } from '../subscription-renewal-analytic';
 import { SubscriptionRenewalTableFiltersResult } from '../subscription-renewal-table-filters-result';
 import { SubscriptionRenewalTableRow } from '../subscription-renewal-table-row';
-import { SubscriptionRenewalTableToolbar } from '../subscription-renewal-table-toolbar';
 import {
   SubscriptionRenewalResDT,
   SubscriptionRenewalTableFilters,
 } from '../types/subscription-renewal';
-import { useSubscriptions } from 'src/sections/admin/subscription/hooks';
 
-// ----------------------------------------------------------------------
+// Toolbar with search + date range + multi-select status
+import { SubscriptionRenewalTableToolbar } from '../subscription-renewal-table-toolbar';
 
 const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'shopOwner', label: 'Shopowner' },
   { id: 'phone', label: 'Phone' },
+  { id: 'transactionType', label: 'Transaction type' },
   { id: 'subscriptionTerm', label: 'Subscription type' },
-  { id: 'subscriptionFee', label: 'Subscription fee' },
+  { id: 'subscriptionFee', label: 'Subscription fee' }, // Shows transaction amount
   { id: 'startDate', label: 'Start date' },
   { id: 'endDate', label: 'End date' },
   { id: 'subscriptionStatus', label: 'Subscription status' },
 ];
 
-export const TRANSACTION_STATUS_OPTIONS = ['PENDING', 'ACTIVE', 'EXPIRED'];
-
-// ----------------------------------------------------------------------
+// ✅ make it a mutable string[]
+export const TRANSACTION_STATUS_OPTIONS: string[] = ['PENDING', 'ACTIVE', 'EXPIRED'];
 
 export function SubscriptionRenewalListView() {
   const { subscriptionRenewals } = UseSubscriptionRenewals();
   const theme = useTheme();
 
-  const table = useTable({ defaultOrderBy: 'createDate' });
-
+  const table = useTable({ defaultOrderBy: 'createdAt' });
   const confirmDialog = useBoolean();
 
   const [tableData, setTableData] = useState<SubscriptionRenewalResDT[]>(subscriptionRenewals);
@@ -109,99 +102,37 @@ export function SubscriptionRenewalListView() {
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
-  const getInvoiceLength = (status: string) =>
-    tableData.filter((item) => item.subscription.subscriptionStatus === status).length;
-
-  const getTotalAmount = (status: string) =>
-    sumBy(
-      tableData.filter((item) => item.subscription.subscriptionStatus === status),
-      (invoice) => invoice.newFee
-    );
-
-  const getPercentByStatus = (status: string) =>
-    (getInvoiceLength(status) / tableData.length) * 100;
+  const getCountBySubStatus = (status: 'PENDING' | 'ACTIVE' | 'EXPIRED') =>
+    tableData.filter((r) => r.subscription.subscriptionStatus === status).length;
 
   const TABS = [
-    {
-      value: 'all',
-      label: 'All',
-      color: 'default',
-      count: tableData.length,
-    },
-    {
-      value: 'PENDING',
-      label: 'Pending',
-      color: 'warning',
-      count: getInvoiceLength('PENDING'),
-    },
-    {
-      value: 'ACTIVE',
-      label: 'Active',
-      color: 'success',
-      count: getInvoiceLength('ACTIVE'),
-    },
-    {
-      value: 'EXPIRED',
-      label: 'Expired',
-      color: 'default',
-      count: getInvoiceLength('EXPIRED'),
-    },
+    { value: 'all', label: 'All', color: 'default', count: tableData.length },
+    { value: 'PENDING', label: 'Pending', color: 'warning', count: getCountBySubStatus('PENDING') },
+    { value: 'ACTIVE', label: 'Active', color: 'success', count: getCountBySubStatus('ACTIVE') },
+    { value: 'EXPIRED', label: 'Expired', color: 'default', count: getCountBySubStatus('EXPIRED') },
   ] as const;
 
   const handleDeleteRow = useCallback(
     (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== Number(id));
-
       toast.success('Delete success!');
-
       setTableData(deleteRow);
-
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
     [dataInPage.length, table, tableData]
   );
 
   const handleDeleteRows = useCallback(() => {
-    // const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
-
     toast.success('Delete success!');
-
-    // setTableData(deleteRows);
-
     table.onUpdatePageDeleteRows(dataInPage.length, dataFiltered.length);
-  }, [dataFiltered.length, dataInPage.length, table, tableData]);
+  }, [dataFiltered.length, dataInPage.length, table]);
 
   const handleFilterStatus = useCallback(
-    (event: React.SyntheticEvent, newValue: string) => {
+    (_: React.SyntheticEvent, newValue: string) => {
       table.onResetPage();
       updateFilters({ status: newValue });
     },
     [updateFilters, table]
-  );
-
-  const renderConfirmDialog = () => (
-    <ConfirmDialog
-      open={confirmDialog.value}
-      onClose={confirmDialog.onFalse}
-      title="Delete"
-      content={
-        <>
-          Are you sure want to delete <strong> {table.selected.length} </strong> items?
-        </>
-      }
-      action={
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => {
-            handleDeleteRows();
-            confirmDialog.onFalse();
-          }}
-        >
-          Delete
-        </Button>
-      }
-    />
   );
 
   useEffect(() => {
@@ -233,51 +164,22 @@ export function SubscriptionRenewalListView() {
                 title="Total"
                 total={tableData.length}
                 percent={100}
-                price={sumBy(tableData, (invoice) => invoice.newFee)}
+                price={sumBy(tableData, (r) => r.amount)}
                 icon="solar:bill-list-bold-duotone"
                 color={theme.vars.palette.info.main}
               />
-              {/* 
-              <SubscriptionRenewalAnalytic
-                title="Pending"
-                total={getInvoiceLength('pending')}
-                percent={getPercentByStatus('pending')}
-                price={getTotalAmount('pending')}
-                icon="solar:sort-by-time-bold-duotone"
-                color={theme.vars.palette.warning.main}
-              />  */}
-              {/* 
-              <SubscriptionRenewalAnalytic
-                title="Completed"
-                total={getInvoiceLength('paid')}
-                percent={getPercentByStatus('paid')}
-                price={getTotalAmount('paid')}
-                icon="solar:file-check-bold-duotone"
-                color={theme.vars.palette.success.main}
-              /> */}
-
-              {/* <SubscriptionRenewalAnalytic
-                title="Refund"
-                total={getInvoiceLength('draft')}
-                percent={getPercentByStatus('draft')}
-                price={getTotalAmount('draft')}
-                icon="solar:file-corrupted-bold-duotone"
-                color={theme.vars.palette.text.secondary}
-              /> */}
-
-              {/* <SubscriptionRenewalAnalytic
-                title="Failed"
-                total={getInvoiceLength('overdue')}
-                percent={getPercentByStatus('overdue')}
-                price={getTotalAmount('overdue')}
-                icon="solar:bell-bing-bold-duotone"
-                color={theme.vars.palette.error.main}
-              /> */}
             </Stack>
           </Scrollbar>
         </Card>
 
         <Card>
+          <SubscriptionRenewalTableToolbar
+            filters={filters}
+            dateError={dateError}
+            onResetPage={table.onResetPage}
+            options={{ service: TRANSACTION_STATUS_OPTIONS }}
+          />
+
           <Tabs
             value={currentFilters.status}
             onChange={handleFilterStatus}
@@ -307,13 +209,6 @@ export function SubscriptionRenewalListView() {
             ))}
           </Tabs>
 
-          <SubscriptionRenewalTableToolbar
-            filters={filters}
-            dateError={dateError}
-            onResetPage={table.onResetPage}
-            options={{ service: TRANSACTION_STATUS_OPTIONS }}
-          />
-
           {canReset && (
             <SubscriptionRenewalTableFiltersResult
               filters={filters}
@@ -334,37 +229,10 @@ export function SubscriptionRenewalListView() {
                   dataFiltered.map((row) => String(row.id))
                 );
               }}
-              action={
-                <Box sx={{ display: 'flex' }}>
-                  {/* <Tooltip title="Sent">
-                    <IconButton color="primary">
-                      <Iconify icon="iconamoon:send-fill" />
-                    </IconButton>
-                  </Tooltip> */}
-
-                  {/* <Tooltip title="Download">
-                    <IconButton color="primary">
-                      <Iconify icon="eva:download-outline" />
-                    </IconButton>
-                  </Tooltip> */}
-
-                  {/* <Tooltip title="Print">
-                    <IconButton color="primary">
-                      <Iconify icon="solar:printer-minimalistic-bold" />
-                    </IconButton>
-                  </Tooltip> */}
-
-                  {/* <Tooltip title="Delete">
-                    <IconButton color="primary" onClick={confirmDialog.onTrue}>
-                      <Iconify icon="solar:trash-bin-trash-bold" />
-                    </IconButton>
-                  </Tooltip> */}
-                </Box>
-              }
             />
 
             <Scrollbar sx={{ minHeight: 444 }}>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -393,13 +261,13 @@ export function SubscriptionRenewalListView() {
                         selected={table.selected.includes(String(row.id))}
                         onSelectRow={() => table.onSelectRow(String(row.id))}
                         onDeleteRow={() => handleDeleteRow(String(row.id))}
-                        editHref={''}
-                        detailsHref={''}
+                        editHref=""
+                        detailsHref=""
                       />
                     ))}
 
                   <TableEmptyRows
-                    height={table.dense ? 56 : 56 + 20}
+                    height={table.dense ? 56 : 76}
                     emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                   />
 
@@ -421,12 +289,31 @@ export function SubscriptionRenewalListView() {
         </Card>
       </DashboardContent>
 
-      {renderConfirmDialog()}
+      <ConfirmDialog
+        open={confirmDialog.value}
+        onClose={confirmDialog.onFalse}
+        title="Delete"
+        content={
+          <>
+            Are you sure want to delete <strong>{table.selected.length}</strong> items?
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleDeleteRows();
+              confirmDialog.onFalse();
+            }}
+          >
+            Delete
+          </Button>
+        }
+      />
     </>
   );
 }
-
-// ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
   dateError: boolean;
@@ -446,31 +333,32 @@ function applyFilter({ inputData, comparator, filters, dateError }: ApplyFilterP
     return a[1] - b[1];
   });
 
-  inputData = stabilizedThis.map((el) => el[0]);
+  let data = stabilizedThis.map((el) => el[0]);
 
+  // Search by id, name, phone, email
   if (name) {
-    inputData = inputData.filter(({ id, subscription }) =>
-      [id, subscription?.user?.fullName, subscription?.user?.phoneNumber].some(
-        (field) => typeof field === 'string' && field.toLowerCase().includes(name.toLowerCase())
+    const lower = name.toLowerCase();
+    data = data.filter((row) =>
+      [String(row.id), row.user?.fullName, row.user?.phoneNumber, row.user?.email].some(
+        (field) => typeof field === 'string' && field.toLowerCase().includes(lower)
       )
     );
   }
 
+  // Tab status (single)
   if (status !== 'all') {
-    inputData = inputData.filter((invoice) => invoice.subscription.subscriptionStatus === status);
+    data = data.filter((row) => row.subscription.subscriptionStatus === status);
   }
 
+  // Multi-select status
   if (service.length) {
-    inputData = inputData.filter(
-      (invoice) => service.includes(invoice.subscription.subscriptionStatus) // No need for 'some' since 'transactionStatus' is a string
-    );
+    data = data.filter((row) => service.includes(row.subscription.subscriptionStatus));
   }
 
-  if (!dateError) {
-    if (startDate && endDate) {
-      inputData = inputData.filter((invoice) => fIsBetween(invoice.createdAt, startDate, endDate));
-    }
+  // Date range (transactionDate)
+  if (!dateError && startDate && endDate) {
+    data = data.filter((row) => fIsBetween(row.transactionDate, startDate, endDate));
   }
 
-  return inputData;
+  return data;
 }

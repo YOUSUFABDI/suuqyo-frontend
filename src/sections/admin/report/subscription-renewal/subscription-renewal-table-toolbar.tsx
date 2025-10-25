@@ -9,9 +9,6 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import { formHelperTextClasses } from '@mui/material/FormHelperText';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -22,15 +19,14 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CustomPopover } from 'src/components/custom-popover';
 import { Iconify } from 'src/components/iconify';
 import { SubscriptionRenewalTableFilters } from './types/subscription-renewal';
-
-// ----------------------------------------------------------------------
+import { InputAdornment } from '@mui/material';
 
 type Props = {
   dateError: boolean;
   onResetPage: () => void;
   filters: UseSetStateReturn<SubscriptionRenewalTableFilters>;
   options: {
-    service: string[];
+    service: string[]; // expects a mutable string[]
   };
 };
 
@@ -41,7 +37,6 @@ export function SubscriptionRenewalTableToolbar({
   onResetPage,
 }: Props) {
   const menuActions = usePopover();
-
   const { state: currentFilters, setState: updateFilters } = filters;
 
   const handleFilterName = useCallback(
@@ -56,7 +51,6 @@ export function SubscriptionRenewalTableToolbar({
     (event: SelectChangeEvent<string[]>) => {
       const newValue =
         typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value;
-
       onResetPage();
       updateFilters({ service: newValue });
     },
@@ -91,12 +85,10 @@ export function SubscriptionRenewalTableToolbar({
           <Iconify icon="solar:printer-minimalistic-bold" />
           Print
         </MenuItem>
-
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:import-bold" />
           Import
         </MenuItem>
-
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:export-bold" />
           Export
@@ -117,17 +109,16 @@ export function SubscriptionRenewalTableToolbar({
           alignItems: { xs: 'flex-end', md: 'center' },
         }}
       >
-        <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 180 } }}>
-          <InputLabel htmlFor="filter-service-select">Status</InputLabel>
-
+        <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 220 } }}>
           <Select
             multiple
             value={currentFilters.service}
             onChange={handleFilterStatus}
-            input={<OutlinedInput label="Service" />}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            inputProps={{ id: 'filter-service-select' }}
+            input={<OutlinedInput label="Status" />}
+            renderValue={(selected) => selected.join(', ')}
+            inputProps={{ id: 'filter-status-select' }}
             sx={{ textTransform: 'capitalize' }}
+            displayEmpty
           >
             {options.service.map((option) => (
               <MenuItem key={option} value={option}>
@@ -148,10 +139,10 @@ export function SubscriptionRenewalTableToolbar({
 
         <DatePicker
           label="Start date"
-          value={currentFilters.endDate}
+          value={currentFilters.startDate}
           onChange={handleFilterStartDate}
           slotProps={{ textField: { fullWidth: true } }}
-          sx={{ maxWidth: { md: 180 } }}
+          sx={{ maxWidth: { md: 200 } }}
         />
 
         <DatePicker
@@ -166,7 +157,7 @@ export function SubscriptionRenewalTableToolbar({
             },
           }}
           sx={{
-            maxWidth: { md: 180 },
+            maxWidth: { md: 200 },
             [`& .${formHelperTextClasses.root}`]: {
               bottom: { md: -40 },
               position: { md: 'absolute' },
@@ -198,7 +189,6 @@ export function SubscriptionRenewalTableToolbar({
               },
             }}
           />
-
           {/* <IconButton onClick={menuActions.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton> */}

@@ -1,43 +1,49 @@
 import { IDatePickerControl } from 'src/types/common';
 
+// This is a renewal TRANSACTION shape coming from backend
 export type SubscriptionRenewalResDT = {
   id: number;
+  userId: number;
   subscriptionId: number;
-  renewedAt: string; // ISO date string
-  newStartDate: string; // ISO date string
-  newEndDate: string; // ISO date string
-  newFee: number;
-  discountApplied: number;
-  isFree: boolean;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
+
+  amount: number; // transaction amount
+  paymentMethod: 'EVC_PLUS' | 'CASH';
+  transactionDate: string; // ISO
+  createdAt: string; // ISO
+  updatedAt: string; // ISO
+  transactionStatus: 'PENDING' | 'COMPLETED' | 'FAILED';
+  transactionType: 'NEW_SUBSCRIPTION' | 'RENEW_SUBSCRIPTION';
+
+  user: {
+    profileImage: string;
+    email: string;
+    fullName: string;
+    phoneNumber: string;
+  };
+
   subscription: {
     id: number;
-    shopOwnerId: number;
-    startDate: string; // ISO date string
-    endDate: string; // ISO date string
-    subscriptionTerm: string;
+    userId: number;
+    startDate: string; // ISO
+    endDate: string; // ISO
+    subscriptionPlan: 'BASIC' | 'PRO' | 'PREMIUM';
+    subscriptionTerm: 'MONTHLY' | 'YEARLY';
+    productLimit: number;
     subscriptionFee: number;
     createdBy: string;
-    createdAt: string; // ISO date string
-    updatedAt: string; // ISO date string
+    createdAt: string; // ISO
+    updatedAt: string; // ISO
     discount: number;
     isFree: boolean;
-    remainingTime: number;
-    subscriptionStatus: string;
-    user: {
-      profileImage: string;
-      email: string;
-      fullName: string;
-      phoneNumber: string;
-    };
+    remainingTime: number | null;
+    subscriptionStatus: 'PENDING' | 'ACTIVE' | 'EXPIRED';
   };
 };
 
 export type SubscriptionRenewalTableFilters = {
   name: string;
-  status: string;
-  service: string[];
+  status: string; // 'all' | 'PENDING' | 'ACTIVE' | 'EXPIRED' (subscription status)
+  service: string[]; // same as above (multi-select)
   endDate: IDatePickerControl;
   startDate: IDatePickerControl;
 };

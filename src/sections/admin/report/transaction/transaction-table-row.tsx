@@ -111,15 +111,13 @@ export function TransactionTableRow({
 
         <TableCell>
           <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-            <Avatar alt={row.shopOwner?.fullName}>
-              {row.shopOwner?.fullName.charAt(0).toUpperCase()}
-            </Avatar>
+            <Avatar alt={row.user.fullName} src={row.user.profileImage} />
 
             <ListItemText
               disableTypography
               primary={
                 <Typography variant="body2" noWrap>
-                  {row.shopOwner?.fullName}
+                  {row.user.fullName} {''} {row.user.phoneNumber}
                 </Typography>
               }
               secondary={
@@ -156,6 +154,7 @@ export function TransactionTableRow({
 
         <TableCell>{row.subscription.subscriptionTerm}</TableCell>
         <TableCell>{row.transactionType}</TableCell>
+        <TableCell>{row.subscription.subscriptionPlan}</TableCell>
 
         <TableCell>
           <Label

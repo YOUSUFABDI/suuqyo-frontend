@@ -15,14 +15,16 @@ export type SubscriptionTransactionResDT = {
     id: number;
     shopOwnerId: number;
     subscriptionTerm: string;
+    subscriptionPlan: string;
     startDate: string;
     endDate: string;
     isActive: boolean;
   };
-  shopOwner: {
+  user: {
     id: number;
     fullName: string;
     phoneNumber: string;
+    profileImage: string;
   };
 };
 

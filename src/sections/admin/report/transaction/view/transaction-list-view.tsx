@@ -59,6 +59,7 @@ const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'price', label: 'Amount' },
   { id: 'paymentMethod', label: 'Payment method' },
   { id: 'subscriptionTerm', label: 'Subscription type' },
+  { id: 'subscriptionPlan', label: 'Subscription plan' },
   { id: 'transactionType', label: 'Transaction type' },
   { id: 'status', label: 'Status' },
   { id: '' },
@@ -70,6 +71,7 @@ export const TRANSACTION_STATUS_OPTIONS = ['PENDING', 'COMPLETED', 'FAILED'];
 
 export function TransactionListView() {
   const { transactions } = UseTransactions();
+  console.log('transactions', transactions);
   const theme = useTheme();
 
   const table = useTable({ defaultOrderBy: 'createDate' });
@@ -446,8 +448,8 @@ function applyFilter({ inputData, comparator, filters, dateError }: ApplyFilterP
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter(({ id, shopOwner }) =>
-      [id, shopOwner?.fullName, shopOwner?.phoneNumber].some(
+    inputData = inputData.filter(({ id, user }) =>
+      [id, user?.fullName, user?.phoneNumber].some(
         (field) => typeof field === 'string' && field.toLowerCase().includes(name.toLowerCase())
       )
     );
