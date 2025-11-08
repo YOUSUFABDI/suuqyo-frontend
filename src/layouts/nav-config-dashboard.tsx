@@ -94,6 +94,7 @@ export const navData: NavSectionProps['data'] = [
           { title: 'Color', path: paths.dashboard.variant.color },
         ],
       },
+      //
       {
         title: 'Category',
         path: paths.dashboard.category.root,
