@@ -55,17 +55,18 @@ export const paths = {
       // size
       root: `${ROOTS.DASHBOARD}/variant/size`,
       // size
-
       // color
       color: `${ROOTS.DASHBOARD}/variant/color`,
       // color
+    },
+    category: {
+      // product category
+      // productCategory: `${ROOTS.DASHBOARD}/category/product-category`,
+      root: `${ROOTS.DASHBOARD}/category/product-category`,
+      // product category
 
       // product category
-      productCategory: `${ROOTS.DASHBOARD}/variant/product-category`,
-      // product category
-
-      // product category
-      shopCategory: `${ROOTS.DASHBOARD}/variant/shop-category`,
+      shopCategory: `${ROOTS.DASHBOARD}/category/shop-category`,
       // product category
     },
     report: {

@@ -9,6 +9,7 @@ import { analyticApi } from './admin/analytic';
 import { userApi } from './user/user';
 import { manageUserAsAdminApi } from './admin/user';
 import { variantApi } from './admin/variant';
+import { categoryApi } from './admin/category';
 
 import { productApi } from './shop-owner/product';
 import { shopApi } from './shop-owner/shop';
@@ -40,6 +41,7 @@ export const store = configureStore({
     [analyticApi.reducerPath]: analyticApi.reducer,
     [manageUserAsAdminApi.reducerPath]: manageUserAsAdminApi.reducer,
     [variantApi.reducerPath]: variantApi.reducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
     // admin
 
     // shop-owner
@@ -80,6 +82,7 @@ export const store = configureStore({
       analyticApi.middleware,
       manageUserAsAdminApi.middleware,
       variantApi.middleware,
+      categoryApi.middleware,
       // admin
 
       // shop-owner
