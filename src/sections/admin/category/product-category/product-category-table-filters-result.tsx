@@ -1,4 +1,4 @@
-import type { ISizesTableFilters } from './types/types';
+import type { IProductCategoryTableFilters } from './types/types';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 import type { FiltersResultProps } from 'src/components/filters-result';
 
@@ -12,10 +12,15 @@ import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-r
 
 type Props = FiltersResultProps & {
   onResetPage: () => void;
-  filters: UseSetStateReturn<ISizesTableFilters>;
+  filters: UseSetStateReturn<IProductCategoryTableFilters>;
 };
 
-export function SizeTableFiltersResult({ filters, onResetPage, totalResults, sx }: Props) {
+export function ProductCategoryTableFiltersResult({
+  filters,
+  onResetPage,
+  totalResults,
+  sx,
+}: Props) {
   const { state: currentFilters, setState: updateFilters, resetState: resetFilters } = filters;
 
   const handleRemoveKeyword = useCallback(() => {

@@ -38,9 +38,9 @@ import {
 import { UseDeleteOneProductCategory, UseProductCategories } from '../hooks';
 import { UseDeleteProductCategories } from '../hooks/use-delete-product-categories';
 import { ProductCatgeoryQuickCreateForm } from '../product-category-quick-create-form';
-import { SizeTableFiltersResult } from '../size-table-filters-result';
+import { ProductCategoryTableFiltersResult } from '../product-category-table-filters-result';
 import { ProductCatgoryTableRow } from '../product-category-table-row';
-import { SizeTableToolbar } from '../size-table-toolbar';
+import { ProductCategoryTableToolbar } from '../product-category-table-toolbar';
 import { ProductCategoryDT } from '../types/types';
 
 // ----------------------------------------------------------------------
@@ -207,14 +207,14 @@ export function ProductCategoryListView() {
         />
 
         <Card>
-          <SizeTableToolbar
+          <ProductCategoryTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
             options={{ status: ['All', 'Active', 'Inactive'] }}
           />
 
           {canReset && (
-            <SizeTableFiltersResult
+            <ProductCategoryTableFiltersResult
               filters={filters}
               totalResults={dataFiltered.length}
               onResetPage={table.onResetPage}

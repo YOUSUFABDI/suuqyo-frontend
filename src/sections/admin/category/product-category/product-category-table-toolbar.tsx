@@ -1,6 +1,6 @@
 import type { SelectChangeEvent } from '@mui/material/Select';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
-import type { ISizesTableFilters } from './types/types';
+import type { IProductCategoryTableFilters } from './types/types';
 
 import { usePopover } from 'minimal-shared/hooks';
 import { useCallback } from 'react';
@@ -19,13 +19,13 @@ import { Iconify } from 'src/components/iconify';
 
 type Props = {
   onResetPage: () => void;
-  filters: UseSetStateReturn<ISizesTableFilters>;
+  filters: UseSetStateReturn<IProductCategoryTableFilters>;
   options: {
     status: string[];
   };
 };
 
-export function SizeTableToolbar({ filters, options, onResetPage }: Props) {
+export function ProductCategoryTableToolbar({ filters, options, onResetPage }: Props) {
   const menuActions = usePopover();
 
   const { state: currentFilters, setState: updateFilters } = filters;
@@ -41,7 +41,7 @@ export function SizeTableToolbar({ filters, options, onResetPage }: Props) {
   const handleFilterStatus = useCallback(
     (event: SelectChangeEvent) => {
       onResetPage();
-      updateFilters({ status: event.target.value as ISizesTableFilters['status'] });
+      updateFilters({ status: event.target.value as IProductCategoryTableFilters['status'] });
     },
     [onResetPage, updateFilters]
   );
