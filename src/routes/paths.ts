@@ -69,6 +69,9 @@ export const paths = {
       shopCategory: `${ROOTS.DASHBOARD}/category/shop-category`,
       // product category
     },
+    notification: {
+      root: `${ROOTS.DASHBOARD}/notification`,
+    },
     report: {
       root: `${ROOTS.DASHBOARD}/report`,
       subscriptionRenewal: `${ROOTS.DASHBOARD}/report/subs-renewal`,

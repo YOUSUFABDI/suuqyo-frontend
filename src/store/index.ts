@@ -27,6 +27,7 @@ import { customerProductApi } from './customer/product';
 import { customerReviewApi } from './customer/review';
 
 import { contactApi } from './public/public';
+import { notificationApi } from './public/notification';
 
 export const store = configureStore({
   reducer: {
@@ -67,6 +68,7 @@ export const store = configureStore({
 
     // public
     [contactApi.reducerPath]: contactApi.reducer,
+    [notificationApi.reducerPath]: notificationApi.reducer,
     // public
   },
   devTools: process.env.NODE_ENV !== 'production',
@@ -107,7 +109,8 @@ export const store = configureStore({
       // customer
 
       // public
-      contactApi.middleware
+      contactApi.middleware,
+      notificationApi.middleware
       // public
     ),
 });

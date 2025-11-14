@@ -108,6 +108,14 @@ export const navData: NavSectionProps['data'] = [
   },
 
   /**
+   * Notification
+   */
+  {
+    subheader: 'Notification',
+    items: [{ title: 'Notification', path: paths.dashboard.notification.root, icon: ICONS.chat }],
+  },
+
+  /**
    * Report
    */
   {
