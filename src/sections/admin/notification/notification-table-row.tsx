@@ -38,6 +38,7 @@ export function NotificationTableRow({ row, editHref }: Props) {
             <Avatar src={row.user.profileImage} />
             <Typography color="inherit">{row.user.fullName}</Typography>
             <Typography color="inherit">{row.user.phoneNumber}</Typography>
+            <Typography color="inherit">{row.user.email}</Typography>
           </Box>
         </TableCell>
         <TableCell>
@@ -61,19 +62,6 @@ export function NotificationTableRow({ row, editHref }: Props) {
             </Stack>
           </Box>
         </TableCell>
-
-        {role === 'ADMIN' && (
-          <TableCell>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <IconButton
-                color={menuActions.open ? 'inherit' : 'default'}
-                onClick={menuActions.onOpen}
-              >
-                <Iconify icon="eva:more-vertical-fill" />
-              </IconButton>
-            </Box>
-          </TableCell>
-        )}
       </TableRow>
     </>
   );
