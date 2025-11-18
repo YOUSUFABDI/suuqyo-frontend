@@ -5,7 +5,7 @@ export interface LoginReqDT {
 
 export interface SignUpReqDT {
   fullName: string;
-  username: string;
+  // username: string;
   email: string;
   phoneNumber: string;
   password: string;

@@ -139,11 +139,7 @@ export function SignInView() {
 
       <Form methods={methods} onSubmit={onSubmit}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <Field.Text
-            name="email"
-            label="Email address or username"
-            slotProps={{ inputLabel: { shrink: true } }}
-          />
+          <Field.Text name="email" label="Email" slotProps={{ inputLabel: { shrink: true } }} />
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             <Link

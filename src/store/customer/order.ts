@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API } from '../api';
-import { ApiResponseDT } from 'src/types/api-response';
+import { IOrderHistory } from 'src/sections/home/account/types/types';
 import { AddressDT } from 'src/sections/home/address/types/types';
-import { OrderHistoryDT } from 'src/sections/home/account/types/types';
+import { ApiResponseDT } from 'src/types/api-response';
+import { API } from '../api';
 
 export const orderApi = createApi({
   reducerPath: 'order',
@@ -66,7 +66,7 @@ export const orderApi = createApi({
       }),
       invalidatesTags: ['order'],
     }),
-    getOrderHistory: builder.query<ApiResponseDT<OrderHistoryDT[]>, void>({
+    getOrderHistory: builder.query<ApiResponseDT<IOrderHistory[]>, void>({
       query: () => ({
         url: '/customer-order/get-order-history',
         method: 'GET',

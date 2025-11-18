@@ -32,7 +32,7 @@ export type SignUpSchemaType = zod.infer<typeof SignUpSchema>;
 
 export const SignUpSchema = zod.object({
   fullName: zod.string().min(1, { message: 'Full name is required!' }),
-  username: zod.string().min(1, { message: 'Username is required!' }),
+  // username: zod.string().min(1, { message: 'Username is required!' }),
   email: zod
     .string()
     .min(1, { message: 'Email is required!' })
@@ -54,7 +54,7 @@ export function SignUpView() {
 
   const defaultValues: SignUpSchemaType = {
     fullName: '',
-    username: '',
+    // username: '',
     email: '',
     phoneNumber: '',
     password: '',
@@ -100,9 +100,8 @@ export function SignUpView() {
           label="Full name"
           slotProps={{ inputLabel: { shrink: true } }}
         />
-        <Field.Text name="username" label="Username" slotProps={{ inputLabel: { shrink: true } }} />
       </Box>
-      <Field.Text name="email" label="Email address" slotProps={{ inputLabel: { shrink: true } }} />
+      <Field.Text name="email" label="Email" slotProps={{ inputLabel: { shrink: true } }} />
       <Field.Phone name="phoneNumber" label="Phone number" placeholder="61XXXXXXX" />
       <Field.Text
         name="password"

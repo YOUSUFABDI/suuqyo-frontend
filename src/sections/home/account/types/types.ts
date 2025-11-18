@@ -1,46 +1,58 @@
-// src/types/order.ts
+export type OrderStatus =
+  | 'PENDING'
+  | 'PREPARING'
+  | 'DELIVERING'
+  | 'COMPLETED'
+  | 'CANCELED'
+  | 'REFUNDED';
 
-export type OrderHistoryDT = {
+export type OrderTimelineStep = {
+  title: string;
+  date: string | null;
+  isCompleted: boolean;
+};
+
+export interface IOrderItemProduct {
+  id: number;
+  name: string;
+  image?: string | null;
+  images?: { image: string }[];
+  isDeleted?: boolean;
+}
+
+export interface IOrderItem {
+  price: string; // Decimal serialized as string
+  quantity: number;
+  product: IOrderItemProduct;
+}
+
+export interface IShippingAddress {
+  fullName: string;
+  address: string | null;
+  city: string;
+  state: string;
+  country: string;
+  phoneNumber: string;
+}
+
+export interface IOrderHistory {
   id: number;
   orderNumber: string;
   createdAt: string;
-  status: string;
+  updatedAt: string;
+  status: OrderStatus;
   subtotal: string;
   total: string;
   shippingFee: string;
-  paymentMethod: string;
-  shippingAddress: {
-    fullName: string;
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    phoneNumber: string;
-  };
-  items: Array<{
-    product: {
-      id: number;
-      name: string;
-      sellingPrice: string;
-      quantity: number;
-    };
-    quantity: number;
-    price: string;
-  }>;
-  orderTime: string;
-  paymentTime: string;
-  deliveryTime: string;
-  completionTime: string;
-  timeline: Array<{ title: string; time: string }>;
-};
-export interface IOrderHistory {
-  id: string;
-  orderNumber: string;
-  createdAt: string;
-  orderTime: string;
-  paymentTime: string;
-  deliveryTime: string;
-  completionTime: string;
-  status: string;
-  timeline: Array<{ title: string; time: string }>;
+  paymentMethod: string | null;
+  paymentAccount: string | null;
+  totalItems: number;
+  shippingAddress: IShippingAddress | null;
+  items: IOrderItem[];
+
+  orderTime?: string | null;
+  paymentTime?: string | null;
+  deliveryTime?: string | null;
+  completionTime?: string | null;
+  timeline?: OrderTimelineStep[];
 }

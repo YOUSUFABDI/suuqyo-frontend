@@ -18,6 +18,7 @@ import { toast } from 'src/components/snackbar';
 import { useUser } from 'src/sections/auth/hooks';
 import { useUpdateUserMutation } from 'src/store/user/user';
 import { getErrorMessage } from 'src/utils/error.message';
+import { MenuItem } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +26,7 @@ export type UpdateUserSchemaType = zod.infer<typeof UpdateUserSchema>;
 
 export const UpdateUserSchema = zod.object({
   fullName: zod.string().optional(),
-  username: zod.string().optional(),
+  // username: zod.string().optional(),
   sex: zod.string().optional(),
   email: zod.string().email().optional(),
   profileImage: schemaHelper.file().optional(),
@@ -44,7 +45,7 @@ export function AccountGeneral() {
 
   const currentUser: UpdateUserSchemaType = {
     fullName: user?.fullName || '',
-    username: user?.username || '',
+    // username: user?.username || '',
     sex: user?.sex || '',
     email: user?.email || '',
     profileImage: user?.profileImage || null,
@@ -57,7 +58,7 @@ export function AccountGeneral() {
 
   const defaultValues: UpdateUserSchemaType = {
     fullName: '',
-    username: '',
+    // username: '',
     sex: '',
     email: '',
     profileImage: null,
@@ -84,7 +85,7 @@ export function AccountGeneral() {
     try {
       const updateUserDto = {
         fullName: data.fullName,
-        username: data.username,
+        // username: data.username,
         sex: data.sex,
         email: data.email,
         phoneNumber: data.phoneNumber,
@@ -169,10 +170,14 @@ export function AccountGeneral() {
               }}
             >
               <Field.Text name="fullName" label="Name" />
-              <Field.Text name="username" label="Username" />
-              <Field.Text name="email" label="Email address" />
+              {/* <Field.Text name="username" label="Username" /> */}
+              <Field.Text name="email" label="Email" />
               <Field.Phone name="phoneNumber" label="Phone number" />
-              <Field.Text name="sex" label="Gender" />
+              {/* <Field.Text name="sex" label="Gender" /> */}
+              <Field.Select name="sex" label="Gender">
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+              </Field.Select>
               <Field.Text name="address" label="Address" />
 
               <Field.CountrySelect name="country" label="Country" placeholder="Choose a country" />
