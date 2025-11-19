@@ -20,6 +20,10 @@ import { getErrorMessage } from 'src/utils/error.message';
 import { FormHead } from '../../components/form-head';
 import { FormReturnLink } from '../../components/form-return-link';
 import { useTranslate } from 'src/locales';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from 'src/store/auth/authSlice';
+import axios from 'axios';
+import { API } from 'src/store/api';
 // ----------------------------------------------------------------------
 
 export type VerifySchemaType = zod.infer<typeof VerifySchema>;
@@ -42,6 +46,7 @@ export function VerifyView() {
   const searchParams = useSearchParams();
   const [verifyOTP, { isLoading }] = useVerifyOTPMutation();
   const { t } = useTranslate();
+  const dispatch = useDispatch();
 
   const emailParam = searchParams.get('email');
   const defaultEmail = emailParam ? emailParam : '';
@@ -61,20 +66,38 @@ export function VerifyView() {
     formState: { isSubmitting },
   } = methods;
 
+  const handleRoleBasedRedirect = (role: string) => {
+    switch (role) {
+      case 'ADMIN':
+        return '/dashboard';
+      case 'SHOP_OWNER':
+        return '/shop-owner';
+      case 'DELIVERY_USER':
+        return '/delivery-user';
+      case 'STAFF':
+        return '/staff/shop-owner';
+      default:
+        return '/';
+    }
+  };
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       const reqData = {
         email: data.email,
         code: Number(data.code),
       };
-      const response = await verifyOTP(reqData).unwrap();
 
-      if (response.error === null) {
-        toast.success('Account verified successfully!');
-        router.push(paths.auth.jwt.signIn);
-      }
+      const res = await axios.post(`${API}/auth/verify-otp`, reqData);
+      // console.log('res', res);
+
+      const { access_token, role, email } = res.data.payload.data;
+
+      dispatch(setCredentials({ token: access_token, role, email }));
+
+      toast.success('Account verified successfully!');
+      router.push(handleRoleBasedRedirect(role));
     } catch (error) {
-      // console.log(error);
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     }
