@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { CONFIG } from 'src/global-config';
 
 import { HomeView } from 'src/sections/home/view';
-
+import { ProductListView } from 'src/sections/home/product/product-list-view';
 // ----------------------------------------------------------------------
 
 export const metadata: Metadata = {
@@ -11,5 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <HomeView />;
+  // return <HomeView />;
+  return <ProductListView />;
 }

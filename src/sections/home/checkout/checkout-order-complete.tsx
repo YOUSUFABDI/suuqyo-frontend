@@ -76,7 +76,8 @@ export function CheckoutOrderComplete({ onResetCart, onDownloadPDF, ...other }: 
         >
           <Button
             component={RouterLink}
-            href={paths.customer.product.root}
+            // href={paths.customer.product.root}
+            href="/"
             size="large"
             color="inherit"
             variant="outlined"

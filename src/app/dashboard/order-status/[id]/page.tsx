@@ -1,24 +1,21 @@
 'use client';
 
 import { CONFIG } from 'src/global-config';
-// import { OrderStatusDetailsView } from 'src/sections/admin/order-status/view';
-
-import { UseOrders } from 'src/sections/shop-owner/order/hooks';
+import { UseOrderStatus } from 'src/sections/admin/order-status/hooks/use-order-status';
+import { OrderStatusDetailsView } from 'src/sections/admin/order-status/view/order-status-details-view';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  params: { id: string };
+  params: { id: number };
 };
 
 export default function Page({ params }: Props) {
-  const { orders } = UseOrders();
   const { id } = params;
+  const { OneOrderStatus } = UseOrderStatus(id);
+  // console.log('OneOrderStatus', OneOrderStatus);
 
-  const currentOrder = orders.find((order) => Number(order.id) === Number(id));
-
-  return <div></div>;
-  // return <OrderStatusDetailsView order={currentOrder} />;
+  return <OrderStatusDetailsView order={OneOrderStatus} />;
 }
 
 // Static export settings (if required)

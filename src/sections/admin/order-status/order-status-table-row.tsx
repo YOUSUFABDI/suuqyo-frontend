@@ -9,15 +9,33 @@ import TableRow from '@mui/material/TableRow';
 import { Label } from 'src/components/label';
 import { fDate, fTime } from 'src/utils/format-time';
 import { OrderStatusDT } from './types/types';
+import { CustomPopover } from 'src/components/custom-popover';
+import { IconButton, MenuItem, MenuList } from '@mui/material';
+import { Iconify } from 'src/components/iconify';
+import { useBoolean, usePopover } from 'minimal-shared/hooks';
+
+import { RouterLink } from 'src/routes/components';
 
 type Props = {
   row: OrderStatusDT;
   selected: boolean;
   onSelectRow: () => void;
+  detailsHref: string;
+  // onDeleteRow: () => void;
 };
 
-export function OrderStatusTableRow({ row, selected, onSelectRow }: Props) {
-  return (
+export function OrderStatusTableRow({
+  row,
+  selected,
+  onSelectRow,
+  // onDeleteRow,
+  detailsHref,
+}: Props) {
+  const confirmDialog = useBoolean();
+  const menuActions = usePopover();
+  const collapseRow = useBoolean();
+
+  const renderPrimaryRow = () => (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
         <Checkbox
@@ -111,6 +129,48 @@ export function OrderStatusTableRow({ row, selected, onSelectRow }: Props) {
           '—'
         )}
       </TableCell>
+
+      <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <IconButton color={menuActions.open ? 'inherit' : 'default'} onClick={menuActions.onOpen}>
+          <Iconify icon="eva:more-vertical-fill" />
+        </IconButton>
+      </TableCell>
     </TableRow>
+  );
+
+  const renderMenuActions = () => (
+    <CustomPopover
+      open={menuActions.open}
+      anchorEl={menuActions.anchorEl}
+      onClose={menuActions.onClose}
+      slotProps={{ arrow: { placement: 'right-top' } }}
+    >
+      <MenuList>
+        {/* <MenuItem
+          onClick={() => {
+            confirmDialog.onTrue();
+            menuActions.onClose();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon="solar:trash-bin-trash-bold" />
+          Delete
+        </MenuItem> */}
+
+        <li>
+          <MenuItem component={RouterLink} href={detailsHref} onClick={() => menuActions.onClose()}>
+            <Iconify icon="solar:eye-bold" />
+            View
+          </MenuItem>
+        </li>
+      </MenuList>
+    </CustomPopover>
+  );
+
+  return (
+    <>
+      {renderPrimaryRow()}
+      {renderMenuActions()}
+    </>
   );
 }

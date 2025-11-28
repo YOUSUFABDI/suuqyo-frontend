@@ -64,6 +64,7 @@ const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'refunded', label: 'Refunded', width: 80, align: 'center' },
   { id: 'totalOrders', label: 'Total', width: 92, align: 'center' },
   { id: 'lastOrderDate', label: 'Last order', width: 160 },
+  { id: '', width: 88 },
 ];
 
 // Safe array helper
@@ -264,6 +265,7 @@ export function OrderStatusListView() {
                   )
                   .map((row) => (
                     <OrderStatusTableRow
+                      detailsHref={paths.dashboard.orderStatus.details(row.shopOwnerId)}
                       key={row.shopOwnerId}
                       row={row}
                       // If your row still shows a checkbox, keep these lines and add selector column back:

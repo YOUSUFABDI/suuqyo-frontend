@@ -8,7 +8,7 @@ import {
 } from 'src/sections/admin/shop-owner/types/types';
 import { ApiResponseDT } from 'src/types/api-response';
 import { API } from '../api';
-import { OrderStatusDT } from 'src/sections/admin/order-status/types/types';
+import { OneOrderStatusDT, OrderStatusDT } from 'src/sections/admin/order-status/types/types';
 
 // Custom base query with retry logic for mobile devices and large files
 const baseQueryWithRetry = retry(
@@ -168,6 +168,13 @@ export const shopOwnerApi = createApi({
       }),
       providesTags: ['shopOwnerApi'],
     }),
+    getOrderStatus: builder.query<ApiResponseDT<OneOrderStatusDT>, { id: number }>({
+      query: ({ id }) => ({
+        url: `/admin-shop-owner/get-order-status/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['shopOwnerApi'],
+    }),
     // get order status of shopowner
   }),
 });
@@ -183,5 +190,6 @@ export const {
 
   // get order status of shopowner
   useGetAllOrderStatusOfShopOwnersQuery,
+  useGetOrderStatusQuery,
   // get order status of shopowner
 } = shopOwnerApi;

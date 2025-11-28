@@ -6,11 +6,17 @@ import { paths } from 'src/routes/paths';
 // ----------------------------------------------------------------------
 
 export const navData: NavMainProps['data'] = [
-  { title: 'pages.home', path: '/', icon: <Iconify width={22} icon="tabler:home" /> },
   {
     title: 'pages.products',
-    path: paths.customer.product.root,
+    // path: paths.customer.product.root,
+    path: '/',
     icon: <Iconify width={22} icon="fluent:box-20-filled" />,
+  },
+  {
+    title: 'pages.home',
+    // path: '/',
+    path: paths.customer.product.root,
+    icon: <Iconify width={22} icon="tabler:home" />,
   },
   {
     title: 'pages.shops',

@@ -49,7 +49,7 @@ export const paths = {
     },
     orderStatus: {
       root: `${ROOTS.DASHBOARD}/order-status`,
-      details: (id: string) => `${ROOTS.SHOP_OWNER}/order-status/${id}`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/order-status/${id}`,
     },
     variant: {
       // size
