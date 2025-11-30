@@ -46,7 +46,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
               <m.div variants={varFade('inUp')}>
                 <Image
                   alt="Our office small"
-                  src={`${CONFIG.assetsDir}/assets/images/about/Suuqyo Delivery Brand-12.jpg`}
+                  src={`${CONFIG.assetsDir}/assets/images/about/new_suuqyo_logo.jpeg`}
                   ratio="1/1"
                   sx={(theme) => ({
                     borderRadius: 3,
@@ -63,7 +63,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
               <m.div variants={varFade('inUp')}>
                 <Image
                   alt="Our office large"
-                  src={`${CONFIG.assetsDir}/assets/images/about/Suuqyo Delivery Brand-03.jpg`}
+                  src={`${CONFIG.assetsDir}/assets/images/about/new_suuqyo_logo.jpeg`}
                   ratio="3/4"
                   sx={(theme) => ({
                     borderRadius: 3,

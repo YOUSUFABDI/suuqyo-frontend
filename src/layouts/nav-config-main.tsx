@@ -12,12 +12,12 @@ export const navData: NavMainProps['data'] = [
     path: '/',
     icon: <Iconify width={22} icon="fluent:box-20-filled" />,
   },
-  {
-    title: 'pages.home',
-    // path: '/',
-    path: paths.customer.product.root,
-    icon: <Iconify width={22} icon="tabler:home" />,
-  },
+  // {
+  //   title: 'pages.home',
+  //   // path: '/',
+  //   path: paths.customer.product.root,
+  //   icon: <Iconify width={22} icon="tabler:home" />,
+  // },
   {
     title: 'pages.shops',
     path: paths.customer.shop.root,

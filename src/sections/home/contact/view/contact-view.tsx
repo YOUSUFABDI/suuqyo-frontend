@@ -34,7 +34,7 @@ export function ContactView() {
           <m.div variants={varFade('inUp')}>
             <Image
               alt="Our office large"
-              src={`${CONFIG.assetsDir}/assets/images/about/Suuqyo Delivery Brand-12.jpg`}
+              src={`${CONFIG.assetsDir}/assets/images/about/new_suuqyo_logo.jpeg`}
               ratio="3/4"
               sx={(theme) => ({
                 borderRadius: 3,

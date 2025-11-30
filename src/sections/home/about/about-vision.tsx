@@ -22,7 +22,7 @@ export function AboutVision({ sx, ...other }: BoxProps) {
 
   const renderImage = () => (
     <Image
-      src={`${CONFIG.assetsDir}/assets/images/about/Suuqyo Delivery Brand-03.jpg`}
+      src={`${CONFIG.assetsDir}/assets/images/about/new_suuqyo_logo.jpeg`}
       alt="About vision"
       ratio={{ xs: '4/3', sm: '16/9' }}
       slotProps={{
