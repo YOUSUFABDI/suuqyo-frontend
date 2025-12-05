@@ -42,7 +42,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
             size={{ xs: 12, md: 6, lg: 7 }}
             sx={{ pr: { md: 7 }, alignItems: 'center', display: { xs: 'none', md: 'flex' } }}
           >
-            <Grid size={6}>
+            <Grid size={9}>
               <m.div variants={varFade('inUp')}>
                 <Image
                   alt="Our office small"
@@ -59,7 +59,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
               </m.div>
             </Grid>
 
-            <Grid size={6}>
+            {/* <Grid size={6}>
               <m.div variants={varFade('inUp')}>
                 <Image
                   alt="Our office large"
@@ -74,7 +74,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
                   })}
                 />
               </m.div>
-            </Grid>
+            </Grid> */}
           </Grid>
 
           <Grid size={{ xs: 12, md: 6, lg: 5 }}>
