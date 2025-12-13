@@ -31,6 +31,7 @@ const initialState: ICheckoutState = {
   totalItems: 0,
   paymentMethods: [],
   shopAddress: '',
+  shopPhone: '',
 };
 
 // ----------------------------------------------------------------------
@@ -133,6 +134,13 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
   const onSetShopAddress = useCallback(
     (address: string) => {
       setField('shopAddress', address);
+    },
+    [setField]
+  );
+
+  const onSetShopPhone = useCallback(
+    (phone: string) => {
+      setField('shopPhone', phone);
     },
     [setField]
   );
@@ -303,6 +311,7 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
       onCreateBillingAddress,
       onSetPaymentMethods,
       onSetShopAddress,
+      onSetShopPhone,
     }),
     [
       state,
@@ -322,6 +331,7 @@ function CheckoutContainer({ children }: CheckoutProviderProps) {
       onCreateBillingAddress,
       onSetPaymentMethods,
       onSetShopAddress,
+      onSetShopPhone,
     ]
   );
 

@@ -21,18 +21,20 @@ import { Iconify } from 'src/components/iconify';
 
 import { Field } from 'src/components/hook-form';
 import { PaymentNewCardForm } from '../payment/payment-new-card-form';
+import { Alert, AlertTitle } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
 type Props = CardProps & {
   name: string;
+  shopPhone?: string;
   options: {
     cards: ICheckoutCardOption[];
     payments: ICheckoutPaymentOption[];
   };
 };
 
-export function CheckoutPaymentMethods({ name, options, sx, ...other }: Props) {
+export function CheckoutPaymentMethods({ name, options, shopPhone, sx, ...other }: Props) {
   const { control, watch } = useFormContext();
   const selectedPayment = watch(name);
 
@@ -135,6 +137,11 @@ export function CheckoutPaymentMethods({ name, options, sx, ...other }: Props) {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Alert variant="standard" sx={{ mb: 2 }} severity="info">
+        <AlertTitle>Fiiro gaar ah</AlertTitle>
+        Intaad lacag dirin kahor wac dukaan ka {shopPhone ? <strong>{shopPhone}</strong> : ''}
+      </Alert>
     </>
   );
 }

@@ -52,6 +52,7 @@ export type ICheckoutState = {
   paymentMethods: PaymentMethod[];
   billing: AddressDT | null;
   shopAddress?: string;
+  shopPhone?: string;
 };
 
 export type CheckoutContextValue = {
@@ -77,4 +78,5 @@ export type CheckoutContextValue = {
   onCreateBillingAddress: (address: AddressDT) => void;
   onSetPaymentMethods: (methods: PaymentMethod[]) => void;
   onSetShopAddress: (address: string) => void;
+  onSetShopPhone: (phone: string) => void;
 };

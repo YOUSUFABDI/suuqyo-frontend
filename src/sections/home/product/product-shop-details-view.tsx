@@ -56,11 +56,13 @@ type Props = {
 };
 
 export function ProductShopDetailsView({ product }: Props) {
+  // console.log('product', product);
   const {
     state: checkoutState,
     onAddToCart,
     onSetPaymentMethods,
     onSetShopAddress,
+    onSetShopPhone,
   } = useCheckoutContext();
 
   // const available = product?.user?.product?.quantity != null && product.user.product.quantity > 0;
@@ -103,6 +105,7 @@ export function ProductShopDetailsView({ product }: Props) {
               onAddToCart={onAddToCart}
               onSetPaymentMethods={onSetPaymentMethods}
               onSetShopAddress={onSetShopAddress}
+              onSetShopPhone={onSetShopPhone}
               // disableActions={!product?.available}
               disableActions={!available}
             />
@@ -159,9 +162,7 @@ export function ProductShopDetailsView({ product }: Props) {
           <ProductDetailsReturnPolicy policy={product?.product.returnPolicy || ''} />
         )}
 
-        {tabs.value === 'reviews' && (
-          <ProductDetailsReview productId={productId} />
-        )}
+        {tabs.value === 'reviews' && <ProductDetailsReview productId={productId} />}
       </Card>
     </Container>
   );

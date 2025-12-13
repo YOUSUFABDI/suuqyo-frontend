@@ -29,6 +29,7 @@ type Props = {
 };
 
 export function ProductItem({ product, detailsHref }: Props) {
+  // console.log('product', product);
   const {
     state: checkoutState,
     onAddToCart,
@@ -38,7 +39,7 @@ export function ProductItem({ product, detailsHref }: Props) {
   const available = product.quantity > 0 ? true : false;
 
   // Extract unique colors from variants
-  const uniqueColors = product?.variants 
+  const uniqueColors = product?.variants
     ? Array.from(new Set(product.variants.map((variant) => variant?.color?.name).filter(Boolean)))
     : [];
 
@@ -75,7 +76,11 @@ export function ProductItem({ product, detailsHref }: Props) {
     <Box sx={{ position: 'relative', p: 1 }}>
       <Image
         alt={product.name}
-        src={product?.images && product.images.length > 0 ? product.images[0].image : '/placeholder.jpg'}
+        src={
+          product?.images && product.images.length > 0
+            ? product.images[0].image
+            : '/placeholder.jpg'
+        }
         ratio="1/1"
         sx={{ borderRadius: 1.5 }}
       />
@@ -103,7 +108,9 @@ export function ProductItem({ product, detailsHref }: Props) {
               <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
                 ${product.sellingPrice}
               </Box>
-              <Box component="span">${(product.sellingPrice * (1 - product.discount / 100)).toFixed(2)}</Box>
+              <Box component="span">
+                ${(product.sellingPrice * (1 - product.discount / 100)).toFixed(2)}
+              </Box>
             </>
           ) : (
             // Show regular price if no discount

@@ -57,18 +57,19 @@ export const useInfiniteProducts = ({
     error: currentError,
     refetch,
   } = useGetAllProductsQuery(
-    { 
-      page: currentPage, 
-      limit, 
+    {
+      page: currentPage,
+      limit,
       category: currentCategory,
       sortBy: currentSortBy,
       minPrice: currentMinPrice,
-      maxPrice: currentMaxPrice
+      maxPrice: currentMaxPrice,
     },
     {
       skip: false,
     }
   );
+  // console.log('data', data);
 
   // Reset pagination when filters change
   useEffect(() => {

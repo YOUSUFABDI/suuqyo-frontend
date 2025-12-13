@@ -55,4 +55,17 @@ export interface IOrderHistory {
   deliveryTime?: string | null;
   completionTime?: string | null;
   timeline?: OrderTimelineStep[];
+
+  shopOwner: {
+    email: string;
+    fullName: string;
+    phoneNumber: string;
+    id: number;
+    shopDetail: {
+      isVerified: boolean;
+      shopAddress: string;
+      shopLogo: string;
+      shopName: string;
+    };
+  };
 }

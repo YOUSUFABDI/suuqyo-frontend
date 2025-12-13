@@ -36,6 +36,7 @@ type Props = {
   onAddToCart?: CheckoutContextValue['onAddToCart'];
   onSetPaymentMethods?: CheckoutContextValue['onSetPaymentMethods'];
   onSetShopAddress?: CheckoutContextValue['onSetShopAddress'];
+  onSetShopPhone?: CheckoutContextValue['onSetShopPhone'];
 };
 
 export function ProductDetailsSummary({
@@ -44,9 +45,11 @@ export function ProductDetailsSummary({
   onAddToCart,
   onSetPaymentMethods,
   onSetShopAddress,
+  onSetShopPhone,
   disableActions,
   ...other
 }: Props) {
+  console.log('product', product);
   const router = useRouter();
   const variants = product.variants || [];
   const isFood = product.isFood;
@@ -207,6 +210,10 @@ export function ProductDetailsSummary({
 
         if (product?.shop?.shopAddress) {
           onSetShopAddress?.(product.shop.shopAddress);
+        }
+
+        if (product?.user?.phoneNumber) {
+          onSetShopPhone?.(product.user.phoneNumber);
         }
 
         checkoutItems.forEach((item) => {

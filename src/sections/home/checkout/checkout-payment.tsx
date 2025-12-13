@@ -94,6 +94,7 @@ export function CheckoutPayment() {
     onApplyShipping,
     state: checkoutState,
   } = useCheckoutContext();
+  console.log(checkoutState);
 
   const [deliveryOptions, setDeliveryOptions] = useState<ICheckoutDeliveryOption[]>([
     { value: 0, label: 'Free', description: 'Pick up by yourself' },
@@ -280,6 +281,7 @@ export function CheckoutPayment() {
                 description: `Phone: ${method.paymentPhone}`,
               })),
             }}
+            shopPhone={checkoutState.shopPhone}
             sx={{ my: 3 }}
           />
 
@@ -309,7 +311,7 @@ export function CheckoutPayment() {
             variant="contained"
             loading={isSubmitting || isLoading}
           >
-            Complete order
+            Place order
           </LoadingButton>
         </Grid>
       </Grid>

@@ -86,6 +86,7 @@ function getProductImage(item: IOrderItem | undefined): string {
 export default function OrderHistoryPage() {
   const theme = useTheme();
   const { orderHistory, errorMessage, isLoading } = UseOrderHistory();
+  // console.log('orderHistory', orderHistory);
   const [selectedOrder, setSelectedOrder] = React.useState<IOrderHistory | null>(null);
   const [open, setOpen] = React.useState(false);
 
@@ -422,6 +423,39 @@ export default function OrderHistoryPage() {
                     </Box> */}
                   </Box>
                 </Stack>
+
+                {/* Shop info */}
+                <Box
+                  sx={{
+                    flex: 1,
+                    p: 2,
+                    borderRadius: 2,
+                    border: `1px solid ${theme.palette.divider}`,
+                  }}
+                >
+                  <Typography variant="subtitle1" sx={{ mb: 1.5 }}>
+                    Shop Information
+                  </Typography>
+
+                  <Stack spacing={0.75} sx={{ mb: 1.5 }}>
+                    <Row label="Name" value={selectedOrder.shopOwner.shopDetail.shopName} />
+                    <Row label="Phone number" value={selectedOrder.shopOwner.phoneNumber} />
+                  </Stack>
+
+                  <Box
+                    sx={{
+                      mt: 0.5,
+                      pt: 1,
+                      borderTop: `1px dashed ${theme.palette.divider}`,
+                    }}
+                  >
+                    <Row
+                      label="Address"
+                      value={selectedOrder.shopOwner.shopDetail.shopAddress}
+                      strong
+                    />
+                  </Box>
+                </Box>
               </Stack>
             </DialogContent>
 

@@ -17,6 +17,7 @@ type Props = BoxProps & {
 };
 
 export function ProductList({ products, loading, sx, hasMore, isFetchingMore, ...other }: Props) {
+  // console.log('products', products);
   const renderLoading = () =>
     Array.from(new Array(8)).map((_, index) => <ProductItemSkeleton key={index} />);
 

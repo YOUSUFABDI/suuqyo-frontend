@@ -66,12 +66,15 @@ export function ProductListView() {
   }, [categoriesData]);
 
   // Create memoized filter values for the API
-  const apiFilters = useMemo(() => ({
-    category: filters.state.category !== 'all' ? filters.state.category : undefined,
-    sortBy: sortBy !== 'newest' ? sortBy : undefined,
-    minPrice: filters.state.priceRange[0] !== MIN_PRICE ? filters.state.priceRange[0] : undefined,
-    maxPrice: filters.state.priceRange[1] !== MAX_PRICE ? filters.state.priceRange[1] : undefined,
-  }), [filters.state, sortBy]);
+  const apiFilters = useMemo(
+    () => ({
+      category: filters.state.category !== 'all' ? filters.state.category : undefined,
+      sortBy: sortBy !== 'newest' ? sortBy : undefined,
+      minPrice: filters.state.priceRange[0] !== MIN_PRICE ? filters.state.priceRange[0] : undefined,
+      maxPrice: filters.state.priceRange[1] !== MAX_PRICE ? filters.state.priceRange[1] : undefined,
+    }),
+    [filters.state, sortBy]
+  );
 
   // Use infinite scroll hook
   const {
@@ -89,6 +92,7 @@ export function ProductListView() {
     maxPrice: apiFilters.maxPrice,
     limit: DEFAULT_LIMIT,
   });
+  // console.log('allProducts', allProducts);
 
   // Handle scroll event for infinite loading
   useEffect(() => {
