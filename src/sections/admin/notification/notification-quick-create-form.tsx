@@ -14,22 +14,35 @@ import { Field, Form } from 'src/components/hook-form';
 import { toast } from 'src/components/snackbar';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
-import { useCreateOneColorMutation } from 'src/store/admin/variant';
-import { getErrorMessage } from 'src/utils/error.message';
 import {
   useSendNotificationToCustomerMutation,
   useSendNotificationToShopOwnerMutation,
+  useSendSmsToCustomersMutation,
+  useSendSmsToShopOwnersMutation,
 } from 'src/store/public/notification';
+import { getErrorMessage } from 'src/utils/error.message';
 
 // ----------------------------------------------------------------------
 
 export type NotificationQuickCreateSchemaType = zod.infer<typeof NotificationQuickCreateSchema>;
 
-export const NotificationQuickCreateSchema = zod.object({
-  title: zod.string().min(1, { message: 'Title is required!' }),
-  message: zod.string().min(1, { message: 'Message is required!' }),
-  recipientType: zod.string().min(1, { message: 'Recipient type is required!' }),
-});
+export const NotificationQuickCreateSchema = zod
+  .object({
+    title: zod.string().min(1, { message: 'Title is required!' }),
+
+    message: zod.string().optional(), // EMAIL
+    smsMessage: zod.string().optional(), // SMS
+
+    recipientType: zod.enum(['SHOP_OWNER', 'CUSTOMER']),
+    provider: zod.enum(['EMAIL', 'SMS']),
+  })
+  .refine(
+    (data) => (data.provider === 'SMS' ? !!data.smsMessage?.trim() : !!data.message?.trim()),
+    {
+      message: 'Message content is required',
+      path: ['message'],
+    }
+  );
 
 // ----------------------------------------------------------------------
 
@@ -44,10 +57,15 @@ export function NotificationQuickCreateForm({ open, onClose }: Props) {
   const [sendNotificationToShopOwner] = useSendNotificationToShopOwnerMutation();
   const [sendNotificationToCustomer] = useSendNotificationToCustomerMutation();
 
+  const [sendSmsShopOwner] = useSendSmsToShopOwnersMutation();
+  const [sendSmsCustomer] = useSendSmsToCustomersMutation();
+
   const defaultValues: NotificationQuickCreateSchemaType = {
     title: '',
     message: '',
-    recipientType: '',
+    smsMessage: '',
+    recipientType: 'SHOP_OWNER',
+    provider: 'EMAIL',
   };
 
   const methods = useForm<NotificationQuickCreateSchemaType>({
@@ -67,25 +85,26 @@ export function NotificationQuickCreateForm({ open, onClose }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      if (data.recipientType === 'SHOP_OWNER') {
-        await sendNotificationToShopOwner(data).unwrap();
-        toast.success('Sent successfully!');
-        reset();
-        onClose();
-
-        router.push(paths.dashboard.notification.root);
+      if (data.provider === 'SMS') {
+        if (data.recipientType === 'SHOP_OWNER') {
+          await sendSmsShopOwner(data).unwrap();
+        } else {
+          await sendSmsCustomer(data).unwrap();
+        }
       } else {
-        await sendNotificationToCustomer(data).unwrap();
-        toast.success('Sent successfully!');
-        reset();
-        onClose();
-
-        router.push(paths.dashboard.notification.root);
+        if (data.recipientType === 'SHOP_OWNER') {
+          await sendNotificationToShopOwner(data).unwrap();
+        } else {
+          await sendNotificationToCustomer(data).unwrap();
+        }
       }
-    } catch (error: any) {
-      console.log('error', error);
-      const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
+
+      toast.success('Sent successfully!');
+      reset();
+      onClose();
+      router.push(paths.dashboard.notification.root);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   });
 
@@ -111,25 +130,29 @@ export function NotificationQuickCreateForm({ open, onClose }: Props) {
             }}
           >
             <Field.Text name="title" label="Title" />
+
             <Field.Select
-              name="recipientType"
-              label="Recipient type"
-              value={values.recipientType} // This binds the role value from the form state
+              name="provider"
+              label="Channel"
               slotProps={{
                 select: { native: true },
                 inputLabel: { shrink: true },
               }}
             >
-              {/* Select the role if it's available from the currentUser */}
-              <option value="" disabled>
-                Select Role
-              </option>
-              <option value="SHOP_OWNER" selected={values.recipientType === 'SHOP_OWNER'}>
-                Shop owner
-              </option>
-              <option value="CUSTOMER" selected={values.recipientType === 'CUSTOMER'}>
-                Customer
-              </option>{' '}
+              <option value="EMAIL">Email</option>
+              <option value="SMS">SMS</option>
+            </Field.Select>
+
+            <Field.Select
+              name="recipientType"
+              label="Recipient type"
+              slotProps={{
+                select: { native: true },
+                inputLabel: { shrink: true },
+              }}
+            >
+              <option value="SHOP_OWNER">Shop owner</option>
+              <option value="CUSTOMER">Customer</option>
             </Field.Select>
           </Box>
           <Box
@@ -137,7 +160,11 @@ export function NotificationQuickCreateForm({ open, onClose }: Props) {
               py: 1,
             }}
           >
-            <Field.Editor name="message" />
+            {values.provider === 'SMS' ? (
+              <Field.Text name="smsMessage" label="SMS Message" placeholder="Enter SMS content" />
+            ) : (
+              <Field.Editor name="message" />
+            )}
           </Box>
         </DialogContent>
 

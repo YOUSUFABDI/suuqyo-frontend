@@ -9,8 +9,9 @@ export type INotificationTableFilters = {
 
 export type NotificationReqDT = {
   title: string;
-  message: string;
-  recipientType: string;
+  message?: string;
+  recipientType?: 'SHOP_OWNER' | 'CUSTOMER';
+  provider: 'EMAIL' | 'SMS';
 };
 
 export type NotificationDT = {

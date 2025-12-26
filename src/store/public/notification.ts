@@ -49,6 +49,26 @@ export const notificationApi = createApi({
       }),
       providesTags: ['notificationApi'],
     }),
+
+    // -------- SMS (NEW) --------
+    sendSmsToShopOwners: builder.mutation<any, NotificationReqDT>({
+      query: (body) => ({
+        url: '/notification/send-sms-to-shop-owners',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['notificationApi'],
+    }),
+
+    sendSmsToCustomers: builder.mutation<any, NotificationReqDT>({
+      query: (body) => ({
+        url: '/notification/send-sms-to-customers',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['notificationApi'],
+    }),
+    // -------- SMS (NEW) --------
   }),
 });
 
@@ -58,4 +78,7 @@ export const {
   useShopOwnerNotificationsQuery,
   useCustomerNotificationsQuery,
   useGetAllNotificationsQuery,
+
+  useSendSmsToShopOwnersMutation,
+  useSendSmsToCustomersMutation,
 } = notificationApi;
