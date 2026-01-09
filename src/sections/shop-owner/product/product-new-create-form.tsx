@@ -502,7 +502,12 @@ export function ProductNewCreateForm() {
             </Box>
           )}
 
-          <Field.Text name="returnPolicy" label="Return policy" multiline rows={3} />
+          {/* <Field.Text name="returnPolicy" label="Return policy" multiline rows={3} /> */}
+
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Return Policy</Typography>
+            <Field.Editor name="returnPolicy" sx={{ maxHeight: 480 }} />
+          </Stack>
         </Stack>
       </Card>
     );

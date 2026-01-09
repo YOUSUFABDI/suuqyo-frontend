@@ -78,6 +78,9 @@ export const NewUserSchema = zod.object({
     )
     .min(1, { message: 'At least one payment method is required!' })
     .max(4, { message: 'You can only add up to 4 payment methods!' }),
+  policy: zod.boolean().refine((val) => val === true, {
+    message: 'You must agree to the policy to register!',
+  }),
 });
 
 // ----------------------------------------------------------------------
@@ -112,6 +115,7 @@ export function ShopOwnerNewForm() {
     shopCategoryId: null,
     paymentMethods: [{ paymentName: 'EVC_PLUS', paymentPhone: '' }],
     createdBy: '',
+    policy: false,
   };
 
   const methods = useForm<NewUserSchemaType>({
@@ -560,6 +564,33 @@ export function ShopOwnerNewForm() {
                 </Box>
               </Card>
             </Grid>
+
+            {/* policy */}
+            <Grid size={{ xs: 12, md: 8 }}>
+              <Card sx={{ p: 3 }}>
+                <Box
+                  sx={{
+                    rowGap: 3,
+                    columnGap: 2,
+                    display: 'grid',
+                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                  }}
+                >
+                  <Field.Checkbox
+                    name="policy"
+                    label={
+                      <Typography variant="body2">
+                        Waxaan ogolaaday inaan qaado masuuliyadda soo gelinta badeeco sax ah,
+                        xaqiijinta dalabaadka iyo helida lacagta dalabkaas una geeya macaamilkii
+                        alaabta soo dalbaday. Sidoo kalena, lacag u celinta macaamilka ayadoo la
+                        raacayo sharciga alaab celinta ee dalabkaas. Reorder functionality
+                      </Typography>
+                    }
+                  />
+                </Box>
+              </Card>
+            </Grid>
+            {/* policy */}
           </Grid>
         </Card>
         {/* shop detail */}
