@@ -583,7 +583,7 @@ export function ShopOwnerNewForm() {
                         Waxaan ogolaaday inaan qaado masuuliyadda soo gelinta badeeco sax ah,
                         xaqiijinta dalabaadka iyo helida lacagta dalabkaas una geeya macaamilkii
                         alaabta soo dalbaday. Sidoo kalena, lacag u celinta macaamilka ayadoo la
-                        raacayo sharciga alaab celinta ee dalabkaas. Reorder functionality
+                        raacayo sharciga alaab celinta ee dalabkaas.
                       </Typography>
                     }
                   />
