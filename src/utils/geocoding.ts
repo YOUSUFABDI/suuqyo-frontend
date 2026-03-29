@@ -1,6 +1,7 @@
 export async function geocodeAddress(address: string): Promise<{ lat: number; lon: number }> {
+  const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
   const response = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyCshsTPtTESZ2xsLnaH5E65yr5CzWJkCHQ`
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${GOOGLE_API_KEY}`
   );
 
   const data = await response.json();

@@ -113,10 +113,11 @@ export function AddressNewForm({ open, onClose, onCreate }: Props) {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
+        const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
         try {
           const response = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyCshsTPtTESZ2xsLnaH5E65yr5CzWJkCHQ`
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_API_KEY}`
           );
 
           const data = await response.json();
