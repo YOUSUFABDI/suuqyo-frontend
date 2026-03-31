@@ -49,7 +49,7 @@ export function ProductDetailsSummary({
   disableActions,
   ...other
 }: Props) {
-  console.log('product', product);
+  // console.log('product', product);
   const router = useRouter();
   const variants = product.variants || [];
   const isFood = product.isFood;
